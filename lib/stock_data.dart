@@ -1,13 +1,16 @@
 import 'package:flutter_prac_jongmock/util.dart';
+/*
+class _Stock{
+  final String title; // 주식 이름
+  final String type; // 분야
+  final int sign; // 부호 1 양수, 0 0, -1 음수
+  final int price; // 현재가
+  final int dist; // 등락폭
+  int restCount; // 잔량
 
-/*class _Stock{
-  final String title;
-  final String type;
-  final int sign; // 1, 0, -1
-  final int price;
-  final int dist;
-  int restCount;
-
+  final int yesterday_close; // 전일 종가
+  final int today_start; // 당일 시가
+  final int today_close; // 당일 종가
 }*/
 class Stock {
   final bool isStock;

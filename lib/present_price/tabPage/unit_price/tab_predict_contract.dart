@@ -7,12 +7,13 @@ import 'package:flutter_prac_jongmock/main/main_controller.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
+/// 단일가 - 예상체결탭
 class TabPredictContract extends StatelessWidget {
   final controller = Get.find<MainController>();
 
-  final double cellHeight = 40;
-  final double firstWidth = 90;
-  late final double restWidth = (Get.width - firstWidth) / 3;
+  final double cellHeight = 40; // 테이블 셀 높이
+  final double firstWidth = 90; // 1열 폭
+  late final double restWidth = (Get.width - firstWidth) / 3; // 나머지 열 폭
 
   final double bigFont = 16;
   final double smallFont = 14;
@@ -50,6 +51,8 @@ class TabPredictContract extends StatelessWidget {
           alignment: Alignment.center,
           child: Text('예상체결가', style: textStyle),
         ),
+        // 정규장대비/정규장대비율
+        // 클릭시 전환
         InkWell(
           onTap: () {
             controller.unitPage_tabPredict_toggleClick();

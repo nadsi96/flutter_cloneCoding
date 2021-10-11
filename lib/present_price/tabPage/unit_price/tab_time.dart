@@ -6,12 +6,13 @@ import 'package:flutter_prac_jongmock/main/main_controller.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
+/// 단일가 - 시간탭
 class TabTime extends StatelessWidget {
   final controller = Get.find<MainController>();
 
-  final double cellHeight = 40;
-  final double firstWidth = 90;
-  late final double restWidth = (Get.width - firstWidth) / 3;
+  final double cellHeight = 40; // 테이블 셀 높이
+  final double firstWidth = 90; // 1열 폭
+  late final double restWidth = (Get.width - firstWidth) / 3; // 나머지 열 폭
 
   final double bigFont = 16;
   final double smallFont = 14;
@@ -77,6 +78,7 @@ class TabTime extends StatelessWidget {
     }
   }
 
+  /// 테이블 행
   Widget tableRow(UnitPage_TabTime_Data data) {
     final deco = BoxDecoration(
       border: Border.all(color: GRAY, width: 0.5),
@@ -128,6 +130,9 @@ class TabTime extends StatelessWidget {
     );
   }
 
+  /// 조회할 데이터 없으면 데이터 없다는 텍스트 띄움
+  /// 있으면 출력
+  /// 리스트뷰(row)
   Widget table() {
     return Obx(() {
       var dataSet = controller.unitPage_data.value;
@@ -169,6 +174,8 @@ class ProduceUnitPageTabTimeData {
 
     dataSet.clear();
 
+    // 16시부터 18시까지 10분 간격으로 처리
+    // 단일가는 당일 종가 +-10%, 전일 종가 +-30%
     int price = (yesterday * (1 + (ran.nextInt(21)-10)/100)).toInt(); // +- 10%
     // DateTime dt = DateTime(2021, 1, 1, 18);
     DateTime dt = DateTime.now();
