@@ -27,23 +27,36 @@ class BottomButtons extends StatelessWidget {
 
   /// 좌측 홈버튼
   Widget btn_Home() {
-    return Container(
+    return InkWell(
+      onTap: () {
+        pageController.goToPage('My');
+      },
+      child: Container(
         color: BLACK,
         padding: const EdgeInsets.all(10),
         child: Center(
-            child: Column(children: [
-          const Icon(
-            Icons.home_filled,
-            color: Colors.grey,
+          child: Column(
+            children: [
+              const Icon(
+                Icons.home_filled,
+                color: Colors.grey,
+              ),
+              Text(
+                "MY",
+                style: TextStyle(fontSize: 8, color: FONTCOLOR),
+              ),
+            ],
           ),
-          Text("MY", style: TextStyle(fontSize: 8, color: FONTCOLOR))
-        ])));
+        ),
+      ),
+    );
   }
 
   /// 스크롤가능한 버튼리스트
   Widget btnList() {
     print("---------------- ${pageController.mainBottomTabListTexts.length}");
-    var btns = List.generate(pageController.mainBottomTabListTexts.length, (index) {
+    var btns =
+        List.generate(pageController.mainBottomTabListTexts.length, (index) {
       final item = pageController.mainBottomTabListTexts[index];
       if (item != "설정") {
         return GetX<MainController>(builder: (_) {

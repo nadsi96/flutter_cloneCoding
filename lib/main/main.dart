@@ -9,6 +9,7 @@ import 'package:flutter_prac_jongmock/interest_page/getx_page_interest.dart';
 import 'package:flutter_prac_jongmock/interest_page/getx_stock_list_view.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
+import 'package:flutter_prac_jongmock/my_page/my_page.dart';
 import 'package:flutter_prac_jongmock/present_price/present_price.dart';
 import 'package:flutter_prac_jongmock/register_page_with_getx/register_page.dart';
 import 'package:flutter/services.dart';
@@ -89,6 +90,8 @@ class MainPage extends StatelessWidget {
             child: Column(children: [
               Expanded(child: GetX<MainController>(builder: (_) {
                 switch (pageController.title.value) {
+                  case 'My':
+                    return MyPage();
                   case '관심종목':
                     return JongmockPage();
                   case '주식현재가':

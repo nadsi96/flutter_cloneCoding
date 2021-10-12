@@ -35,7 +35,7 @@ class TabPageController extends GetxController{
   void goToPage(String text) {
     pageStack.add(text);
     title.value = text;
-    update();
+    // update();
   }
 
   void backToPage() {
@@ -43,6 +43,6 @@ class TabPageController extends GetxController{
     final title = pageStack.last;
     this.title.value = title;
     selectedMainBottomTab.value = title;
-    update();
+    // update();
   }
 }
