@@ -19,7 +19,7 @@ class TabPageController extends GetxController{
     "국내뉴스",
     "전화상담",
     "종료",
-    "설정"
+    "설정",
   ];
   var selectedMainBottomTab = "".obs; // 선택된 하단 버튼
 

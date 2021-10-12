@@ -30,25 +30,29 @@ class BottomButtons extends StatelessWidget {
     return InkWell(
       onTap: () {
         pageController.goToPage('My');
+        pageController.selectedMainBottomTab.value = 'My';
       },
-      child: Container(
-        color: BLACK,
-        padding: const EdgeInsets.all(10),
-        child: Center(
-          child: Column(
-            children: [
-              const Icon(
-                Icons.home_filled,
-                color: Colors.grey,
-              ),
-              Text(
-                "MY",
-                style: TextStyle(fontSize: 8, color: FONTCOLOR),
-              ),
-            ],
+      child: Obx((){
+        final bgColor = (pageController.selectedMainBottomTab.value == 'My')? DDarkGray : BLACK;
+        return Container(
+          color: bgColor,
+          padding: const EdgeInsets.all(10),
+          child: Center(
+            child: Column(
+              children: [
+                const Icon(
+                  Icons.home_filled,
+                  color: Colors.grey,
+                ),
+                Text(
+                  "MY",
+                  style: TextStyle(fontSize: 8, color: FONTCOLOR),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
