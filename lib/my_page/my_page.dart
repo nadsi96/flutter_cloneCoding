@@ -20,6 +20,8 @@ class MyPage extends StatelessWidget {
   final double smallContentFont = 14;
   final double midContentFont = 18;
 
+  MyPage({Key? key}) : super(key: key);
+
   /// 회색 밑줄이 있는 AppBar
   AppBar topBar() {
     return AppBar(
@@ -71,7 +73,7 @@ class MyPage extends StatelessWidget {
   /// 로그인되지 않은 상태면 '로그인이 필요한 정보가 있습니다' 텍스트
   /// 로그인되면 사용자 정보 나타냄
   Widget userInfo() {
-    final rankColor = Color.fromARGB(255, 83, 199, 184);
+    const rankColor = Color.fromARGB(255, 83, 199, 184);
 
     return Obx(() {
       if (controller.isLogin.value) {
@@ -101,7 +103,7 @@ class MyPage extends StatelessWidget {
                           horizontal: 10, vertical: 5),
                       child: Text(
                         user.rank,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: rankColor,
                             fontSize: 12,
                             fontWeight: FontWeight.w900),
