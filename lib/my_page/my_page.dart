@@ -20,6 +20,8 @@ class MyPage extends StatelessWidget {
   final double smallContentFont = 14;
   final double midContentFont = 18;
 
+  final double space = 10;
+
   MyPage({Key? key}) : super(key: key);
 
   /// 회색 밑줄이 있는 AppBar
@@ -143,7 +145,7 @@ class MyPage extends StatelessWidget {
                   children: [
                     Container(
                       color: WHITE,
-                      margin: const EdgeInsets.only(top: 10),
+                      margin: EdgeInsets.only(top: space),
                       padding: const EdgeInsets.fromLTRB(30, 10, 20, 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -246,6 +248,9 @@ class MyPage extends StatelessWidget {
 
   /// user 정보화면
   /// 로그인 후, 토글이 삼성증권으로 설정된 경우
+  /// 잔액, 투자금액, 투자수익, 수익률
+  /// 새로고침된(위 정보 불러온) 시간
+  /// 이체/대출 버튼
   Widget userInfoSamsung(User user) {
     return Container(
       height: 200,
@@ -275,7 +280,7 @@ class MyPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: space),
                 userInfoRowItem('투자금액', '${user.invest} 원'),
                 userInfoRowItem('투자수익', '${user.returnOfInvest} 원'),
                 userInfoRowItem('수익률', '${user.getRate()} %'),
@@ -364,37 +369,40 @@ class MyPage extends StatelessWidget {
   /// 로그인 후, 토글이 타금융사로 설정된 경우
   Widget userInfoOtherBank(User user) {
     return Container(
-        color: WHITE,
-        padding: const EdgeInsets.fromLTRB(40, 30, 40, 20),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                '다른 금융사의 내 계좌를 등록해보세요.',
-                style: TextStyle(fontSize: smallContentFont, color: BLACK),
+      color: WHITE,
+      padding: const EdgeInsets.fromLTRB(40, 30, 40, 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            '다른 금융사의 내 계좌를 등록해보세요.',
+            style: TextStyle(fontSize: smallContentFont, color: BLACK),
+          ),
+          Text(
+            '등록한 계좌의 자산을 삼성증권에서',
+            style: TextStyle(fontSize: smallContentFont, color: BLACK),
+          ),
+          Text(
+            '조회할 수 있습니다.',
+            style: TextStyle(fontSize: smallContentFont, color: BLACK),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.deepPurple),
+            ),
+            child: Center(
+              child: Text(
+                '오픈뱅킹 서비스 신청',
+                style: TextStyle(
+                    fontSize: smallContentFont, color: Colors.deepPurple),
               ),
-              Text(
-                '등록한 계좌의 자산을 삼성증권에서',
-                style: TextStyle(fontSize: smallContentFont, color: BLACK),
-              ),
-              Text(
-                '조회할 수 있습니다.',
-                style: TextStyle(fontSize: smallContentFont, color: BLACK),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.deepPurple),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '오픈뱅킹 서비스 신청',
-                      style: TextStyle(
-                          fontSize: smallContentFont, color: Colors.deepPurple),
-                    ),
-                  ))
-            ]));
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// user 정보화면
@@ -418,6 +426,14 @@ class MyPage extends StatelessWidget {
     );
   }
 
+  /// 종목순위
+  ///
+  Widget stockRank(){
+    return Container(
+      margin: EdgeInsets.only(top: space)
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -430,9 +446,15 @@ class MyPage extends StatelessWidget {
             right: 0,
             bottom: 0,
             child: Obx(() {
-              return (controller.goTopVisibility.value)
+              return (!controller.goTopVisibility.value)
                   ? InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        // 스크롤 맨 위로
+                        if (scrollController.hasClients) {
+                          scrollController.jumpTo(0);
+                          controller.goTopVisibility.value = false;
+                        }
+                      },
                       child: Container(
                         width: 50,
                         height: 50,
@@ -452,12 +474,20 @@ class MyPage extends StatelessWidget {
                     )
                   : Container();
             }),
-          ),
+          ), // 스크롤 맨 위로 올리는 버튼. 스크롤 위치가 맨 위면 그리지 않음
           SingleChildScrollView(
             controller: scrollController,
-            child: Column(children: [
-              userInfo(),
-            ]),
+            child: NotificationListener(
+              onNotification: (notification) {
+                if(scrollController.hasClients && scrollController.offset != 0){
+                  controller.goTopVisibility.value = true;
+                }
+                return false;
+              },
+              child: Column(children: [
+                userInfo(), // 회원 정보
+              ]),
+            ),
           )
         ],
       ),

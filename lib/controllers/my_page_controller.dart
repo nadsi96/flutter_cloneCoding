@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 class MyPageController extends GetxController{
   var user = User(name: '', account: '').obs;
+  var pw = '';
   var isLogin = false.obs;
 
   var goTopVisibility = true.obs; // 화면 상단으로 스크롤 이동시키는 버튼 보이기/숨기기
@@ -18,6 +19,7 @@ class MyPageController extends GetxController{
   bool login(String pw){
     if(usersData.containsKey(pw)){
       user.value = usersData[pw]!;
+      this.pw = pw;
       isLogin.value = true;
       return true;
     }else{
@@ -35,5 +37,12 @@ class MyPageController extends GetxController{
   void refreshCurrentTime(){
     final ctime = DateTime.now();
     currentTime.value = '${ctime.year}-${formatIntToStringLen2(ctime.month)}-${formatIntToStringLen2(ctime.day)} ${formatIntToStringLen2(ctime.hour)}:${formatIntToStringLen2(ctime.minute)}';
+    login(pw);
+  }
+
+  void logout(){
+    isLogin.value = false;
+    pw = '';
+    user.value = User(name: '', account: '');
   }
 }
