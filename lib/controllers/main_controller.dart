@@ -1,4 +1,4 @@
-import 'package:flutter_prac_jongmock/build_data/build_data.dart';
+import 'package:flutter_prac_jongmock/data/build_data.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/hoga/data/produce_hoga_data.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/hoga/section_left_bottom.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/investor/page_investor_table.dart';
@@ -10,8 +10,7 @@ import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:get/get.dart';
 
 class MainController extends GetxController {
-  var pageStack = [];
-  var title = "관심종목".obs;
+
   var stocks = <String>[].obs; // 조회종목목록
   var stockCnt = 0.obs;
 
@@ -19,23 +18,7 @@ class MainController extends GetxController {
 
   var selectedStock = "".obs; // 조회종목 중 선택한 주식 이름
 
-  /// 메인화면 하단 버튼
-  // 메인화면 하단 버튼 목록
-  final mainBottomTabListTexts = <String>[
-    "관심종목",
-    "주식현재가",
-    "종합차트",
-    "주식주문",
-    "잔고/손익",
-    "체결내역",
-    "즉시이체",
-    "국내외\n시장종합",
-    "국내뉴스",
-    "전화상담",
-    "종료",
-    "설정"
-  ];
-  var selectedMainBottomTab = "".obs; // 선택된 하단 버튼
+
 
   /// 주식현재가
   // 주식현재가 탭메뉴 목록
@@ -165,12 +148,7 @@ class MainController extends GetxController {
   var unitPage_tabPredict_toggleIdx = 0.obs;
 
   MainController() {
-    // 하단 버튼 리스트 클릭해서 페이지 이동시, 쌓는 페이지 스택
-    // appBar에서 뒤로가기 버튼 클릭시 이전 페이지로 이동
-    pageStack.add(title.value);
 
-    selectedMainBottomTab.value =
-        mainBottomTabListTexts.first; // 하단 버튼 첫항목 선택된 상태로 초기화
 
     stockPriceTab.value =
         stockPriceTabTexts.first; // 주식현재가 탭버튼 첫 항목 선택된 상태로 초기화
@@ -180,20 +158,6 @@ class MainController extends GetxController {
     timePage_cntOption.value = timePage_cntOptions.keys.first; // 주식현재가 - 시간 체결량옵션 첫번째 값으로 초기화
 
 
-  }
-
-  void goToPage(String text) {
-    pageStack.add(text);
-    title.value = text;
-    update();
-  }
-
-  void backToPage() {
-    pageStack.removeLast();
-    final title = pageStack.last;
-    this.title.value = title;
-    selectedMainBottomTab.value = title;
-    update();
   }
 
   /// 조회종목목록 목록 전체 업데이트

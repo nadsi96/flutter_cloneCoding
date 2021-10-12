@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
+import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:flutter_prac_jongmock/divider.dart';
-import 'package:flutter_prac_jongmock/main/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:get/get.dart';
 
 import 'getx_stock_list_view.dart';
@@ -14,21 +15,21 @@ class JongmockPage extends StatelessWidget {
 
   var topButtons;
 
-  final controller = Get.find<MainController>();
+  final pageController = Get.find<TabPageController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: WHITE,
-          leading: (controller.pageStack.length > 1)
+          leading: (pageController.pageStack.length > 1)
               ? InkWell(
               onTap: () {
-                controller.backToPage();
+                pageController.backToPage();
               },
               child: TitleBarBackButton())
               : null,
-          title: Text(controller.title.value,
+          title: Text(pageController.title.value,
               style: const TextStyle(color: BLACK, fontSize: 18)),
           shadowColor: TRANSPARENT,
         ),

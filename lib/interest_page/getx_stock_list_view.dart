@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
-import 'package:flutter_prac_jongmock/main/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:get/get.dart';
 
 import '../stock_data.dart';

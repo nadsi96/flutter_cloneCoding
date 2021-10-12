@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_prac_jongmock/main/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:get/get.dart';
 
 /// 하단 버튼리스트
@@ -12,6 +13,7 @@ class BottomButtons extends StatefulWidget {
 class _BottomButtons extends State<BottomButtons> {
 
   final controller = Get.find<MainController>();
+  final pageController = Get.find<TabPageController>();
 
   // 스크롤되는 부분에 들어갈 내용
   final btnListTexts = <String?>[
@@ -62,7 +64,7 @@ class _BottomButtons extends State<BottomButtons> {
       if (element != null) {
         btns.add(InkWell(
           onTap: (){
-            controller.goToPage(element);
+            pageController.goToPage(element);
           },
           child: Container(
             child: Center(

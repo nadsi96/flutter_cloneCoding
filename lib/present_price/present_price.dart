@@ -2,7 +2,8 @@ import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
-import 'package:flutter_prac_jongmock/main/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/news/page_news.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
@@ -18,6 +19,7 @@ import 'tabPage/unit_price/page_unit_price.dart';
 /// 주식 현재가
 class PresentPrice extends StatelessWidget {
   final controller = Get.find<MainController>();
+  final pageController = Get.find<TabPageController>();
 
   PresentPrice({Key? key}) : super(key: key);
 
@@ -130,8 +132,8 @@ class PresentPrice extends StatelessWidget {
       appBar: AppBar(
         leading: InkWell(
             onTap: () {
-              controller.backToPage();
-              if (controller.title.value != "주식현재가") {
+              pageController.backToPage();
+              if (pageController.title.value != "주식현재가") {
                 Get.back();
               }
             },

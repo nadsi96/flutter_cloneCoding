@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
-import 'package:flutter_prac_jongmock/main/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/hoga/data/produce_hoga_data.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/hoga/widget_table.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';

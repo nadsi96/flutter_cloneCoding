@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
-import 'package:flutter_prac_jongmock/main/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:get/get.dart';
 
 /// 하단 버튼리스트
 class BottomButtons extends StatelessWidget {
-  final controller = Get.find<MainController>();
+  final pageController = Get.find<TabPageController>();
 
   final FONTSIZE = 14.0;
   final FONTCOLOR = LLLIGHTGRAY;
@@ -41,19 +42,19 @@ class BottomButtons extends StatelessWidget {
 
   /// 스크롤가능한 버튼리스트
   Widget btnList() {
-    print("---------------- ${controller.mainBottomTabListTexts.length}");
-    var btns = List.generate(controller.mainBottomTabListTexts.length, (index) {
-      final item = controller.mainBottomTabListTexts[index];
+    print("---------------- ${pageController.mainBottomTabListTexts.length}");
+    var btns = List.generate(pageController.mainBottomTabListTexts.length, (index) {
+      final item = pageController.mainBottomTabListTexts[index];
       if (item != "설정") {
         return GetX<MainController>(builder: (_) {
           return InkWell(
               onTap: () {
-                controller.goToPage(item);
-                controller.selectedMainBottomTab.value = item;
+                pageController.goToPage(item);
+                pageController.selectedMainBottomTab.value = item;
               },
               child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  color: (controller.selectedMainBottomTab.value == item)
+                  color: (pageController.selectedMainBottomTab.value == item)
                       ? DDarkGray
                       : BLACK,
                   child: Center(
@@ -63,11 +64,11 @@ class BottomButtons extends StatelessWidget {
         });
       } else {
         return InkWell(onTap: () {
-          controller.selectedMainBottomTab.value = item;
+          pageController.selectedMainBottomTab.value = item;
         }, child: GetX<MainController>(builder: (_) {
           return Container(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              color: (controller.selectedMainBottomTab.value == item)
+              color: (pageController.selectedMainBottomTab.value == item)
                   ? DDarkGray
                   : BLACK,
               child: Icon(Icons.settings, color: FONTCOLOR));
