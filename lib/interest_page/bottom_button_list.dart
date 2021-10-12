@@ -44,15 +44,19 @@ class _BottomButtons extends State<BottomButtons> {
 
   /// 좌측 홈버튼
   Widget btn_Home() {
-    return Container(
-        margin: EdgeInsets.all(10),
+    return InkWell(
+      onTap: (){
+        pageController.goToPage('My');
+      },
+        child: Container(
+        margin: const EdgeInsets.all(10),
         child: Column(children: [
-          Icon(
+          const Icon(
             Icons.home_filled,
             color: Colors.grey,
           ),
           Text("MY", style: TextStyle(fontSize: 12, color: FONTCOLOR))
-        ]));
+        ])));
   }
 
   /// 스크롤가능한 버튼리스트
@@ -70,7 +74,7 @@ class _BottomButtons extends State<BottomButtons> {
             child: Center(
                 child: Text(element,
                     style: TextStyle(fontSize: FONTSIZE, color: FONTCOLOR))),
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           ))
         );
       } else {
@@ -89,9 +93,9 @@ class _BottomButtons extends State<BottomButtons> {
   /// 우측 메뉴버튼
   Widget btn_Menu() {
     return Container(
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         child: Column(children: [
-          Icon(
+          const Icon(
             Icons.menu,
             color: Colors.grey,
           ),
