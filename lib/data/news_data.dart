@@ -2,7 +2,7 @@ import 'dart:math';
 
 class NewsData {
   final int type; // 0 - 뉴스, 1 - 공시
-  late final DateTime? dt;
+  DateTime? dt;
   String company = "";
   final String title;
 

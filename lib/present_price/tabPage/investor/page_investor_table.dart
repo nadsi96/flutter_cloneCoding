@@ -51,16 +51,15 @@ class InvestorTable extends StatelessWidget {
     print("end investor Table constructor");
   }
 
-  Color getColor(int item){
-    if(item > 0){
+  Color getColor(int item) {
+    if (item > 0) {
       return RED;
-    }else if(item < 0){
+    } else if (item < 0) {
       return BLUE;
-    }else{
+    } else {
       return BLACK;
     }
   }
-
 
   Widget rowItem({String text="", Color fontColor=BLACK}){
     return Container(

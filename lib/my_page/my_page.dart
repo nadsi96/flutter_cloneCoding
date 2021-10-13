@@ -7,6 +7,7 @@ import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:flutter_prac_jongmock/data/stock_rank_data.dart';
 import 'package:flutter_prac_jongmock/data/user_data.dart';
 import 'package:flutter_prac_jongmock/data/world_idx_data.dart';
+import 'package:flutter_prac_jongmock/present_price/tabPage/news/news_detail.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
@@ -809,6 +810,7 @@ class MyPage extends StatelessWidget {
   }
 
   /// 관심그룹
+  /// 항목 클릭시 해당 주식 호가창(주식현재가 - 호가)으로 이동(해야됨)
   Widget stockGroup() {
     final defaultStocks = mainController.stocks.value; // 기본 보유 목록
     User user;
@@ -1023,7 +1025,7 @@ class MyPage extends StatelessWidget {
   }
 
   /// FAQ, 챗봇문의, 투자스쿨 배너
-  Widget clientCenter(){
+  Widget clientCenter() {
     return Column(
       children: [
         Container(
@@ -1035,32 +1037,42 @@ class MyPage extends StatelessWidget {
             crossAxisCount: 2,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
-            childAspectRatio: (Get.width/2)/60,
+            childAspectRatio: (Get.width / 2) / 60,
             children: [
               InkWell(
-                onTap: (){},
+                onTap: () {},
                 child: Container(
                   color: const Color.fromARGB(255, 58, 160, 241),
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/images/img1.png', width: 30, height: 30),
-                      Text('자주묻는 질문', style: TextStyle(color: WHITE, fontSize: midContentFont),),
+                      Image.asset('assets/images/img1.png',
+                          width: 30, height: 30),
+                      Text(
+                        '자주묻는 질문',
+                        style:
+                            TextStyle(color: WHITE, fontSize: midContentFont),
+                      ),
                     ],
                   ),
                 ),
               ),
               InkWell(
-                onTap: (){},
+                onTap: () {},
                 child: Container(
                   color: const Color.fromARGB(255, 1, 120, 206),
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/images/img1.png', width: 30, height: 30),
-                      Text('챗봇문의', style: TextStyle(color: WHITE, fontSize: midContentFont),),
+                      Image.asset('assets/images/img1.png',
+                          width: 30, height: 30),
+                      Text(
+                        '챗봇문의',
+                        style:
+                            TextStyle(color: WHITE, fontSize: midContentFont),
+                      ),
                     ],
                   ),
                 ),
@@ -1069,7 +1081,7 @@ class MyPage extends StatelessWidget {
           ),
         ), // 자주 묻는 질문, 챗봇문의
         InkWell(
-          onTap: (){},
+          onTap: () {},
           child: Container(
             color: WHITE,
             margin: marginSpace,
@@ -1078,6 +1090,94 @@ class MyPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  /// 국내뉴스
+  /// 항목 클릭시 뉴스 상세화면 이동
+  Widget news() {
+    return Container(
+      color: WHITE,
+      margin: marginSpace,
+      child: Column(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: GRAY),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: Text('국내뉴스', style: titleStyle),
+                ),
+                const Spacer(),
+                InkWell(
+                  onTap: () {
+                    myPageController.refreshNewsUpdateTime();
+                  },
+                  child: const Icon(Icons.refresh, color: BLACK),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  alignment: Alignment.center,
+                  child: Obx(() {
+                    return Text(
+                      myPageController.getNewsUpdateTime(),
+                      style:
+                          TextStyle(fontSize: smallContentFont, color: BLACK),
+                    );
+                  }),
+                ),
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child:
+                        const Icon(Icons.chevron_right, size: 30, color: BLACK),
+                  ),
+                ),
+              ],
+            ),
+          ), // 타이틀부분
+          Obx(() {
+            final data = myPageController.newsList.value;
+            return Column(
+              children: List.generate(
+                data.length,
+                (idx) => InkWell(
+                  onTap: () {
+                    Get.dialog(NewsDetail(newsData: data[idx]));
+                  },
+                  child: newsItemView(data[idx].title),
+                ),
+              ),
+            );
+          }), // 뉴스항목
+        ],
+      ),
+    );
+  }
+
+  /// 국내뉴스, 이슈스케줄 항목 뷰
+  Widget newsItemView(String title) {
+    return Container(
+      width: Get.width,
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
+      alignment: Alignment.centerLeft,
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: GRAY),
+        ),
+      ),
+      child: Text(title,
+          style: TextStyle(fontSize: midContentFont, color: BLACK),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis),
     );
   }
 
@@ -1130,6 +1230,7 @@ class MyPage extends StatelessWidget {
                 worldStock(), // 세계지수
                 stockGroup(), // 관심그룹(보유주식목록)
                 clientCenter(), // 자주 묻는 질문, 챗봇문의, 투자스쿨 배너
+                news(), // 국내뉴스
               ]),
             ),
           ),

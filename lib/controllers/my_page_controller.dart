@@ -1,10 +1,11 @@
+import 'package:flutter_prac_jongmock/data/news_data.dart';
 import 'package:flutter_prac_jongmock/data/stock_rank_data.dart';
 import 'package:flutter_prac_jongmock/data/user_data.dart';
 import 'package:flutter_prac_jongmock/data/world_idx_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
-class MyPageController extends GetxController{
+class MyPageController extends GetxController {
   // Rx<User?> user = null.obs;
   var user = User(name: '', account: '').obs;
   var pw = ''; // 입력된 비밀번호
@@ -19,8 +20,8 @@ class MyPageController extends GetxController{
 
   /// 종목순위
   var stockRanktype = {
-    '국내' : ['상승률', '거래대금', '외인순매수', '기관순매수'],
-    '나스닥' : ['상승률', '거래대금', '거래량'],
+    '국내': ['상승률', '거래대금', '외인순매수', '기관순매수'],
+    '나스닥': ['상승률', '거래대금', '거래량'],
   };
   var typeRankToggle = '국내'.obs;
   var selectedStockRankTab1 = '상승률'.obs; // 국내
@@ -29,26 +30,42 @@ class MyPageController extends GetxController{
   var stockRankData = <StockData>[].obs; // 종목순위 리스트 데이터
 
   /// 세계지수
-  var seqWorldData = ['KOSPI', 'KOSDAQ', 'DOW', 'NASDAQ', '중국상해종합', '일본 NIKKEI 225']; // 그리드에 나타낼 세계지수 데이터 항목, 순서
+  var seqWorldData = [
+    'KOSPI',
+    'KOSDAQ',
+    'DOW',
+    'NASDAQ',
+    '중국상해종합',
+    '일본 NIKKEI 225'
+  ]; // 그리드에 나타낼 세계지수 데이터 항목, 순서
   var worldData = <WorldStockPoint>[].obs; // 그리드에 그릴 세계지수 데이터
 
   /// 주식목록
   var selectedStockGroup = '최근조회목록'.obs; // 선택한 주식 그룹
 
-  MyPageController(){
-    refreshCurrentTime();
-    selectedStockRankTab = {'국내' : selectedStockRankTab1, '나스닥' : selectedStockRankTab2};
+  /// 국내뉴스
+  var newsUpdateTime = DateTime.now().obs; // 뉴스 업데이트 시간
+  var newsList = <NewsData>[].obs; // 뉴스데이터
+  int newsIndex = 0; // 뉴스데이터 업데이트 되는거 확인용
 
+  MyPageController() {
+    refreshCurrentTime(); // 자산정보 업데이트
+    refreshNewsUpdateTime(); // 뉴스정보 업데이트
+    selectedStockRankTab = {
+      '국내': selectedStockRankTab1,
+      '나스닥': selectedStockRankTab2
+    };
   }
+
   /// 로그인 성공시 true,
   /// 실패시 false 반환
-  bool login(String pw){
-    if(usersData.containsKey(pw)){
+  bool login(String pw) {
+    if (usersData.containsKey(pw)) {
       user.value = usersData[pw]!;
       this.pw = pw;
       isLogin.value = true;
       return true;
-    }else{
+    } else {
       isLogin.value = false;
       return false;
     }
@@ -56,24 +73,25 @@ class MyPageController extends GetxController{
 
   /// 회원 정보
   /// 삼성증권 / 타금융사 토글 클릭
-  void accountToggleClick(){
-    showAccountToggle.value = (++showAccountToggle.value)%bank.length;
+  void accountToggleClick() {
+    showAccountToggle.value = (++showAccountToggle.value) % bank.length;
   }
 
   /// 현재시간 갱신
   /// 문자열
-  void refreshCurrentTime(){
+  void refreshCurrentTime() {
     final ctime = DateTime.now();
-    currentTime.value = '${ctime.year}-${formatIntToStringLen2(ctime.month)}-${formatIntToStringLen2(ctime.day)} ${formatIntToStringLen2(ctime.hour)}:${formatIntToStringLen2(ctime.minute)}';
+    currentTime.value =
+        '${ctime.year}-${formatIntToStringLen2(ctime.month)}-${formatIntToStringLen2(ctime.day)} ${formatIntToStringLen2(ctime.hour)}:${formatIntToStringLen2(ctime.minute)}';
     login(pw);
   }
 
   /// 종목순위
   /// 국내/나스닥 토글 클릭
-  void stockRankTypeToggleClick(){
-    if(typeRankToggle.value == '국내'){
+  void stockRankTypeToggleClick() {
+    if (typeRankToggle.value == '국내') {
       typeRankToggle.value = '나스닥';
-    }else{
+    } else {
       typeRankToggle.value = '국내';
     }
   }
@@ -81,19 +99,19 @@ class MyPageController extends GetxController{
   /// 종목순위
   /// 국내/나스닥 토글 선택에 따라
   /// 해당하는 값들(상승률,거래대금,외인순매수,기관순매수 / 상승률,거래대금,거래량) 배열로 리턴
-  List<String> getStockRankTypes(){
-    if(stockRanktype.containsKey(typeRankToggle.value)){
+  List<String> getStockRankTypes() {
+    if (stockRanktype.containsKey(typeRankToggle.value)) {
       return stockRanktype[typeRankToggle.value]!;
-    }else{
+    } else {
       return stockRanktype.values.first;
     }
   }
 
   /// 종목순위
   /// 국내/나스닥 토글, 탭 선택에 따라 해당하는 데이터 배열 반환
-  List<StockData> getStockRankData(){
-    if(typeRankToggle.value == '국내'){
-      switch(selectedStockRankTab1.value){
+  List<StockData> getStockRankData() {
+    if (typeRankToggle.value == '국내') {
+      switch (selectedStockRankTab1.value) {
         case '상승률':
           stockRankData.value = stockRank_incre;
           break;
@@ -109,8 +127,8 @@ class MyPageController extends GetxController{
         default:
           stockRankData.value = [];
       }
-    }else{
-      switch(selectedStockRankTab2.value){
+    } else {
+      switch (selectedStockRankTab2.value) {
         case '상승률':
           stockRankData.value = stockRank_incre;
           break;
@@ -118,8 +136,8 @@ class MyPageController extends GetxController{
           stockRankData.value = stockRank_tradeVol;
           break;
         // case '거래량':
-          // stockRankData.value = stockRank_foreignBuy;
-          // break;
+        // stockRankData.value = stockRank_foreignBuy;
+        // break;
         default:
           stockRankData.value = [];
       }
@@ -127,7 +145,7 @@ class MyPageController extends GetxController{
     return stockRankData.value;
   }
 
-  void logout(){
+  void logout() {
     isLogin.value = false;
     pw = '';
     user.value = User(name: '', account: '');
@@ -135,14 +153,32 @@ class MyPageController extends GetxController{
 
   /// 세계지수
   /// 그리드에 나타낼 데이터 반환
-  List<WorldStockPoint> getWorldIdxData(){
+  List<WorldStockPoint> getWorldIdxData() {
     worldData.value.clear();
-    for(var item in seqWorldData){
-      if(worldStockPoint.containsKey(item)){
+    for (var item in seqWorldData) {
+      if (worldStockPoint.containsKey(item)) {
         worldData.value.add(worldStockPoint[item]!);
       }
     }
     worldData.refresh();
     return worldData.value;
+  }
+
+  /// 국내뉴스 업데이트된 시간 갱신
+  void refreshNewsUpdateTime() {
+    newsUpdateTime.value = DateTime.now();
+    newsList.value = List.generate(
+        5,
+        (index) => NewsData(
+            title:
+                '뉴스 $newsIndex $newsIndex $newsIndex 뉴스뉴스 $newsIndex $newsIndex $newsIndex 뉴스뉴스 $newsIndex $newsIndex $newsIndex 뉴스뉴스 $newsIndex $newsIndex ${newsIndex++} 뉴스'));
+    newsUpdateTime.refresh();
+  }
+
+  /// 국내뉴스 업데이트된 시간 받음
+  /// 00-00 00:00
+  String getNewsUpdateTime() {
+    final time = newsUpdateTime.value;
+    return '${formatIntToStringLen2(time.month)}-${formatIntToStringLen2(time.day)} ${formatIntToStringLen2(time.hour)}:${formatIntToStringLen2(time.minute)}';
   }
 }
