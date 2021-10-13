@@ -1022,20 +1022,67 @@ class MyPage extends StatelessWidget {
     );
   }
 
-  /*/// FAQ, 챗봇문의, 광고
+  /// FAQ, 챗봇문의, 투자스쿨 배너
   Widget clientCenter(){
     return Column(
       children: [
         Container(
           color: WHITE,
           margin: marginSpace,
-          child: Row(
-            children:
-          )
-        )
-      ]
-    )
-  }*/
+          padding: const EdgeInsets.all(10),
+          height: 80,
+          child: GridView.count(
+            crossAxisCount: 2,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: (Get.width/2)/60,
+            children: [
+              InkWell(
+                onTap: (){},
+                child: Container(
+                  color: const Color.fromARGB(255, 58, 160, 241),
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/images/img1.png', width: 30, height: 30),
+                      Text('자주묻는 질문', style: TextStyle(color: WHITE, fontSize: midContentFont),),
+                    ],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: (){},
+                child: Container(
+                  color: const Color.fromARGB(255, 1, 120, 206),
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/images/img1.png', width: 30, height: 30),
+                      Text('챗봇문의', style: TextStyle(color: WHITE, fontSize: midContentFont),),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ), // 자주 묻는 질문, 챗봇문의
+        InkWell(
+          onTap: (){},
+          child: Container(
+            width: double.infinity,
+            height: 60,
+            color: WHITE,
+            margin: marginSpace,
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            child: Image.asset('assets/images/img2.png', fit: BoxFit.fitHeight),
+          ),
+        ),
+      ],
+    );
+  }
+
   /// 대비기호
   Widget getSign(int sign) {
     switch (sign) {
@@ -1084,6 +1131,7 @@ class MyPage extends StatelessWidget {
                 stockRank(), // 종목순위
                 worldStock(), // 세계지수
                 stockGroup(), // 관심그룹(보유주식목록)
+                clientCenter(), // 자주 묻는 질문, 챗봇문의, 투자스쿨 배너
               ]),
             ),
           ),
