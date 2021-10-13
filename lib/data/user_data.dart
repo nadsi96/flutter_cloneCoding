@@ -1,3 +1,4 @@
+import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:intl/intl.dart';
 
@@ -9,7 +10,14 @@ class User{
   final int invest; // 투자금액
   final int returnOfInvest; // 투자수익
 
-  User({required this.name, this.rank = '일반', required this.account, this.balance = 100, this.invest = 0, this.returnOfInvest = 0});
+  Map<String, List<String>> stockGroups = {};
+
+  User({required this.name, this.rank = '일반', required this.account, this.balance = 100, this.invest = 0, this.returnOfInvest = 0}){
+    stockGroups = (name != '') ? {
+    '관심그룹1' : ['카카오', '크래프톤'],
+    '관심그룹2' : ['삼성전자', '농심', 'Naver'],
+    } : {};
+  }
 
   // 수익률
   String getRate(){
@@ -22,4 +30,5 @@ class User{
 
 final Map<String, User> usersData = {
   '123456' : User(name: '나형표', account: '12345689'),
+  '000000' : User(name: '표형나', account: '12345689'),
 };

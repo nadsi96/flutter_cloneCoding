@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
+import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:flutter_prac_jongmock/data/stock_rank_data.dart';
 import 'package:flutter_prac_jongmock/data/user_data.dart';
 import 'package:flutter_prac_jongmock/data/world_idx_data.dart';
+import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
 import 'input_pw.dart';
 
 class MyPage extends StatelessWidget {
-  final controller = Get.find<MyPageController>();
+  final mainController = Get.find<MainController>();
+  final myPageController = Get.find<MyPageController>();
   final pageController = Get.find<TabPageController>();
   final scrollController = ScrollController();
 
@@ -23,7 +26,7 @@ class MyPage extends StatelessWidget {
   final double midContentFont = 16;
 
   final double space = 10;
-  final marginSpace = const EdgeInsets.only(top: 10);
+  final marginSpace = const EdgeInsets.only(top: 10); // 영역간 margin
   final titleStyle =
       const TextStyle(fontSize: 18, color: BLACK, fontWeight: FontWeight.w700);
 
@@ -87,8 +90,8 @@ class MyPage extends StatelessWidget {
     const rankColor = Color.fromARGB(255, 83, 199, 184);
 
     return Obx(() {
-      if (controller.isLogin.value) {
-        final user = controller.user.value;
+      if (myPageController.isLogin.value) {
+        final user = myPageController.user.value;
 
         // 로그인된 화면
         //
@@ -173,7 +176,7 @@ class MyPage extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                        child: (controller.showAccountToggle.value == 0)
+                        child: (myPageController.showAccountToggle.value == 0)
                             ? userInfoSamsung(user)
                             : userInfoOtherBank(user)),
                   ],
@@ -187,7 +190,7 @@ class MyPage extends StatelessWidget {
         return InkWell(
           onTap: () async {
             final pw = await Get.dialog(InputPw());
-            if (controller.login(pw)) {}
+            if (myPageController.login(pw)) {}
           },
           child: Container(
             margin: const EdgeInsets.only(top: 5),
@@ -232,10 +235,10 @@ class MyPage extends StatelessWidget {
         children: List.generate(2, (idx) {
           return InkWell(
             onTap: () {
-              controller.accountToggleClick();
+              myPageController.accountToggleClick();
             },
             child: Obx(() {
-              final flag = controller.showAccountToggle.value == idx;
+              final flag = myPageController.showAccountToggle.value == idx;
               return Container(
                 width: 90,
                 decoration: BoxDecoration(
@@ -244,7 +247,7 @@ class MyPage extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    controller.bank[idx],
+                    myPageController.bank[idx],
                     style: TextStyle(
                         color: (flag) ? WHITE : GRAY,
                         fontSize: smallContentFont),
@@ -306,14 +309,14 @@ class MyPage extends StatelessWidget {
                     const Icon(Icons.chevron_right, color: GRAY, size: 20),
                     const Spacer(),
                     Obx(() {
-                      return Text(controller.currentTime.value,
+                      return Text(myPageController.currentTime.value,
                           style: const TextStyle(fontSize: 10, color: GRAY));
                     }),
                     Container(
                       margin: const EdgeInsets.all(10),
                       child: InkWell(
                         onTap: () {
-                          controller.refreshCurrentTime();
+                          myPageController.refreshCurrentTime();
                         },
                         child: const Icon(
                           Icons.refresh,
@@ -485,22 +488,23 @@ class MyPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: horizonPadding),
             child: Obx(() {
-              final type = controller.typeRankToggle.value;
+              final type = myPageController.typeRankToggle.value;
               print('type $type');
-              final items = controller.getStockRankTypes();
+              final items = myPageController.getStockRankTypes();
               return Row(
                 children: List.generate(items.length, (idx) {
                   return Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.selectedStockRankTab[type]!.value =
+                        myPageController.selectedStockRankTab[type]!.value =
                             items[idx];
                       },
                       child: Obx(() {
                         return BlueGrayButton(
                             text: items[idx],
                             isSelected: (items[idx] ==
-                                controller.selectedStockRankTab[type]!.value),
+                                myPageController
+                                    .selectedStockRankTab[type]!.value),
                             fontSize: smallContentFont);
                       }),
                     ),
@@ -510,7 +514,7 @@ class MyPage extends StatelessWidget {
             }),
           ), // 국내/나스닥 선택에 따라 탭버튼 생성
           Obx(() {
-            final dataList = controller.getStockRankData();
+            final dataList = myPageController.getStockRankData();
             return _stockRankList(dataList);
           }),
         ],
@@ -531,14 +535,15 @@ class MyPage extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(controller.stockRanktype.keys.length, (idx) {
-          final text = controller.stockRanktype.keys.elementAt(idx);
+        children:
+            List.generate(myPageController.stockRanktype.keys.length, (idx) {
+          final text = myPageController.stockRanktype.keys.elementAt(idx);
           return InkWell(
             onTap: () {
-              controller.typeRankToggle.value = text;
+              myPageController.typeRankToggle.value = text;
             },
             child: Obx(() {
-              final flag = controller.typeRankToggle.value == text;
+              final flag = myPageController.typeRankToggle.value == text;
               return Container(
                 width: 90,
                 decoration: BoxDecoration(
@@ -547,7 +552,7 @@ class MyPage extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    controller.stockRanktype.keys.elementAt(idx),
+                    myPageController.stockRanktype.keys.elementAt(idx),
                     style: TextStyle(
                         color: (flag) ? WHITE : GRAY,
                         fontSize: smallContentFont),
@@ -728,7 +733,7 @@ class MyPage extends StatelessWidget {
           SizedBox(
             height: gridViewHeight,
             child: Obx(() {
-              final data = controller.getWorldIdxData();
+              final data = myPageController.getWorldIdxData();
               return GridView.count(
                 crossAxisCount: 2,
                 physics: const NeverScrollableScrollPhysics(),
@@ -803,6 +808,234 @@ class MyPage extends StatelessWidget {
     );
   }
 
+  /// 관심그룹
+  Widget stockGroup() {
+    final defaultStocks = mainController.stocks.value; // 기본 보유 목록
+    User user;
+    if (myPageController.isLogin.value) {
+      user = myPageController.user.value;
+    } else {
+      user = User(name: '', account: '');
+    }
+    user.stockGroups['최근조회목록'] = defaultStocks;
+
+    return Container(
+      margin: marginSpace,
+      color: WHITE,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(5),
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        const Icon(Icons.menu, color: BLACK),
+                        Obx(() {
+                          final groupName =
+                              myPageController.selectedStockGroup.value;
+                          return Text(groupName, style: titleStyle);
+                        }),
+                      ],
+                    ),
+                  ),
+                ), // 그룹 선택
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        // 국가별 시세
+                        onTap: () {},
+                        child: Container(
+                          color: LIGHTGRAY,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          alignment: Alignment.center,
+                          child: Text(
+                            '국가별 시세',
+                            style: TextStyle(
+                                fontSize: smallContentFont, color: BLACK),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        // 종목/그룹 편집
+                        // 등록화면 종목편집으로 이동
+                        onTap: () {},
+                        child: const Icon(Icons.settings_outlined,
+                            color: DARKGRAY, size: 28),
+                      ),
+                      InkWell(
+                        // 관심종목 이동
+                        onTap: () {},
+                        child: const Icon(Icons.chevron_right,
+                            color: BLACK, size: 32),
+                      ),
+                    ],
+                  ),
+                ), // 국가별 시세 정보, 설정, 관심종목 이동
+              ],
+            ),
+          ), // 타이틀부분
+          Obx(() {
+            final data =
+                user.stockGroups[myPageController.selectedStockGroup.value] ??
+                    [];
+            return stockList(data);
+          }), // 주식 목록 리스트뷰. 선택한 그룹의 주식목록 출력
+        ],
+      ),
+    );
+  }
+
+  /// 주식 목록 리스트뷰
+  Widget stockList(List<String> data) {
+    const double itemHeight = 65;
+
+    // 리스트뷰에 들어갈 뷰아이템 리스트 생성
+    final List<Widget> itemList = [];
+    for (var i = 0; i < data.length; i++) {
+      final stock = stockData[data[i]]?.elementAt(0);
+      if (stock == null) {
+        continue;
+      } else {
+        itemList.add(stockItem(stock, itemHeight));
+      }
+    }
+
+    return SizedBox(
+      height: itemHeight * data.length,
+      child: ListView(
+        physics: const NeverScrollableScrollPhysics(),
+        children: itemList,
+      ),
+    );
+  }
+
+  /// 주식 리스트뷰 항목
+  Widget stockItem(Stock stock, double height) {
+    final String imgPath;
+    final String? rateImg;
+    Color textColor;
+    if (stock.getRate() > 0) {
+      textColor = RED;
+      imgPath = 'assets/images/img1.png';
+      rateImg = 'assets/images/rateImg1.png';
+    } else if (stock.getRate() < 0) {
+      textColor = BLUE;
+      imgPath = 'assets/images/img2.png';
+      rateImg = 'assets/images/rateImg2.png';
+    } else {
+      textColor = BLACK;
+      imgPath = 'assets/images/img3.png';
+      rateImg = null;
+    }
+    return Container(
+      height: height,
+      padding: const EdgeInsets.all(10),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: GRAY),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  child: Image.asset(imgPath, fit: BoxFit.fitHeight),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      stock.getTitle(),
+                      style: TextStyle(fontSize: bigContentFont, color: BLACK),
+                    ),
+                    Text(
+                      stock.getType(),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: LIGHTGRAY,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          stock.getPrice(),
+                          style: TextStyle(
+                              fontSize: bigContentFont, color: textColor),
+                        ),
+                        Text(
+                          stock.getCount(),
+                          style: TextStyle(
+                              fontSize: smallContentFont, color: BLACK),
+                        ),
+                      ]),
+                ),
+                Container(
+                  alignment: Alignment.topRight,
+                  padding: const EdgeInsets.only(top: 5, left: 20),
+                  child: (rateImg != null)
+                      ? Image.asset(rateImg, height: 12)
+                      : null,
+                ),
+                Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                      Text(
+                        stock.getVarStr(),
+                        style: TextStyle(
+                            fontSize: midContentFont, color: textColor),
+                      ),
+                      Text(
+                        stock.getRateStr(),
+                        style: TextStyle(
+                            fontSize: midContentFont, color: textColor),
+                      ),
+                    ]))
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /*/// FAQ, 챗봇문의, 광고
+  Widget clientCenter(){
+    return Column(
+      children: [
+        Container(
+          color: WHITE,
+          margin: marginSpace,
+          child: Row(
+            children:
+          )
+        )
+      ]
+    )
+  }*/
   /// 대비기호
   Widget getSign(int sign) {
     switch (sign) {
@@ -837,12 +1070,11 @@ class MyPage extends StatelessWidget {
           NotificationListener(
             onNotification: (notification) {
               if (scrollController.hasClients && scrollController.offset != 0) {
-                controller.goTopVisibility.value = true;
+                myPageController.goTopVisibility.value = true;
               } else if (scrollController.hasClients &&
                   scrollController.offset == 0) {
-                controller.goTopVisibility.value = false;
+                myPageController.goTopVisibility.value = false;
               }
-              print(controller.goTopVisibility.value);
               return true;
             },
             child: SingleChildScrollView(
@@ -851,6 +1083,7 @@ class MyPage extends StatelessWidget {
                 userInfo(), // 회원 정보
                 stockRank(), // 종목순위
                 worldStock(), // 세계지수
+                stockGroup(), // 관심그룹(보유주식목록)
               ]),
             ),
           ),
@@ -858,13 +1091,13 @@ class MyPage extends StatelessWidget {
             right: 20,
             bottom: 50,
             child: Obx(() {
-              return (controller.goTopVisibility.value)
+              return (myPageController.goTopVisibility.value)
                   ? InkWell(
                       onTap: () {
                         // 스크롤 맨 위로
                         if (scrollController.hasClients) {
                           scrollController.jumpTo(0);
-                          controller.goTopVisibility.value = false;
+                          myPageController.goTopVisibility.value = false;
                         }
                       },
                       child: Container(

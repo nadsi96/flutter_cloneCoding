@@ -32,6 +32,9 @@ class MyPageController extends GetxController{
   var seqWorldData = ['KOSPI', 'KOSDAQ', 'DOW', 'NASDAQ', '중국상해종합', '일본 NIKKEI 225']; // 그리드에 나타낼 세계지수 데이터 항목, 순서
   var worldData = <WorldStockPoint>[].obs; // 그리드에 그릴 세계지수 데이터
 
+  /// 주식목록
+  var selectedStockGroup = '최근조회목록'.obs; // 선택한 주식 그룹
+
   MyPageController(){
     refreshCurrentTime();
     selectedStockRankTab = {'국내' : selectedStockRankTab1, '나스닥' : selectedStockRankTab2};
