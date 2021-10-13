@@ -28,13 +28,15 @@ class MyPage extends StatelessWidget {
   /// 회색 밑줄이 있는 AppBar
   AppBar topBar() {
     return AppBar(
-      leading: Obx((){
-        return (pageController.pageStackCnt.value > 1)? InkWell(
-          onTap: () {
-            goBack();
-          },
-          child: const TitleBarBackButton(),
-        ) : Container();
+      leading: Obx(() {
+        return (pageController.pageStackCnt.value > 1)
+            ? InkWell(
+                onTap: () {
+                  goBack();
+                },
+                child: const TitleBarBackButton(),
+              )
+            : Container();
       }),
       titleSpacing: 0,
       title: const Text(
@@ -500,6 +502,10 @@ class MyPage extends StatelessWidget {
               );
             }),
           ),
+          Obx(() {
+            final dataList = controller.getStockRankData();
+            return _stockRankList(dataList);
+          }),
         ],
       ),
     );
@@ -551,77 +557,130 @@ class MyPage extends StatelessWidget {
   /// 종목순위 리스트
   /// 상승률,거래대금, 외인순매수, 기관순매수 선택에 따라 받은 배열을 리스트뷰로 출력
   Widget _stockRankList(List<StockData> dataList) {
-    return ListView.builder(
-      itemCount: dataList.length * 2,
-      itemBuilder: (context, index) {
-        if (index.isOdd) {
-          final idx = index ~/ 2;
-          return _stockRankListItem(dataList[idx], idx + 1);
-        } else {
-          return const Divider(
-            height: 1,
-            color: LIGHTGRAY,
-            thickness: 1,
-          );
-        }
-      },
+    const double itemSize = 60; // 행 높이
+    const double showMoreSize = 50; // 더보기 칸 높이
+    final double boxSize = itemSize * (dataList.length) + showMoreSize; // 종목순위 영역 높이
+
+    final dataListView = List.generate(dataList.length, (index) {
+      return _stockRankListItem(dataList[index], index + 1, itemSize);
+    });
+    dataListView.add(
+      SizedBox(
+        height: showMoreSize,
+        child: InkWell(
+          onTap: (){
+
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                '더보기',
+                style: TextStyle(fontSize: smallContentFont, color: BLACK),
+              ),
+              const Icon(Icons.chevron_right, size: 20, color: BLACK),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    return SizedBox(
+      height: boxSize,
+      child: ListView(
+        physics: const NeverScrollableScrollPhysics(),
+        children: dataListView,
+      ),
     );
   }
 
   /// 종목순위 리스트 항목
-  Widget _stockRankListItem(StockData data, int idx) {
+  Widget _stockRankListItem(StockData data, int idx, double itemSize) {
     const double fontSize = 14;
     final textColor = getColor(data.sign);
 
-    return ListTile(
-      leading: Text(
-        '$idx',
-        style: const TextStyle(fontSize: fontSize, color: BLACK),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            data.name,
-            style: const TextStyle(fontSize: fontSize, color: BLACK),
+    return Container(
+        height: itemSize,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          border: const Border(
+            bottom: BorderSide(color: LIGHTGRAY),
           ),
-          Text(
-            data.price,
-            style: TextStyle(
-              fontSize: fontSize,
-              color: textColor,
+        ),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Container(
+            width: 50,
+            height: 50,
+            alignment: Alignment.center,
+            child: Text(
+              '$idx',
+              style: const TextStyle(fontSize: fontSize, color: BLACK),
             ),
           ),
-        ],
-      ),
-      trailing: SizedBox(
-        height: 30,
-        width: 100,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
+          Expanded(
+            child: Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(right: 20),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  data.name,
+                  style: const TextStyle(fontSize: fontSize, color: BLACK),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                getSign(data.sign),
-                Text(
-                  '${data.dist}',
-                  style: TextStyle(fontSize: fontSize, color: textColor),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: Text(
+                      data.price,
+                      style: TextStyle(fontSize: fontSize, color: textColor),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SizedBox(
+                    height: 45,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            getSign(data.sign),
+                            Text(
+                              '${data.dist}',
+                              style: TextStyle(
+                                  fontSize: fontSize, color: textColor),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          '${data.drate}%',
+                          style:
+                              TextStyle(fontSize: fontSize, color: textColor),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
-            Text(
-              '${data.drate}%',
-              style: TextStyle(fontSize: fontSize, color: textColor),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ]));
   }
 
+  /// 대비기호
   Widget getSign(int sign) {
     switch (sign) {
       case 1:
@@ -697,7 +756,7 @@ class MyPage extends StatelessWidget {
               },
               child: Column(children: [
                 userInfo(), // 회원 정보
-                stockRank(),
+                stockRank(), // 종목순위
               ]),
             ),
           )

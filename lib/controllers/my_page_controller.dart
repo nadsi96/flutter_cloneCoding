@@ -24,6 +24,7 @@ class MyPageController extends GetxController{
   var selectedStockRankTab1 = '상승률'.obs; // 국내
   var selectedStockRankTab2 = '상승률'.obs; // 나스닥
   var selectedStockRankTab;
+  var stockRankData = <StockData>[].obs;
   MyPageController(){
     refreshCurrentTime();
     selectedStockRankTab = {'국내' : selectedStockRankTab1, '나스닥' : selectedStockRankTab2};
@@ -57,12 +58,53 @@ class MyPageController extends GetxController{
     login(pw);
   }
 
+  /// 종목순위
+  /// 국내/나스닥 토글 선택에 따라
+  /// 해당하는 값들(상승률,거래대금,외인순매수,기관순매수 / 상승률,거래대금,거래량) 배열로 리턴
   List<String> getStockRankTypes(){
     if(stockRanktype.containsKey(typeRankToggle.value)){
       return stockRanktype[typeRankToggle.value]!;
     }else{
       return stockRanktype.values.first;
     }
+  }
+
+  /// 종목순위
+  /// 국내/나스닥 토글, 탭 선택에 따라 해당하는 데이터 배열 반환
+  List<StockData> getStockRankData(){
+    if(typeRankToggle.value == '국내'){
+      switch(selectedStockRankTab1.value){
+        case '상승률':
+          stockRankData.value = stockRank_incre;
+          break;
+        case '거래대금':
+          stockRankData.value = stockRank_tradeVol;
+          break;
+        case '외인순매수':
+          stockRankData.value = stockRank_foreignBuy;
+          break;
+        case '기관순매수':
+          stockRankData.value = stockRank_cooperBuy;
+          break;
+        default:
+          stockRankData.value = [];
+      }
+    }else{
+      switch(selectedStockRankTab2.value){
+        case '상승률':
+          stockRankData.value = stockRank_incre;
+          break;
+        case '거래대금':
+          stockRankData.value = stockRank_tradeVol;
+          break;
+        // case '거래량':
+          // stockRankData.value = stockRank_foreignBuy;
+          // break;
+        default:
+          stockRankData.value = [];
+      }
+    }
+    return stockRankData.value;
   }
 
   void logout(){

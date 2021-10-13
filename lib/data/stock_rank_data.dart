@@ -42,6 +42,16 @@ class StockData{
   final String dist;
   final int sign;
   final String drate;
+  late final String yesterday;
+  late final String todayStart;
+  late final String high;
+  late final String low;
 
-  StockData(this.name, this.price, this.dist, this.sign, this.drate);
+  StockData(this.name, this.price, this.dist, this.sign, this.drate){
+    yesterday = price;
+    todayStart = price;
+    high = (int.parse(price.replaceAll(',', '')) + 1500).toString();
+    low = (int.parse(price.replaceAll(',', '')) + 1500).toString();
+    print('$name $low');
+  }
 }
