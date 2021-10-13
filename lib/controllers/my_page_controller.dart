@@ -1,9 +1,11 @@
 import 'package:flutter_prac_jongmock/data/stock_rank_data.dart';
 import 'package:flutter_prac_jongmock/data/user_data.dart';
+import 'package:flutter_prac_jongmock/data/world_idx_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
 class MyPageController extends GetxController{
+  // Rx<User?> user = null.obs;
   var user = User(name: '', account: '').obs;
   var pw = ''; // 입력된 비밀번호
   var isLogin = false.obs; // 현재 로그인 상태. true - 로그인
@@ -24,7 +26,12 @@ class MyPageController extends GetxController{
   var selectedStockRankTab1 = '상승률'.obs; // 국내
   var selectedStockRankTab2 = '상승률'.obs; // 나스닥
   var selectedStockRankTab;
-  var stockRankData = <StockData>[].obs;
+  var stockRankData = <StockData>[].obs; // 종목순위 리스트 데이터
+
+  /// 세계지수
+  var seqWorldData = ['KOSPI', 'KOSDAQ', 'DOW', 'NASDAQ', '중국상해종합', '일본 NIKKEI 225']; // 그리드에 나타낼 세계지수 데이터 항목, 순서
+  var worldData = <WorldStockPoint>[].obs; // 그리드에 그릴 세계지수 데이터
+
   MyPageController(){
     refreshCurrentTime();
     selectedStockRankTab = {'국내' : selectedStockRankTab1, '나스닥' : selectedStockRankTab2};
@@ -111,5 +118,18 @@ class MyPageController extends GetxController{
     isLogin.value = false;
     pw = '';
     user.value = User(name: '', account: '');
+  }
+
+  /// 세계지수
+  /// 그리드에 나타낼 데이터 반환
+  List<WorldStockPoint> getWorldIdxData(){
+    worldData.value.clear();
+    for(var item in seqWorldData){
+      if(worldStockPoint.containsKey(item)){
+        worldData.value.add(worldStockPoint[item]!);
+      }
+    }
+    worldData.refresh();
+    return worldData.value;
   }
 }

@@ -8,7 +8,7 @@ class WorldStockPoint{
   WorldStockPoint(this.name, this.point, this.sign, this.dist, this.drate, this.date);
 }
 
-final worldStockPoint = {
+final Map<String, WorldStockPoint> worldStockPoint = {
   'KOSPI' : WorldStockPoint('KOSPI', '2,950.45', 1, '34.07', '1.17', '10-13'),
   'KOSDAQ' : WorldStockPoint('KOSDAQ', '954.29', 1, '14.24', '1.51', '10-13'),
   'DOW' : WorldStockPoint('DOW', '34,378.34', -1, '117.72', '0.34', '10-12'),

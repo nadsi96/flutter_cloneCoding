@@ -5,6 +5,7 @@ import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:flutter_prac_jongmock/data/stock_rank_data.dart';
 import 'package:flutter_prac_jongmock/data/user_data.dart';
+import 'package:flutter_prac_jongmock/data/world_idx_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
@@ -16,12 +17,15 @@ class MyPage extends StatelessWidget {
   final scrollController = ScrollController();
 
   final double bigFont = 40;
-  final double titleFont = 24;
-  final double bigContentFont = 20;
+  final double titleFont = 22;
+  final double bigContentFont = 18;
   final double smallContentFont = 14;
-  final double midContentFont = 18;
+  final double midContentFont = 16;
 
   final double space = 10;
+  final marginSpace = const EdgeInsets.only(top: 10);
+  final titleStyle =
+      const TextStyle(fontSize: 18, color: BLACK, fontWeight: FontWeight.w700);
 
   MyPage({Key? key}) : super(key: key);
 
@@ -87,6 +91,9 @@ class MyPage extends StatelessWidget {
         final user = controller.user.value;
 
         // 로그인된 화면
+        //
+        // col [자산 - 토글]
+        //     [토글 상태 따른 정보 rows]
         return SizedBox(
           height: 430,
           child: Column(
@@ -436,8 +443,11 @@ class MyPage extends StatelessWidget {
   Widget stockRank() {
     const double horizonPadding = 20;
 
+    // col [종목순위 - 토글]
+    //     [row 탭]
+    //     [listview]
     return Container(
-      margin: EdgeInsets.only(top: space),
+      margin: marginSpace,
       color: WHITE,
       child: Column(
         children: [
@@ -449,10 +459,7 @@ class MyPage extends StatelessWidget {
               children: [
                 Text(
                   '종목순위',
-                  style: TextStyle(
-                      fontSize: midContentFont,
-                      color: BLACK,
-                      fontWeight: FontWeight.w700),
+                  style: titleStyle,
                 ),
                 Container(
                   width: 20,
@@ -501,7 +508,7 @@ class MyPage extends StatelessWidget {
                 }),
               );
             }),
-          ),
+          ), // 국내/나스닥 선택에 따라 탭버튼 생성
           Obx(() {
             final dataList = controller.getStockRankData();
             return _stockRankList(dataList);
@@ -559,7 +566,8 @@ class MyPage extends StatelessWidget {
   Widget _stockRankList(List<StockData> dataList) {
     const double itemSize = 60; // 행 높이
     const double showMoreSize = 50; // 더보기 칸 높이
-    final double boxSize = itemSize * (dataList.length) + showMoreSize; // 종목순위 영역 높이
+    final double boxSize =
+        itemSize * (dataList.length) + showMoreSize; // 종목순위 영역 높이
 
     final dataListView = List.generate(dataList.length, (index) {
       return _stockRankListItem(dataList[index], index + 1, itemSize);
@@ -568,9 +576,7 @@ class MyPage extends StatelessWidget {
       SizedBox(
         height: showMoreSize,
         child: InkWell(
-          onTap: (){
-
-          },
+          onTap: () {},
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -601,14 +607,16 @@ class MyPage extends StatelessWidget {
     final textColor = getColor(data.sign);
 
     return Container(
-        height: itemSize,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          border: const Border(
-            bottom: BorderSide(color: LIGHTGRAY),
-          ),
+      height: itemSize,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: LIGHTGRAY),
         ),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           Container(
             width: 50,
             height: 50,
@@ -645,7 +653,7 @@ class MyPage extends StatelessWidget {
                       textAlign: TextAlign.right,
                     ),
                   ),
-                ),
+                ), // 가격
                 Expanded(
                   child: SizedBox(
                     height: 45,
@@ -673,11 +681,126 @@ class MyPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                ), // 대비기호, 등락폭, 등락율
+              ],
+            ),
+          ), // 가격 / 대비기호, 등락폭, 등락율
+        ],
+      ),
+    );
+  }
+
+  /// 세계지수
+  ///
+  Widget worldStock() {
+    const gridChildRatio = 1.25; // gridItem 크기 비율 (w/h)
+    final double gridViewHeight =
+        (Get.width / 2 / gridChildRatio) * 3; // gridview 높이
+    return Container(
+      color: WHITE,
+      margin: marginSpace,
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: Text('세계지수', style: titleStyle),
+              ),
+              const Spacer(),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: const Icon(Icons.settings_outlined, color: DARKGRAY),
+                ),
+              ), // 설정
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: const Icon(Icons.chevron_right, color: BLACK),
+                ),
+              ), // 추가정보
+            ],
+          ), // 타이틀부분
+          SizedBox(
+            height: gridViewHeight,
+            child: Obx(() {
+              final data = controller.getWorldIdxData();
+              return GridView.count(
+                crossAxisCount: 2,
+                physics: const NeverScrollableScrollPhysics(),
+                childAspectRatio: gridChildRatio,
+                children:
+                    List.generate(data.length, (idx) => gridItem(data[idx])),
+              );
+            }),
+          ), // 데이터
+          Container(
+            padding: const EdgeInsets.all(10),
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              '※해외지수는 종가 또는 지연 시세로 제공됩니다.',
+              style: TextStyle(fontSize: 12, color: BLACK),
+            ),
+          ), // 하단 텍스트
+        ],
+      ),
+    );
+  }
+
+  /// 세계지수 그리드 항목
+  Widget gridItem(WorldStockPoint data) {
+    final textColor = getColor(data.sign);
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: LIGHTGRAY),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Text(
+                data.name,
+                style: TextStyle(fontSize: midContentFont, color: BLACK),
+              ),
+            ),
+            Text(
+              data.point,
+              style: TextStyle(
+                  fontSize: titleFont,
+                  color: textColor,
+                  fontWeight: FontWeight.w700),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                getSign(data.sign),
+                Text(
+                  data.dist,
+                  style: TextStyle(fontSize: midContentFont, color: textColor),
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  '${data.drate}%',
+                  style: TextStyle(fontSize: midContentFont, color: textColor),
                 ),
               ],
             ),
-          ),
-        ]));
+            Text(
+              data.date,
+              style: TextStyle(fontSize: smallContentFont, color: DARKGRAY),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   /// 대비기호
@@ -711,11 +834,31 @@ class MyPage extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
+          NotificationListener(
+            onNotification: (notification) {
+              if (scrollController.hasClients && scrollController.offset != 0) {
+                controller.goTopVisibility.value = true;
+              } else if (scrollController.hasClients &&
+                  scrollController.offset == 0) {
+                controller.goTopVisibility.value = false;
+              }
+              print(controller.goTopVisibility.value);
+              return true;
+            },
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(children: [
+                userInfo(), // 회원 정보
+                stockRank(), // 종목순위
+                worldStock(), // 세계지수
+              ]),
+            ),
+          ),
           Positioned(
-            right: 0,
-            bottom: 0,
+            right: 20,
+            bottom: 50,
             child: Obx(() {
-              return (!controller.goTopVisibility.value)
+              return (controller.goTopVisibility.value)
                   ? InkWell(
                       onTap: () {
                         // 스크롤 맨 위로
@@ -727,7 +870,7 @@ class MyPage extends StatelessWidget {
                       child: Container(
                         width: 50,
                         height: 50,
-                        margin: const EdgeInsets.only(right: 20, bottom: 50),
+                        // margin: const EdgeInsets.only(right: 20, bottom: 50),
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(150, 255, 255, 255),
                           borderRadius: BorderRadius.circular(10),
@@ -744,22 +887,6 @@ class MyPage extends StatelessWidget {
                   : Container();
             }),
           ), // 스크롤 맨 위로 올리는 버튼. 스크롤 위치가 맨 위면 그리지 않음
-          SingleChildScrollView(
-            controller: scrollController,
-            child: NotificationListener(
-              onNotification: (notification) {
-                if (scrollController.hasClients &&
-                    scrollController.offset != 0) {
-                  controller.goTopVisibility.value = true;
-                }
-                return false;
-              },
-              child: Column(children: [
-                userInfo(), // 회원 정보
-                stockRank(), // 종목순위
-              ]),
-            ),
-          )
         ],
       ),
     );
