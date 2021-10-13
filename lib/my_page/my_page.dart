@@ -1071,12 +1071,10 @@ class MyPage extends StatelessWidget {
         InkWell(
           onTap: (){},
           child: Container(
-            width: double.infinity,
-            height: 60,
             color: WHITE,
             margin: marginSpace,
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            child: Image.asset('assets/images/img2.png', fit: BoxFit.fitHeight),
+            child: Image.asset('assets/images/samsung_school.jpg'),
           ),
         ),
       ],
