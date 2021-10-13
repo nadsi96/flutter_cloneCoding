@@ -30,7 +30,6 @@ class BottomButtons extends StatelessWidget {
     return InkWell(
       onTap: () {
         pageController.goToPage('My');
-        pageController.selectedMainBottomTab.value = 'My';
       },
       child: Obx((){
         final bgColor = (pageController.selectedMainBottomTab.value == 'My')? DDarkGray : BLACK;
@@ -67,7 +66,6 @@ class BottomButtons extends StatelessWidget {
           return InkWell(
               onTap: () {
                 pageController.goToPage(item);
-                pageController.selectedMainBottomTab.value = item;
               },
               child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -81,7 +79,8 @@ class BottomButtons extends StatelessWidget {
         });
       } else {
         return InkWell(onTap: () {
-          pageController.selectedMainBottomTab.value = item;
+          pageController.goToPage(item);
+          // pageController.selectedMainBottomTab.value = item;
         }, child: GetX<MainController>(builder: (_) {
           return Container(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),

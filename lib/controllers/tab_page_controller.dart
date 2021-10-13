@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 class TabPageController extends GetxController{
 
   var pageStack = [];
-  var title = "관심종목".obs;
+  var pageStackCnt = 0.obs;
+  var title = "".obs;
 
   /// 메인화면 하단 버튼
   // 메인화면 하단 버튼 목록
@@ -23,26 +24,31 @@ class TabPageController extends GetxController{
   ];
   var selectedMainBottomTab = "".obs; // 선택된 하단 버튼
 
-  PageController(){
+  /*PageController(){
     // 하단 버튼 리스트 클릭해서 페이지 이동시, 쌓는 페이지 스택
     // appBar에서 뒤로가기 버튼 클릭시 이전 페이지로 이동
-    pageStack.add(title.value);
-
-    selectedMainBottomTab.value =
-        mainBottomTabListTexts.first; // 하단 버튼 첫항목 선택된 상태로 초기화
-  }
+    // pageStack.add(title.value);
+    //
+    // selectedMainBottomTab.value =
+    //     mainBottomTabListTexts.first; // 하단 버튼 첫항목 선택된 상태로 초기화
+  }*/
 
   void goToPage(String text) {
     pageStack.add(text);
+    pageStackCnt.value++;
     title.value = text;
+    selectedMainBottomTab.value = text;
+    print('goToPage $pageStack');
     // update();
   }
 
   void backToPage() {
     pageStack.removeLast();
+    pageStackCnt.value--;
     final title = pageStack.last;
     this.title.value = title;
     selectedMainBottomTab.value = title;
+    print('backToPage $pageStack');
     // update();
   }
 }

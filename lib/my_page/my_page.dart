@@ -3,6 +3,7 @@ import 'package:flutter_prac_jongmock/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
+import 'package:flutter_prac_jongmock/data/stock_rank_data.dart';
 import 'package:flutter_prac_jongmock/data/user_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
@@ -27,12 +28,14 @@ class MyPage extends StatelessWidget {
   /// 회색 밑줄이 있는 AppBar
   AppBar topBar() {
     return AppBar(
-      leading: InkWell(
-        onTap: () {
-          goBack();
-        },
-        child: const TitleBarBackButton(),
-      ),
+      leading: Obx((){
+        return (pageController.pageStackCnt.value > 1)? InkWell(
+          onTap: () {
+            goBack();
+          },
+          child: const TitleBarBackButton(),
+        ) : Container();
+      }),
       titleSpacing: 0,
       title: const Text(
         'My',
@@ -428,10 +431,217 @@ class MyPage extends StatelessWidget {
 
   /// 종목순위
   ///
-  Widget stockRank(){
+  Widget stockRank() {
+    const double horizonPadding = 20;
+
     return Container(
-      margin: EdgeInsets.only(top: space)
+      margin: EdgeInsets.only(top: space),
+      color: WHITE,
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 10, bottom: 30),
+            padding: const EdgeInsets.only(left: horizonPadding, right: 20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '종목순위',
+                  style: TextStyle(
+                      fontSize: midContentFont,
+                      color: BLACK,
+                      fontWeight: FontWeight.w700),
+                ),
+                Container(
+                  width: 20,
+                  height: 20,
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(50)),
+                    border: Border.all(color: DARKGRAY),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'i',
+                      style: TextStyle(
+                          fontSize: smallContentFont, color: DARKGRAY),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                stockRankToggle(), // 국내/나스닥 토글
+              ],
+            ),
+          ), // 종목순위 타이틀. 국내/나스닥 토글
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: horizonPadding),
+            child: Obx(() {
+              final type = controller.typeRankToggle.value;
+              print('type $type');
+              final items = controller.getStockRankTypes();
+              return Row(
+                children: List.generate(items.length, (idx) {
+                  return Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        controller.selectedStockRankTab[type]!.value =
+                            items[idx];
+                      },
+                      child: Obx(() {
+                        return BlueGrayButton(
+                            text: items[idx],
+                            isSelected: (items[idx] ==
+                                controller.selectedStockRankTab[type]!.value),
+                            fontSize: smallContentFont);
+                      }),
+                    ),
+                  );
+                }),
+              );
+            }),
+          ),
+        ],
+      ),
     );
+  }
+
+  /// 종목순위
+  /// 국내/나스닥 토글
+  Widget stockRankToggle() {
+    return Container(
+      width: 180,
+      height: 35,
+      margin: const EdgeInsets.only(right: 10),
+      decoration: BoxDecoration(
+        color: LIGHTGRAY,
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: List.generate(controller.stockRanktype.keys.length, (idx) {
+          final text = controller.stockRanktype.keys.elementAt(idx);
+          return InkWell(
+            onTap: () {
+              controller.typeRankToggle.value = text;
+            },
+            child: Obx(() {
+              final flag = controller.typeRankToggle.value == text;
+              return Container(
+                width: 90,
+                decoration: BoxDecoration(
+                  color: (flag) ? BLUE : LIGHTGRAY,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Center(
+                  child: Text(
+                    controller.stockRanktype.keys.elementAt(idx),
+                    style: TextStyle(
+                        color: (flag) ? WHITE : GRAY,
+                        fontSize: smallContentFont),
+                  ),
+                ),
+              );
+            }),
+          );
+        }),
+      ),
+    );
+  }
+
+  /// 종목순위 리스트
+  /// 상승률,거래대금, 외인순매수, 기관순매수 선택에 따라 받은 배열을 리스트뷰로 출력
+  Widget _stockRankList(List<StockData> dataList) {
+    return ListView.builder(
+      itemCount: dataList.length * 2,
+      itemBuilder: (context, index) {
+        if (index.isOdd) {
+          final idx = index ~/ 2;
+          return _stockRankListItem(dataList[idx], idx + 1);
+        } else {
+          return const Divider(
+            height: 1,
+            color: LIGHTGRAY,
+            thickness: 1,
+          );
+        }
+      },
+    );
+  }
+
+  /// 종목순위 리스트 항목
+  Widget _stockRankListItem(StockData data, int idx) {
+    const double fontSize = 14;
+    final textColor = getColor(data.sign);
+
+    return ListTile(
+      leading: Text(
+        '$idx',
+        style: const TextStyle(fontSize: fontSize, color: BLACK),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            data.name,
+            style: const TextStyle(fontSize: fontSize, color: BLACK),
+          ),
+          Text(
+            data.price,
+            style: TextStyle(
+              fontSize: fontSize,
+              color: textColor,
+            ),
+          ),
+        ],
+      ),
+      trailing: SizedBox(
+        height: 30,
+        width: 100,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                getSign(data.sign),
+                Text(
+                  '${data.dist}',
+                  style: TextStyle(fontSize: fontSize, color: textColor),
+                ),
+              ],
+            ),
+            Text(
+              '${data.drate}%',
+              style: TextStyle(fontSize: fontSize, color: textColor),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getSign(int sign) {
+    switch (sign) {
+      case 1:
+        return const Icon(Icons.arrow_drop_up, color: RED);
+      case -1:
+        return const Icon(Icons.arrow_drop_down, color: BLUE);
+      default:
+        return const Spacer();
+    }
+  }
+
+  Color getColor(int sign) {
+    switch (sign) {
+      case 1:
+        return RED;
+      case -1:
+        return BLUE;
+      default:
+        return BLACK;
+    }
   }
 
   @override
@@ -479,13 +689,15 @@ class MyPage extends StatelessWidget {
             controller: scrollController,
             child: NotificationListener(
               onNotification: (notification) {
-                if(scrollController.hasClients && scrollController.offset != 0){
+                if (scrollController.hasClients &&
+                    scrollController.offset != 0) {
                   controller.goTopVisibility.value = true;
                 }
                 return false;
               },
               child: Column(children: [
                 userInfo(), // 회원 정보
+                stockRank(),
               ]),
             ),
           )

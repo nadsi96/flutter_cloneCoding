@@ -13,8 +13,6 @@ import 'getx_top_buttons.dart';
 class JongmockPage extends StatelessWidget {
   var title = "관심종목";
 
-  var topButtons;
-
   final pageController = Get.find<TabPageController>();
 
   @override
@@ -22,13 +20,16 @@ class JongmockPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: WHITE,
-          leading: (pageController.pageStack.length > 1)
-              ? InkWell(
-              onTap: () {
-                pageController.backToPage();
-              },
-              child: TitleBarBackButton())
-              : null,
+          titleSpacing: 0,
+          leading: Obx((){
+            return (pageController.pageStackCnt.value > 1)
+                ? InkWell(
+                onTap: () {
+                  pageController.backToPage();
+                },
+                child: TitleBarBackButton())
+                : Container(width: 0);
+          }),
           title: Text(pageController.title.value,
               style: const TextStyle(color: BLACK, fontSize: 18)),
           shadowColor: TRANSPARENT,

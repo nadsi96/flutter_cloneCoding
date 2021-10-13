@@ -130,14 +130,17 @@ class PresentPrice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-            onTap: () {
-              pageController.backToPage();
-              if (pageController.title.value != "주식현재가") {
-                Get.back();
-              }
-            },
-            child: TitleBarBackButton()),
+        leading: Obx((){
+          final flag = pageController.pageStackCnt.value > 1;
+          return (flag) ? InkWell(
+              onTap: () {
+                pageController.backToPage();
+                if (pageController.title.value != "주식현재가") {
+                  Get.back();
+                }
+              },
+              child: TitleBarBackButton()) : Container();
+        }),
         titleSpacing: 0,
         title: const Text("주식현재가",
             style: TextStyle(fontSize: TITLEBAR_FONTSIZE, color: BLACK)),

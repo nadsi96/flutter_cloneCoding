@@ -79,12 +79,14 @@ class MainPage extends StatelessWidget {
   MainPage() {
     bottomButtons = BottomButtons();
 
-    controller.updateStocks(myStocks);
-
   }
 
   @override
   Widget build(BuildContext context) {
+    controller.updateStocks(myStocks); // 보유주식 불러옴
+    pageController.goToPage(pageController.mainBottomTabListTexts.first); // 시작 페이지 설정
+    print(pageController.pageStack);
+
     return Scaffold(
         body: SafeArea(
             child: Column(children: [
