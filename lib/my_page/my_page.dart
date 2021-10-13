@@ -1162,7 +1162,59 @@ class MyPage extends StatelessWidget {
     );
   }
 
+  /// 이슈스케쥴
+  Widget issueSchedule(){
+    return Container(
+      color: WHITE,
+      margin: marginSpace,
+      child: Column(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: GRAY),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: Text('이슈스케줄 ${formatIntToStringLen2(myPageController.newsUpdateTime.value.month)}-${formatIntToStringLen2(myPageController.newsUpdateTime.value.day)}', style: titleStyle),
+                ),
+                const Spacer(),
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child:
+                    const Icon(Icons.chevron_right, size: 30, color: BLACK),
+                  ),
+                ),
+              ],
+            ),
+          ), // 타이틀부분
+          Obx(() {
+            final data = myPageController.issueList.value;
+            return Column(
+              children: List.generate(
+                data.length,
+                    (idx) => InkWell(
+                  onTap: () {
+                    // 상세화면 다이얼로그 띄움
+                    Get.dialog(issueScheduleDialog(data[idx].title, data[idx].contents));
+                  },
+                  child: newsItemView(data[idx].title),
+                ),
+              ),
+            );
+          }), // 이슈스케줄 항목
+        ],
+      ),
+    );
+  }
   /// 국내뉴스, 이슈스케줄 항목 뷰
+  /// 타이틀 한 줄. 너비 넘어가면 ...
   Widget newsItemView(String title) {
     return Container(
       width: Get.width,
@@ -1178,6 +1230,51 @@ class MyPage extends StatelessWidget {
           style: TextStyle(fontSize: midContentFont, color: BLACK),
           maxLines: 1,
           overflow: TextOverflow.ellipsis),
+    );
+  }
+
+  /// 이슈스케쥴
+  /// 항목 클릭시 띄워줄 다이얼로그 화면
+  /// -타이틀
+  /// -내용
+  /// -확인버튼
+  Widget issueScheduleDialog(String title, String contents){
+    return Dialog(
+        child: Container(
+          height: 540,
+          width: 500,
+          color: WHITE,
+          child: Column(
+            children: [
+              Container(
+                height: 100,
+                margin: const EdgeInsets.all(20),
+                decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: LIGHTGRAY),),),
+                alignment: Alignment.center,
+                child: Text(title, style: const TextStyle(fontSize: 14, color: BLACK)),
+              ),
+              Container(
+                height: 340,
+                padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Text(contents, style: const TextStyle(fontSize: 12, color: BLACK)),
+                ),
+              ),
+              InkWell(
+                onTap: (){
+                  Get.back();
+                },
+                child: Container(
+                  height: 60,
+                  color: BLUE,
+                  alignment: Alignment.center,
+                  child: const Text('확인', style: TextStyle(color: WHITE, fontSize: 14, fontWeight: FontWeight.w900)),
+                ),
+              ),
+            ],
+          ),
+        )
     );
   }
 
@@ -1231,6 +1328,7 @@ class MyPage extends StatelessWidget {
                 stockGroup(), // 관심그룹(보유주식목록)
                 clientCenter(), // 자주 묻는 질문, 챗봇문의, 투자스쿨 배너
                 news(), // 국내뉴스
+                issueSchedule(), // 이슈스케쥴
               ]),
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:flutter_prac_jongmock/data/issue_data.dart';
 import 'package:flutter_prac_jongmock/data/news_data.dart';
 import 'package:flutter_prac_jongmock/data/stock_rank_data.dart';
 import 'package:flutter_prac_jongmock/data/user_data.dart';
@@ -48,9 +49,25 @@ class MyPageController extends GetxController {
   var newsList = <NewsData>[].obs; // 뉴스데이터
   int newsIndex = 0; // 뉴스데이터 업데이트 되는거 확인용
 
+  /// 이슈스케쥴
+  var issueList = <IssueData>[].obs; // 이슈스케줄 데이터
+
   MyPageController() {
     refreshCurrentTime(); // 자산정보 업데이트
     refreshNewsUpdateTime(); // 뉴스정보 업데이트
+
+    issueList.value = List.generate(
+        5,
+        (idx) => IssueData(
+            title: '$idx 이슈스케줄 $idx 이슈스케줄 $idx 이슈스케줄 $idx 이슈스케줄',
+            contents:
+                '''I/SurfaceControl( 9833): nativeRelease nativeObject s[-5476376624083288288] I/SurfaceControl( 9833): nativeRelease nativeObject e[-5476376624083288288]
+    I/SurfaceControl( 9833): nativeRelease nativeObject s[-5476376626256164352]
+    I/SurfaceControl( 9833): nativeRelease nativeObject e[-5476376626256164352]
+    I/SurfaceControl( 9833): nativeRelease nativeObject s[-5476376626258755296]
+    I/SurfaceControl( 9833): nativeRelease nativeObject e[-5476376626258755296]''')); // 이슈스케줄 데이터
+
+
     selectedStockRankTab = {
       '국내': selectedStockRankTab1,
       '나스닥': selectedStockRankTab2
