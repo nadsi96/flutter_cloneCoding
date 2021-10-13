@@ -3,11 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_prac_jongmock/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
+import 'package:flutter_prac_jongmock/data/news_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import 'page_news.dart';
 
 class NewsDetail extends StatelessWidget {
   NewsDetail({Key? key, required this.newsData}) : super(key: key);

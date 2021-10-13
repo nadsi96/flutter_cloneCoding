@@ -514,9 +514,9 @@ class MyPage extends StatelessWidget {
             }),
           ), // 국내/나스닥 선택에 따라 탭버튼 생성
           Obx(() {
-            final dataList = myPageController.getStockRankData();
+            final dataList = myPageController.getStockRankData(); // 설정된 순위 리스트
             return _stockRankList(dataList);
-          }),
+          }), // 종목순위 리스트뷰
         ],
       ),
     );
@@ -540,7 +540,7 @@ class MyPage extends StatelessWidget {
           final text = myPageController.stockRanktype.keys.elementAt(idx);
           return InkWell(
             onTap: () {
-              myPageController.typeRankToggle.value = text;
+              myPageController.stockRankTypeToggleClick(); // 국내/나스닥 전환
             },
             child: Obx(() {
               final flag = myPageController.typeRankToggle.value == text;
@@ -1149,7 +1149,6 @@ class MyPage extends StatelessWidget {
                       child: Container(
                         width: 50,
                         height: 50,
-                        // margin: const EdgeInsets.only(right: 20, bottom: 50),
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(150, 255, 255, 255),
                           borderRadius: BorderRadius.circular(10),

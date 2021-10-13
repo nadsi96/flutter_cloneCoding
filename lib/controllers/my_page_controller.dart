@@ -69,6 +69,16 @@ class MyPageController extends GetxController{
   }
 
   /// 종목순위
+  /// 국내/나스닥 토글 클릭
+  void stockRankTypeToggleClick(){
+    if(typeRankToggle.value == '국내'){
+      typeRankToggle.value = '나스닥';
+    }else{
+      typeRankToggle.value = '국내';
+    }
+  }
+
+  /// 종목순위
   /// 국내/나스닥 토글 선택에 따라
   /// 해당하는 값들(상승률,거래대금,외인순매수,기관순매수 / 상승률,거래대금,거래량) 배열로 리턴
   List<String> getStockRankTypes(){
