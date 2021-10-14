@@ -14,17 +14,18 @@ class EditMyPage extends StatelessWidget {
   final controller = Get.find<MyPageController>();
 
   /// MY 항목 기본값
-  final defaultState = [
-    '나의서비스등급',
-    '총자산',
-    '종목순위',
-    '세계지수',
-    '국내관심종목',
-    '문의&챗봇',
-    '투자스쿨',
-    '국내뉴스',
-    '이슈스케쥴',
-  ];
+  final defaultState = {
+    '나의서비스등급': true,
+    '총자산': true,
+    '종목순위': true,
+    '세계지수': true,
+    '국내관심종목': true,
+    '문의&챗봇': true,
+    '투자스쿨': true,
+    '국내뉴스': true,
+    '이슈스케쥴': true,
+    '국내주식찾기': false
+  };
 
   EditMyPage({Key? key}) : super(key: key);
 
@@ -67,7 +68,15 @@ class EditMyPage extends StatelessWidget {
           }),
           const Spacer(),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              // 초기화
+              controller.myPageEditOrder.value = defaultState.keys.toList();
+              for(var item in defaultState.entries){
+                if(controller.myPageCheckSelected.containsKey(item.key)){
+                  controller.myPageCheckSelected[item.key]!.value = item.value;
+                }
+              }
+            },
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               decoration: BoxDecoration(
@@ -109,18 +118,7 @@ class EditMyPage extends StatelessWidget {
           controller.swapOrder(oldIdx, newIdx);
         },
         children:
-            List.generate(services.length, (index) =>
-                ReorderableDragStartListener(
-                  /*
-                  buildDefaultDragHandles: default = true
-                  모바일에서 실행시 long click해야 움직
-                  바로 조작하고 싶다면 이것을 false로 바꾸고,
-                  모든 항목을 ReorderableDragStartListener로 만들어야
-                   */
-                  key: ValueKey(services[index]),
-                  index: index,
-                  child: rowItem(services[index]),
-                ),
+            List.generate(services.length, (index) => rowItem(services[index], index)
             ),
       );
     });
@@ -128,8 +126,9 @@ class EditMyPage extends StatelessWidget {
 
   /// 항목뷰
   /// 체크해서 MY페이지에 나타날 항목 선택
-  Widget rowItem(String text) {
+  Widget rowItem(String text, int index) {
     return Container(
+      key: ValueKey(text),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: LIGHTGRAY)),
       ),
@@ -159,14 +158,23 @@ class EditMyPage extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: (controller.needLogin.contains(text))
-                  ? [
-                      const Icon(Icons.lock, color: LIGHTGRAY, size: 28),
-                      const Icon(Icons.menu, color: LIGHTGRAY, size: 28),
-                    ]
-                  : [const Icon(Icons.menu, color: LIGHTGRAY, size: 28)],
+            child: ReorderableDragStartListener(
+              /*
+                  buildDefaultDragHandles: default = true
+                  모바일에서 실행시 long click해야 움직
+                  바로 조작하고 싶다면 이것을 false로 바꾸고,
+                  모든 항목을 ReorderableDragStartListener로 만들어야
+                   */
+              index: index,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: (controller.needLogin.contains(text))
+                    ? [
+                  const Icon(Icons.lock, color: LIGHTGRAY, size: 28),
+                  const Icon(Icons.menu, color: LIGHTGRAY, size: 28),
+                ]
+                    : [const Icon(Icons.menu, color: LIGHTGRAY, size: 28)],
+              ),
             ),
           ),
         ],
