@@ -146,13 +146,16 @@ class EditMyPage extends StatelessWidget {
                 }
               },
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Obx(() {
                     return RoundCheckButton(
                         controller.myPageCheckSelected[text]!.value, false);
                   }),
-                  Text(text,
-                      style: const TextStyle(fontSize: 20, color: BLACK)),
+                  Center(
+                    child: Text(text,
+                        style: const TextStyle(fontSize: 20, color: BLACK)),
+                  ),
                 ],
               ),
             ),
