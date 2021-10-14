@@ -81,17 +81,6 @@ class MyPageController extends GetxController {
     '이슈스케쥴',
     '국내주식찾기',
   ].obs;
-  var myPageOrder = [
-    '나의서비스등급',
-    '총자산',
-    '종목순위',
-    '세계지수',
-    '국내관심종목',
-    '문의&챗봇',
-    '투자스쿨',
-    '국내뉴스',
-    '이슈스케쥴',
-  ].obs;
   final needLogin = [ // 로그인해야 볼수 있는 항목
     '나의서비스등급',
     '총자산',
