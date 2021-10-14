@@ -8,6 +8,7 @@ import 'package:flutter_prac_jongmock/data/stock_rank_data.dart';
 import 'package:flutter_prac_jongmock/data/user_data.dart';
 import 'package:flutter_prac_jongmock/data/world_idx_data.dart';
 import 'package:flutter_prac_jongmock/my_page/dialogs.dart';
+import 'package:flutter_prac_jongmock/my_page/edit_my_page.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/news/news_detail.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
@@ -46,7 +47,7 @@ class MyPage extends StatelessWidget {
       leading: Obx(() {
         return (pageController.pageStackCnt.value > 1)
             ? InkWell(
-          splashColor: TRANSPARENT,
+                splashColor: TRANSPARENT,
                 onTap: () => goBack(),
                 child: const TitleBarBackButton(),
               )
@@ -67,8 +68,8 @@ class MyPage extends StatelessWidget {
         ),
         InkWell(
           splashColor: TRANSPARENT,
-          onTap: (){
-            if(myPageController.isLogin.value){
+          onTap: () {
+            if (myPageController.isLogin.value) {
               myPageController.logout();
               user = null;
             }
@@ -837,7 +838,6 @@ class MyPage extends StatelessWidget {
   /// 관심그룹
   /// 항목 클릭시 해당 주식 호가창(주식현재가 - 호가)으로 이동(해야됨)
   Widget stockGroup() {
-
     return Container(
       margin: marginSpace,
       color: WHITE,
@@ -850,11 +850,16 @@ class MyPage extends StatelessWidget {
                 Expanded(
                   child: InkWell(
                     onTap: () async {
-                      final List<String> groups = myPageController.stockGroups.value.keys.toList();
-                      final currentSelected = myPageController.selectedStockGroup.value;
-                      final selected = await Get.dialog(myPageDialogs.selectStockGroup(groups, currentSelected),barrierDismissible: false);
+                      final List<String> groups =
+                          myPageController.stockGroups.value.keys.toList();
+                      final currentSelected =
+                          myPageController.selectedStockGroup.value;
+                      final selected = await Get.dialog(
+                          myPageDialogs.selectStockGroup(
+                              groups, currentSelected),
+                          barrierDismissible: false);
                       print('selected: $selected');
-                      if(selected != null){
+                      if (selected != null) {
                         myPageController.selectedStockGroup.value = selected;
                       }
                     },
@@ -900,7 +905,9 @@ class MyPage extends StatelessWidget {
                       ),
                       InkWell(
                         // 관심종목 이동
-                        onTap: () {pageController.goToPage('관심종목');},
+                        onTap: () {
+                          pageController.goToPage('관심종목');
+                        },
                         child: const Icon(Icons.chevron_right,
                             color: BLACK, size: 32),
                       ),
@@ -911,7 +918,9 @@ class MyPage extends StatelessWidget {
             ),
           ), // 타이틀부분
           Obx(() {
-            final data = myPageController.stockGroups.value[myPageController.selectedStockGroup.value] ?? [];
+            final data = myPageController.stockGroups
+                    .value[myPageController.selectedStockGroup.value] ??
+                [];
             // 데이터가 있으면 리스트 그리고, 없으면 안내내용
             return (data.isNotEmpty) ? stockList(data) : emptyStockGroup();
           }), // 주식 목록 리스트뷰. 선택한 그룹의 주식목록 출력
@@ -931,7 +940,16 @@ class MyPage extends StatelessWidget {
       if (stock == null) {
         continue;
       } else {
-        itemList.add(stockItem(stock, itemHeight));
+        itemList.add(
+          InkWell(
+            onTap: () {
+              mainController.selectedStock.value = stock.getTitle();
+              pageController.goToPage('주식현재가');
+              mainController.stockPriceTab.value = '호가';
+            },
+            child: stockItem(stock, itemHeight),
+          ),
+        );
       }
     }
 
@@ -1054,7 +1072,7 @@ class MyPage extends StatelessWidget {
 
   /// 관심종목
   /// 등록한 관심그룹이 없는 경우
-  Widget emptyStockGroup(){
+  Widget emptyStockGroup() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1062,18 +1080,23 @@ class MyPage extends StatelessWidget {
         Container(
           margin: const EdgeInsets.symmetric(vertical: 20),
           child: Center(
-            child: Text('등록 종목이 없습니다.', style: TextStyle(fontSize: bigContentFont, color: BLACK)),
+            child: Text('등록 종목이 없습니다.',
+                style: TextStyle(fontSize: bigContentFont, color: BLACK)),
           ),
         ),
         InkWell(
-            onTap: (){},
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 50),
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-              decoration: BoxDecoration(border: Border.all(color: Colors.deepPurple), borderRadius: BorderRadius.circular(3)),
-              child: Text('등록', style: TextStyle(fontSize: midContentFont, color: Colors.deepPurple)),
-            ),
+          onTap: () {},
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 50),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.deepPurple),
+                borderRadius: BorderRadius.circular(3)),
+            child: Text('등록',
+                style: TextStyle(
+                    fontSize: midContentFont, color: Colors.deepPurple)),
           ),
+        ),
       ],
     );
   }
@@ -1291,6 +1314,34 @@ class MyPage extends StatelessWidget {
     );
   }
 
+  /// 마이페이지 편집
+  Widget editMyPage(){
+    const color = Colors.deepPurple;
+
+    return Container(
+      margin: marginSpace,
+      color: WHITE,
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 50),
+      child: InkWell(
+        onTap: (){
+          Get.dialog(EditMyPage());
+        },
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(border: Border.all(color: color), borderRadius: BorderRadius.circular(5)),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/home.png', fit: BoxFit.fitHeight, color: color, height: 20),
+              const Text('  MY 편집', style: TextStyle(color: color, fontSize: 16)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 
   /// 대비기호
   Widget getSign(int sign) {
@@ -1343,6 +1394,7 @@ class MyPage extends StatelessWidget {
                 clientCenter(), // 자주 묻는 질문, 챗봇문의, 투자스쿨 배너
                 news(), // 국내뉴스
                 issueSchedule(), // 이슈스케쥴
+                editMyPage(), // My 편집 버튼
               ]),
             ),
           ),
