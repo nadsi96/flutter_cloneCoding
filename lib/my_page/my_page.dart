@@ -24,7 +24,7 @@ class MyPage extends StatelessWidget {
 
   late final defaultStocks = mainController.stocks.value; // 기본 보유 목록
 
-  User? user;
+  // User? user;
 
   final double bigFont = 40;
   final double titleFont = 22;
@@ -33,13 +33,29 @@ class MyPage extends StatelessWidget {
   final double midContentFont = 16;
 
   final double space = 10;
-  final marginSpace = const EdgeInsets.only(top: 10); // 영역간 margin
+  final marginSpace = const EdgeInsets.only(bottom: 10); // 영역간 margin
   final titleStyle =
       const TextStyle(fontSize: 18, color: BLACK, fontWeight: FontWeight.w700);
 
   final myPageDialogs = MyPageDialogs();
 
-  MyPage({Key? key}) : super(key: key);
+
+  /// 선택한 항목에 따라 보여줄 뷰
+  Map <String, Widget> sections = {};
+
+  MyPage({Key? key}) : super(key: key){
+    sections = {
+      '나의서비스등급': userInfo(),
+      '총자산' : userBalInfo(),
+      '종목순위' : stockRank(),
+      '세계지수' : worldStock(),
+      '국내관심종목' : stockGroup(),
+      '문의&챗봇' : clientCenter(),
+      '투자스쿨' : investSchool(),
+      '국내뉴스' : news(),
+      '이슈스케쥴' : issueSchedule(),
+    };
+  }
 
   /// 회색 밑줄이 있는 AppBar
   AppBar topBar() {
@@ -71,7 +87,7 @@ class MyPage extends StatelessWidget {
           onTap: () {
             if (myPageController.isLogin.value) {
               myPageController.logout();
-              user = null;
+              // user = null;
             }
           },
           child: Container(
@@ -100,7 +116,153 @@ class MyPage extends StatelessWidget {
     }
   }
 
-  /// 사용자 정보화면
+  Widget needLogin(){
+    // 로그인되지 않은 화면
+    return InkWell(
+      splashColor: TRANSPARENT,
+      onTap: () async {
+        // 로그인
+        final pw = await Get.dialog(InputPw());
+        if (myPageController.login(pw)) {
+          // user = usersData[pw];
+        }
+      },
+      child: Container(
+        margin: marginSpace,
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        height: 80,
+        color: BLUE,
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '로그인이 필요한 정보가 있습니다.',
+              style: TextStyle(
+                fontSize: midContentFont,
+                color: WHITE,
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50), color: WHITE),
+              child: const Icon(Icons.person_outline, color: BLUE),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget userInfo(){
+    const rankColor = Color.fromARGB(255, 83, 199, 184);
+
+    return Obx((){
+      final user = myPageController.user.value;
+
+      if(myPageController.isLogin.value){
+        return Container(
+          height: 130,
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          margin: marginSpace,
+          alignment: Alignment.centerLeft,
+          color: WHITE,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: rankColor, width: 1.5),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10, vertical: 5),
+                child: Text(
+                  user.rank,
+                  style: const TextStyle(
+                      color: rankColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900),
+                ),
+              ),
+              Text(
+                '${user.name}님 안녕하세요.',
+                style: TextStyle(
+                    fontSize: bigContentFont,
+                    color: BLACK,
+                    fontWeight: FontWeight.w800),
+              ),
+              InkWell(
+                splashColor: TRANSPARENT,
+                onTap: () {},
+                child: Row(
+                  children: [
+                    const Text(
+                      '서비스 등급/혜택 조회',
+                      style: TextStyle(fontSize: 12, color: DARKGRAY),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: const Icon(
+                        Icons.chevron_right,
+                        color: DARKGRAY,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      }else{
+        return Container();
+      }
+    });
+  }
+  Widget userBalInfo(){
+
+    return Obx((){
+      if(myPageController.isLogin.value){
+        final user = myPageController.user.value;
+
+        return Container(
+          color: WHITE,
+          margin: marginSpace,
+          height: 280,
+          child: Column(
+            children: [
+              Container(
+                color: WHITE,
+                padding: const EdgeInsets.fromLTRB(30, 10, 20, 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '자산',
+                      style: TextStyle(
+                          fontSize: bigContentFont, color: BLACK),
+                    ),
+                    userInfoBankToggleBtn(),
+                  ],
+                ),
+              ),
+              Expanded(
+                  child: (myPageController.showAccountToggle.value == 0)
+                      ? userInfoSamsung(user)
+                      : userInfoOtherBank(user)),
+            ],
+          ),
+        );
+      }else{
+        return Container();
+      }
+    });
+  }
+
+  /*/// 사용자 정보화면
   /// 로그인되지 않은 상태면 '로그인이 필요한 정보가 있습니다' 텍스트
   /// 로그인되면 사용자 정보 나타냄
   Widget userInfo() {
@@ -204,45 +366,11 @@ class MyPage extends StatelessWidget {
           ),
         );
       } else {
-        // 로그인되지 않은 화면
-        return InkWell(
-          splashColor: TRANSPARENT,
-          onTap: () async {
-            // 로그인
-            final pw = await Get.dialog(InputPw());
-            if (myPageController.login(pw)) {
-              user = usersData[pw];
-            }
-          },
-          child: Container(
-            margin: const EdgeInsets.only(top: 5),
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            height: 80,
-            color: BLUE,
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '로그인이 필요한 정보가 있습니다.',
-                  style: TextStyle(
-                    fontSize: midContentFont,
-                    color: WHITE,
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50), color: WHITE),
-                  child: const Icon(Icons.person_outline, color: BLUE),
-                ),
-              ],
-            ),
-          ),
-        );
+        return Container();
       }
     });
   }
-
+*/
   /// 삼성증권/타금융사 전환 토글
   Widget userInfoBankToggleBtn() {
     return Container(
@@ -1157,16 +1285,20 @@ class MyPage extends StatelessWidget {
             ],
           ),
         ), // 자주 묻는 질문, 챗봇문의
-        InkWell(
-          onTap: () {},
-          child: Container(
-            color: WHITE,
-            margin: marginSpace,
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            child: Image.asset('assets/images/samsung_school.jpg'),
-          ),
-        ),
       ],
+    );
+  }
+
+  /// 투자스쿨
+  Widget investSchool(){
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        color: WHITE,
+        margin: marginSpace,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        child: Image.asset('assets/images/samsung_school.jpg'),
+      ),
     );
   }
 
@@ -1315,33 +1447,35 @@ class MyPage extends StatelessWidget {
   }
 
   /// 마이페이지 편집
-  Widget editMyPage(){
+  Widget editMyPage() {
     const color = Colors.deepPurple;
 
     return Container(
-      margin: marginSpace,
       color: WHITE,
       padding: const EdgeInsets.fromLTRB(20, 10, 20, 50),
       child: InkWell(
-        onTap: (){
+        onTap: () {
           Get.dialog(EditMyPage());
         },
         child: Container(
           height: 40,
-          decoration: BoxDecoration(border: Border.all(color: color), borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              border: Border.all(color: color),
+              borderRadius: BorderRadius.circular(5)),
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/images/home.png', fit: BoxFit.fitHeight, color: color, height: 20),
-              const Text('  MY 편집', style: TextStyle(color: color, fontSize: 16)),
+              Image.asset('assets/images/home.png',
+                  fit: BoxFit.fitHeight, color: color, height: 20),
+              const Text('  MY 편집',
+                  style: TextStyle(color: color, fontSize: 16)),
             ],
           ),
         ),
       ),
     );
   }
-
 
   /// 대비기호
   Widget getSign(int sign) {
@@ -1386,16 +1520,37 @@ class MyPage extends StatelessWidget {
             },
             child: SingleChildScrollView(
               controller: scrollController,
-              child: Column(children: [
-                userInfo(), // 회원 정보
-                stockRank(), // 종목순위
-                worldStock(), // 세계지수
-                stockGroup(), // 관심그룹(보유주식목록)
-                clientCenter(), // 자주 묻는 질문, 챗봇문의, 투자스쿨 배너
-                news(), // 국내뉴스
-                issueSchedule(), // 이슈스케쥴
-                editMyPage(), // My 편집 버튼
-              ]),
+              child: Obx((){
+                var temp = <Widget>[];
+                for(var sectionName in myPageController.myPageEditOrder.value){
+                  if(myPageController.myPageCheckSelected[sectionName]?.value ?? false){
+                    if(sections.containsKey(sectionName)){
+                      temp.add(sections[sectionName]!);
+                    }
+                  }
+                }
+                if(!myPageController.isLogin.value){
+                  temp.insert(0, needLogin());
+                }
+                temp.add(editMyPage());
+                return Column(
+                  children: temp,
+                );
+              }),
+              // Column(
+              //     children: [
+              //   needLogin(), // 로그인
+              //   userInfo(), // 회원 정보
+              //   userBalInfo(), // 회원 자산정보
+              //   stockRank(), // 종목순위
+              //   worldStock(), // 세계지수
+              //   stockGroup(), // 관심그룹(보유주식목록)
+              //   clientCenter(), // 자주 묻는 질문, 챗봇문의
+              //   investSchool(), // , 투자스쿨 배너
+              //   news(), // 국내뉴스
+              //   issueSchedule(), // 이슈스케쥴
+              //   editMyPage(), // My 편집 버튼
+              // ]),
             ),
           ),
           Positioned(

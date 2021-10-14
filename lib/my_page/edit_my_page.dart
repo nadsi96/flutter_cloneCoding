@@ -22,12 +22,6 @@ class EditMyPage extends StatelessWidget{
     '이슈스케쥴',
   ];
 
-  /// 로그인해야 볼수 있는 항목
-  final needLogin = [
-    '나의서비스등급',
-    '총자산',
-  ];
-
   /// 리스트 상단
   /// 현재 선택된 카드 수 알려줌
   /// 선택카드 기본 상태로 초기화 버튼
@@ -128,7 +122,7 @@ class EditMyPage extends StatelessWidget{
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: (needLogin.contains(text)) ? [const Icon(Icons.lock, color: LIGHTGRAY, size: 28), const Icon(Icons.menu, color: LIGHTGRAY, size: 28)] : [const Icon(Icons.menu, color: LIGHTGRAY, size: 28)],
+              children: (controller.needLogin.contains(text)) ? [const Icon(Icons.lock, color: LIGHTGRAY, size: 28), const Icon(Icons.menu, color: LIGHTGRAY, size: 28)] : [const Icon(Icons.menu, color: LIGHTGRAY, size: 28)],
             ),
           ),
         ],

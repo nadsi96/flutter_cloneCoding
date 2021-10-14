@@ -8,7 +8,9 @@ import 'package:get/get.dart';
 
 class MyPageController extends GetxController {
   // Rx<User?> user = null.obs;
-  // var user = User(name: '', account: '', stockGroups: {}).obs;
+  var user = User(name: '', account: '').obs;
+  // Rx<User?> user = User(name: '', account: '').obs;
+
   var pw = ''; // 입력된 비밀번호
   var isLogin = false.obs; // 현재 로그인 상태. true - 로그인
 
@@ -67,7 +69,7 @@ class MyPageController extends GetxController {
     '이슈스케쥴': true.obs,
     '국내주식찾기': false.obs, // 빈칸
   };
-  var myPageEditOrder = [
+  var myPageEditOrder = [// 전체 순서
     '나의서비스등급',
     '총자산',
     '종목순위',
@@ -90,9 +92,16 @@ class MyPageController extends GetxController {
     '국내뉴스',
     '이슈스케쥴',
   ].obs;
+  final needLogin = [ // 로그인해야 볼수 있는 항목
+    '나의서비스등급',
+    '총자산',
+  ];
 
 
   MyPageController() {
+
+    // user.value = null;
+
     refreshCurrentTime(); // 자산정보 업데이트
     refreshNewsUpdateTime(); // 뉴스정보 업데이트
 
@@ -122,7 +131,8 @@ class MyPageController extends GetxController {
   /// 실패시 false 반환
   bool login(String pw) {
     if (usersData.containsKey(pw)) {
-      // user.value = usersData[pw]!;
+      user.value = usersData[pw]!;
+      user.refresh();
       this.pw = pw;
       isLogin.value = true;
       return true;
@@ -130,6 +140,13 @@ class MyPageController extends GetxController {
       isLogin.value = false;
       return false;
     }
+  }
+
+  void logout() {
+    isLogin.value = false;
+    pw = '';
+    // user.value = null;
+    user.refresh();
   }
 
   /// 회원 정보
@@ -206,11 +223,6 @@ class MyPageController extends GetxController {
     return stockRankData.value;
   }
 
-  void logout() {
-    isLogin.value = false;
-    pw = '';
-  }
-
   /// 세계지수
   /// 그리드에 나타낼 데이터 반환
   List<WorldStockPoint> getWorldIdxData() {
@@ -244,13 +256,12 @@ class MyPageController extends GetxController {
 
 
   /// MY 편집
-  ///
-  void setOrder(List<String> order){
-    myPageOrder.value = List.of(order);
-  }
-
+  /// 순서변경
   void swapOrder(int oldIdx, int newIdx){
     final item = myPageEditOrder[oldIdx];
+
+    // 기존 idx가 새로운 위치의 idx보다 큰 경우
+    // 새로운 idx에 먼저 넣고 기존의 것을 지우기 때문에 기존 idx값에서 +1된 항목이 지워야하는 항목이 됨
     if(newIdx < oldIdx){
       oldIdx += 1;
     }
