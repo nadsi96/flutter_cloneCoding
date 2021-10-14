@@ -7,6 +7,7 @@ import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:flutter_prac_jongmock/data/stock_rank_data.dart';
 import 'package:flutter_prac_jongmock/data/user_data.dart';
 import 'package:flutter_prac_jongmock/data/world_idx_data.dart';
+import 'package:flutter_prac_jongmock/my_page/dialogs.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/news/news_detail.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
@@ -20,6 +21,10 @@ class MyPage extends StatelessWidget {
   final pageController = Get.find<TabPageController>();
   final scrollController = ScrollController();
 
+  late final defaultStocks = mainController.stocks.value; // 기본 보유 목록
+
+  User? user;
+
   final double bigFont = 40;
   final double titleFont = 22;
   final double bigContentFont = 18;
@@ -31,6 +36,8 @@ class MyPage extends StatelessWidget {
   final titleStyle =
       const TextStyle(fontSize: 18, color: BLACK, fontWeight: FontWeight.w700);
 
+  final myPageDialogs = MyPageDialogs();
+
   MyPage({Key? key}) : super(key: key);
 
   /// 회색 밑줄이 있는 AppBar
@@ -39,9 +46,7 @@ class MyPage extends StatelessWidget {
       leading: Obx(() {
         return (pageController.pageStackCnt.value > 1)
             ? InkWell(
-                onTap: () {
-                  goBack();
-                },
+                onTap: () => goBack(),
                 child: const TitleBarBackButton(),
               )
             : Container();
@@ -59,9 +64,17 @@ class MyPage extends StatelessWidget {
           margin: const EdgeInsets.only(right: 15),
           child: const Icon(Icons.search, color: BLACK),
         ),
-        Container(
-          margin: const EdgeInsets.only(right: 15),
-          child: const Icon(Icons.menu, color: BLACK),
+        InkWell(
+          onTap: (){
+            if(myPageController.isLogin.value){
+              myPageController.logout();
+              user = null;
+            }
+          },
+          child: Container(
+            margin: const EdgeInsets.only(right: 15),
+            child: const Icon(Icons.menu, color: BLACK),
+          ),
         ),
       ],
       shadowColor: TRANSPARENT,
@@ -91,8 +104,8 @@ class MyPage extends StatelessWidget {
     const rankColor = Color.fromARGB(255, 83, 199, 184);
 
     return Obx(() {
-      if (myPageController.isLogin.value) {
-        final user = myPageController.user.value;
+      if (myPageController.isLogin.value && user != null) {
+        // final user = myPageController.user.value;
 
         // 로그인된 화면
         //
@@ -120,7 +133,7 @@ class MyPage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 5),
                       child: Text(
-                        user.rank,
+                        user!.rank,
                         style: const TextStyle(
                             color: rankColor,
                             fontSize: 12,
@@ -128,7 +141,7 @@ class MyPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${user.name}님 안녕하세요.',
+                      '${user!.name}님 안녕하세요.',
                       style: TextStyle(
                           fontSize: bigContentFont,
                           color: BLACK,
@@ -178,8 +191,8 @@ class MyPage extends StatelessWidget {
                     ),
                     Expanded(
                         child: (myPageController.showAccountToggle.value == 0)
-                            ? userInfoSamsung(user)
-                            : userInfoOtherBank(user)),
+                            ? userInfoSamsung(user!)
+                            : userInfoOtherBank(user!)),
                   ],
                 ),
               ),
@@ -190,8 +203,11 @@ class MyPage extends StatelessWidget {
         // 로그인되지 않은 화면
         return InkWell(
           onTap: () async {
+            // 로그인
             final pw = await Get.dialog(InputPw());
-            if (myPageController.login(pw)) {}
+            if (myPageController.login(pw)) {
+              user = usersData[pw];
+            }
           },
           child: Container(
             margin: const EdgeInsets.only(top: 5),
@@ -812,14 +828,6 @@ class MyPage extends StatelessWidget {
   /// 관심그룹
   /// 항목 클릭시 해당 주식 호가창(주식현재가 - 호가)으로 이동(해야됨)
   Widget stockGroup() {
-    final defaultStocks = mainController.stocks.value; // 기본 보유 목록
-    User user;
-    if (myPageController.isLogin.value) {
-      user = myPageController.user.value;
-    } else {
-      user = User(name: '', account: '');
-    }
-    user.stockGroups['최근조회목록'] = defaultStocks;
 
     return Container(
       margin: marginSpace,
@@ -832,7 +840,15 @@ class MyPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () async {
+                      final List<String> groups = myPageController.stockGroups.value.keys.toList();
+                      final currentSelected = myPageController.selectedStockGroup.value;
+                      final selected = await Get.dialog(myPageDialogs.selectStockGroup(groups, currentSelected),barrierDismissible: false);
+                      print('selected: $selected');
+                      if(selected != null){
+                        myPageController.selectedStockGroup.value = selected;
+                      }
+                    },
                     child: Row(
                       children: [
                         const Icon(Icons.menu, color: BLACK),
@@ -851,7 +867,9 @@ class MyPage extends StatelessWidget {
                     children: [
                       InkWell(
                         // 국가별 시세
-                        onTap: () {},
+                        onTap: () {
+                          Get.dialog(myPageDialogs.realtimePrice());
+                        },
                         child: Container(
                           color: LIGHTGRAY,
                           padding: const EdgeInsets.symmetric(
@@ -873,7 +891,7 @@ class MyPage extends StatelessWidget {
                       ),
                       InkWell(
                         // 관심종목 이동
-                        onTap: () {},
+                        onTap: () {pageController.goToPage('관심종목');},
                         child: const Icon(Icons.chevron_right,
                             color: BLACK, size: 32),
                       ),
@@ -884,10 +902,9 @@ class MyPage extends StatelessWidget {
             ),
           ), // 타이틀부분
           Obx(() {
-            final data =
-                user.stockGroups[myPageController.selectedStockGroup.value] ??
-                    [];
-            return stockList(data);
+            final data = myPageController.stockGroups.value[myPageController.selectedStockGroup.value] ?? [];
+            // 데이터가 있으면 리스트 그리고, 없으면 안내내용
+            return (data.isNotEmpty) ? stockList(data) : emptyStockGroup();
           }), // 주식 목록 리스트뷰. 선택한 그룹의 주식목록 출력
         ],
       ),
@@ -947,6 +964,7 @@ class MyPage extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
+            // 캔들그래프, 종목명, 분야
             child: Row(
               children: [
                 Container(
@@ -956,6 +974,7 @@ class MyPage extends StatelessWidget {
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
                       stock.getTitle(),
@@ -972,7 +991,7 @@ class MyPage extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+          ), // 캔들그래프, 종목명, 분야
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1021,6 +1040,32 @@ class MyPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  /// 관심종목
+  /// 등록한 관심그룹이 없는 경우
+  Widget emptyStockGroup(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 20),
+          child: Center(
+            child: Text('등록 종목이 없습니다.', style: TextStyle(fontSize: bigContentFont, color: BLACK)),
+          ),
+        ),
+        InkWell(
+            onTap: (){},
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 50),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+              decoration: BoxDecoration(border: Border.all(color: Colors.deepPurple), borderRadius: BorderRadius.circular(3)),
+              child: Text('등록', style: TextStyle(fontSize: midContentFont, color: Colors.deepPurple)),
+            ),
+          ),
+      ],
     );
   }
 
@@ -1163,7 +1208,7 @@ class MyPage extends StatelessWidget {
   }
 
   /// 이슈스케쥴
-  Widget issueSchedule(){
+  Widget issueSchedule() {
     return Container(
       color: WHITE,
       margin: marginSpace,
@@ -1180,7 +1225,9 @@ class MyPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   alignment: Alignment.centerLeft,
-                  child: Text('이슈스케줄 ${formatIntToStringLen2(myPageController.newsUpdateTime.value.month)}-${formatIntToStringLen2(myPageController.newsUpdateTime.value.day)}', style: titleStyle),
+                  child: Text(
+                      '이슈스케줄 ${formatIntToStringLen2(myPageController.newsUpdateTime.value.month)}-${formatIntToStringLen2(myPageController.newsUpdateTime.value.day)}',
+                      style: titleStyle),
                 ),
                 const Spacer(),
                 InkWell(
@@ -1188,7 +1235,7 @@ class MyPage extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     child:
-                    const Icon(Icons.chevron_right, size: 30, color: BLACK),
+                        const Icon(Icons.chevron_right, size: 30, color: BLACK),
                   ),
                 ),
               ],
@@ -1199,10 +1246,11 @@ class MyPage extends StatelessWidget {
             return Column(
               children: List.generate(
                 data.length,
-                    (idx) => InkWell(
+                (idx) => InkWell(
                   onTap: () {
                     // 상세화면 다이얼로그 띄움
-                    Get.dialog(issueScheduleDialog(data[idx].title, data[idx].contents));
+                    Get.dialog(myPageDialogs.issueScheduleDialog(
+                        data[idx].title, data[idx].contents));
                   },
                   child: newsItemView(data[idx].title),
                 ),
@@ -1213,6 +1261,7 @@ class MyPage extends StatelessWidget {
       ),
     );
   }
+
   /// 국내뉴스, 이슈스케줄 항목 뷰
   /// 타이틀 한 줄. 너비 넘어가면 ...
   Widget newsItemView(String title) {
@@ -1233,50 +1282,6 @@ class MyPage extends StatelessWidget {
     );
   }
 
-  /// 이슈스케쥴
-  /// 항목 클릭시 띄워줄 다이얼로그 화면
-  /// -타이틀
-  /// -내용
-  /// -확인버튼
-  Widget issueScheduleDialog(String title, String contents){
-    return Dialog(
-        child: Container(
-          height: 540,
-          width: 500,
-          color: WHITE,
-          child: Column(
-            children: [
-              Container(
-                height: 100,
-                margin: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: LIGHTGRAY),),),
-                alignment: Alignment.center,
-                child: Text(title, style: const TextStyle(fontSize: 14, color: BLACK)),
-              ),
-              Container(
-                height: 340,
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Text(contents, style: const TextStyle(fontSize: 12, color: BLACK)),
-                ),
-              ),
-              InkWell(
-                onTap: (){
-                  Get.back();
-                },
-                child: Container(
-                  height: 60,
-                  color: BLUE,
-                  alignment: Alignment.center,
-                  child: const Text('확인', style: TextStyle(color: WHITE, fontSize: 14, fontWeight: FontWeight.w900)),
-                ),
-              ),
-            ],
-          ),
-        )
-    );
-  }
 
   /// 대비기호
   Widget getSign(int sign) {

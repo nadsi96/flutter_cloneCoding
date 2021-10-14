@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 class MyPageController extends GetxController {
   // Rx<User?> user = null.obs;
-  var user = User(name: '', account: '').obs;
+  // var user = User(name: '', account: '', stockGroups: {}).obs;
   var pw = ''; // 입력된 비밀번호
   var isLogin = false.obs; // 현재 로그인 상태. true - 로그인
 
@@ -42,7 +42,8 @@ class MyPageController extends GetxController {
   var worldData = <WorldStockPoint>[].obs; // 그리드에 그릴 세계지수 데이터
 
   /// 주식목록
-  var selectedStockGroup = '최근조회목록'.obs; // 선택한 주식 그룹
+  var selectedStockGroup = '관심종목'.obs; // 선택한 주식 그룹
+  var stockGroups = <String, List<String>>{}.obs;
 
   /// 국내뉴스
   var newsUpdateTime = DateTime.now().obs; // 뉴스 업데이트 시간
@@ -56,6 +57,10 @@ class MyPageController extends GetxController {
     refreshCurrentTime(); // 자산정보 업데이트
     refreshNewsUpdateTime(); // 뉴스정보 업데이트
 
+    stockGroups.value = stockGroupsData; // 주식목록 그룹
+    if(stockGroups.value.keys.isNotEmpty){
+      selectedStockGroup.value = stockGroups.value.keys.first;
+    }
     issueList.value = List.generate(
         5,
         (idx) => IssueData(
@@ -78,7 +83,7 @@ class MyPageController extends GetxController {
   /// 실패시 false 반환
   bool login(String pw) {
     if (usersData.containsKey(pw)) {
-      user.value = usersData[pw]!;
+      // user.value = usersData[pw]!;
       this.pw = pw;
       isLogin.value = true;
       return true;
@@ -165,7 +170,8 @@ class MyPageController extends GetxController {
   void logout() {
     isLogin.value = false;
     pw = '';
-    user.value = User(name: '', account: '');
+    selectedStockGroup.value = '최근조회종목';
+    // user.value = User(name: '', account: '', stockGroups: {});
   }
 
   /// 세계지수
