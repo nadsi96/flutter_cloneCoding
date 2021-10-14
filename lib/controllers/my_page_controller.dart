@@ -53,6 +53,45 @@ class MyPageController extends GetxController {
   /// 이슈스케쥴
   var issueList = <IssueData>[].obs; // 이슈스케줄 데이터
 
+  /// MY 편집
+  /// 전체 항목: 선택여부
+  var myPageCheckSelected = {
+    '나의서비스등급': true.obs,
+    '총자산': true.obs,
+    '종목순위': true.obs,
+    '세계지수': true.obs,
+    '국내관심종목': true.obs,
+    '문의&챗봇': true.obs,
+    '투자스쿨': true.obs,
+    '국내뉴스': true.obs,
+    '이슈스케쥴': true.obs,
+    '국내주식찾기': false.obs, // 빈칸
+  };
+  var myPageEditOrder = [
+    '나의서비스등급',
+    '총자산',
+    '종목순위',
+    '세계지수',
+    '국내관심종목',
+    '문의&챗봇',
+    '투자스쿨',
+    '국내뉴스',
+    '이슈스케쥴',
+    '국내주식찾기',
+  ].obs;
+  var myPageOrder = [
+    '나의서비스등급',
+    '총자산',
+    '종목순위',
+    '세계지수',
+    '국내관심종목',
+    '문의&챗봇',
+    '투자스쿨',
+    '국내뉴스',
+    '이슈스케쥴',
+  ].obs;
+
+
   MyPageController() {
     refreshCurrentTime(); // 자산정보 업데이트
     refreshNewsUpdateTime(); // 뉴스정보 업데이트
@@ -201,5 +240,24 @@ class MyPageController extends GetxController {
   String getNewsUpdateTime() {
     final time = newsUpdateTime.value;
     return '${formatIntToStringLen2(time.month)}-${formatIntToStringLen2(time.day)} ${formatIntToStringLen2(time.hour)}:${formatIntToStringLen2(time.minute)}';
+  }
+
+
+  /// MY 편집
+  ///
+  void setOrder(List<String> order){
+    myPageOrder.value = List.of(order);
+  }
+
+  void swapOrder(int oldIdx, int newIdx){
+    final item = myPageEditOrder[oldIdx];
+    if(newIdx < oldIdx){
+      oldIdx += 1;
+    }
+
+    myPageEditOrder.insert(newIdx, item);
+    myPageEditOrder.removeAt(oldIdx);
+
+    myPageEditOrder.refresh();
   }
 }
