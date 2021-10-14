@@ -104,11 +104,24 @@ class EditMyPage extends StatelessWidget {
       return ReorderableListView(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
+        buildDefaultDragHandles: false,
         onReorder: (oldIdx, newIdx) {
           controller.swapOrder(oldIdx, newIdx);
         },
         children:
-            List.generate(services.length, (index) => rowItem(services[index])),
+            List.generate(services.length, (index) =>
+                ReorderableDragStartListener(
+                  /*
+                  buildDefaultDragHandles: default = true
+                  모바일에서 실행시 long click해야 움직
+                  바로 조작하고 싶다면 이것을 false로 바꾸고,
+                  모든 항목을 ReorderableDragStartListener로 만들어야
+                   */
+                  key: ValueKey(services[index]),
+                  index: index,
+                  child: rowItem(services[index]),
+                ),
+            ),
       );
     });
   }
@@ -117,7 +130,6 @@ class EditMyPage extends StatelessWidget {
   /// 체크해서 MY페이지에 나타날 항목 선택
   Widget rowItem(String text) {
     return Container(
-      key: ValueKey(text),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: LIGHTGRAY)),
       ),
