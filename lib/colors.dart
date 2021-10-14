@@ -11,6 +11,7 @@ const BLACK = Colors.black;
 const GRAY = Color.fromARGB(255, 167, 167, 167);
 const WHITE = Colors.white;
 const DEEPBLUE = Color.fromARGB(255, 0, 0, 255);
+const DARKBLUE = Color.fromARGB(255, 1, 120, 206);
 const BLUE = Colors.blue;
 const LIGHTBLUE = Color.fromARGB(255, 233, 239, 251);
 const RED = Colors.red;

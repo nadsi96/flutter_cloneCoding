@@ -103,7 +103,7 @@ class CheckServiceRank extends StatelessWidget {
                             color: BLACK,
                             fontWeight: FontWeight.bold)),
                     Container(
-                      color: BLUE,
+                      color: DARKBLUE,
                       height: 80,
                       alignment: Alignment.center,
                       margin: const EdgeInsets.only(top: 10),
@@ -111,7 +111,7 @@ class CheckServiceRank extends StatelessWidget {
                           style: TextStyle(fontSize: midFont, color: WHITE)),
                     ),
                     Container(
-                      color: BLUE,
+                      color: DARKBLUE,
                       height: 80,
                       alignment: Alignment.center,
                       margin: const EdgeInsets.only(top: 10),

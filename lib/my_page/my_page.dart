@@ -1018,7 +1018,7 @@ class MyPage extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: Image.asset(imgPath, fit: BoxFit.fitHeight),
-                ),
+                ), // 그래프
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1031,7 +1031,7 @@ class MyPage extends StatelessWidget {
                       stock.getType(),
                       style: const TextStyle(
                         fontSize: 12,
-                        color: LIGHTGRAY,
+                        color: GRAY,
                       ),
                     ),
                   ],
@@ -1158,7 +1158,7 @@ class MyPage extends StatelessWidget {
               InkWell(
                 onTap: () {},
                 child: Container(
-                  color: const Color.fromARGB(255, 1, 120, 206),
+                  color: DARKBLUE,
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
