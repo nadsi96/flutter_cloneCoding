@@ -24,8 +24,6 @@ class MyPage extends StatelessWidget {
 
   late final defaultStocks = mainController.stocks.value; // 기본 보유 목록
 
-  // User? user;
-
   final double bigFont = 40;
   final double titleFont = 22;
   final double bigContentFont = 18;
@@ -39,25 +37,25 @@ class MyPage extends StatelessWidget {
 
   final myPageDialogs = MyPageDialogs();
 
-
   /// 선택한 항목에 따라 보여줄 뷰
-  Map <String, Widget> sections = {};
+  Map<String, Widget> sections = {};
 
-  MyPage({Key? key}) : super(key: key){
+  MyPage({Key? key}) : super(key: key) {
     sections = {
       '나의서비스등급': userInfo(),
-      '총자산' : userBalInfo(),
-      '종목순위' : stockRank(),
-      '세계지수' : worldStock(),
-      '국내관심종목' : stockGroup(),
-      '문의&챗봇' : clientCenter(),
-      '투자스쿨' : investSchool(),
-      '국내뉴스' : news(),
-      '이슈스케쥴' : issueSchedule(),
+      '총자산': userBalInfo(),
+      '종목순위': stockRank(),
+      '세계지수': worldStock(),
+      '국내관심종목': stockGroup(),
+      '문의&챗봇': clientCenter(),
+      '투자스쿨': investSchool(),
+      '국내뉴스': news(),
+      '이슈스케쥴': issueSchedule(),
     };
   }
 
   /// 회색 밑줄이 있는 AppBar
+  /// 이전 페이지로, 타이틀, 검색, 메뉴(지금은 로그아웃)
   AppBar topBar() {
     return AppBar(
       leading: Obx(() {
@@ -116,7 +114,9 @@ class MyPage extends StatelessWidget {
     }
   }
 
-  Widget needLogin(){
+  /// 로그인 필요 안내
+  /// 클릭시 로그인
+  Widget needLogin() {
     // 로그인되지 않은 화면
     return InkWell(
       splashColor: TRANSPARENT,
@@ -154,13 +154,15 @@ class MyPage extends StatelessWidget {
     );
   }
 
-  Widget userInfo(){
+  /// 회원정보
+  /// 등급, 안내인사
+  Widget userInfo() {
     const rankColor = Color.fromARGB(255, 83, 199, 184);
 
-    return Obx((){
+    return Obx(() {
       final user = myPageController.user.value;
 
-      if(myPageController.isLogin.value){
+      if (myPageController.isLogin.value) {
         return Container(
           height: 130,
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
@@ -176,8 +178,8 @@ class MyPage extends StatelessWidget {
                   border: Border.all(color: rankColor, width: 1.5),
                   borderRadius: BorderRadius.circular(3),
                 ),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Text(
                   user.rank,
                   style: const TextStyle(
@@ -195,7 +197,7 @@ class MyPage extends StatelessWidget {
               ),
               InkWell(
                 splashColor: TRANSPARENT,
-                onTap: () {},
+                onTap: () => pageController.goToPage('서비스등급조회'),
                 child: Row(
                   children: [
                     const Text(
@@ -216,15 +218,15 @@ class MyPage extends StatelessWidget {
             ],
           ),
         );
-      }else{
+      } else {
         return Container();
       }
     });
   }
-  Widget userBalInfo(){
 
-    return Obx((){
-      if(myPageController.isLogin.value){
+  Widget userBalInfo() {
+    return Obx(() {
+      if (myPageController.isLogin.value) {
         final user = myPageController.user.value;
 
         return Container(
@@ -242,8 +244,7 @@ class MyPage extends StatelessWidget {
                   children: [
                     Text(
                       '자산',
-                      style: TextStyle(
-                          fontSize: bigContentFont, color: BLACK),
+                      style: TextStyle(fontSize: bigContentFont, color: BLACK),
                     ),
                     userInfoBankToggleBtn(),
                   ],
@@ -256,121 +257,12 @@ class MyPage extends StatelessWidget {
             ],
           ),
         );
-      }else{
-        return Container();
-      }
-    });
-  }
-
-  /*/// 사용자 정보화면
-  /// 로그인되지 않은 상태면 '로그인이 필요한 정보가 있습니다' 텍스트
-  /// 로그인되면 사용자 정보 나타냄
-  Widget userInfo() {
-    const rankColor = Color.fromARGB(255, 83, 199, 184);
-
-    return Obx(() {
-      if (myPageController.isLogin.value && user != null) {
-        // final user = myPageController.user.value;
-
-        // 로그인된 화면
-        //
-        // col [자산 - 토글]
-        //     [토글 상태 따른 정보 rows]
-        return SizedBox(
-          height: 430,
-          child: Column(
-            children: [
-              Container(
-                height: 130,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                alignment: Alignment.centerLeft,
-                color: WHITE,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: rankColor, width: 1.5),
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      child: Text(
-                        user!.rank,
-                        style: const TextStyle(
-                            color: rankColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ),
-                    Text(
-                      '${user!.name}님 안녕하세요.',
-                      style: TextStyle(
-                          fontSize: bigContentFont,
-                          color: BLACK,
-                          fontWeight: FontWeight.w800),
-                    ),
-                    InkWell(
-                      splashColor: TRANSPARENT,
-                      onTap: () {},
-                      child: Row(
-                        children: [
-                          const Text(
-                            '서비스 등급/혜택 조회',
-                            style: TextStyle(fontSize: 12, color: DARKGRAY),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 20),
-                            child: const Icon(
-                              Icons.chevron_right,
-                              color: DARKGRAY,
-                              size: 20,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    Container(
-                      color: WHITE,
-                      margin: EdgeInsets.only(top: space),
-                      padding: const EdgeInsets.fromLTRB(30, 10, 20, 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            '자산',
-                            style: TextStyle(
-                                fontSize: bigContentFont, color: BLACK),
-                          ),
-                          userInfoBankToggleBtn(),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                        child: (myPageController.showAccountToggle.value == 0)
-                            ? userInfoSamsung(user!)
-                            : userInfoOtherBank(user!)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
       } else {
         return Container();
       }
     });
   }
-*/
+
   /// 삼성증권/타금융사 전환 토글
   Widget userInfoBankToggleBtn() {
     return Container(
@@ -1229,7 +1121,7 @@ class MyPage extends StatelessWidget {
     );
   }
 
-  /// FAQ, 챗봇문의, 투자스쿨 배너
+  /// FAQ, 챗봇문의
   Widget clientCenter() {
     return Column(
       children: [
@@ -1290,7 +1182,7 @@ class MyPage extends StatelessWidget {
   }
 
   /// 투자스쿨
-  Widget investSchool(){
+  Widget investSchool() {
     return InkWell(
       onTap: () {},
       child: Container(
@@ -1520,16 +1412,34 @@ class MyPage extends StatelessWidget {
             },
             child: SingleChildScrollView(
               controller: scrollController,
-              child: Obx((){
+              child: Obx(() {
                 var temp = <Widget>[];
-                for(var sectionName in myPageController.myPageEditOrder.value){
-                  if(myPageController.myPageCheckSelected[sectionName]?.value ?? false){
-                    if(sections.containsKey(sectionName)){
+                bool needLoginFlag = false;
+
+                for (var sectionName
+                    in myPageController.myPageEditOrder.value) {
+
+                  // sectionName이 MyPage에 출력할 항목 리스트에 있는지, 출력해야하는 항목인지 확인
+                  // 출력해야하면 배열에 추가
+                  if (myPageController
+                          .myPageCheckSelected[sectionName]?.value ??
+                      false) {
+                    if (sections.containsKey(sectionName)) {
                       temp.add(sections[sectionName]!);
+
+                      // 해당 항목이 로그인 정보가 필요한 화면이라면
+                      // needLoginFlag를 true로 지정
+                      if(myPageController.needLogin.contains(sectionName)){
+                        needLoginFlag = true;
+                      }
                     }
                   }
                 }
-                if(!myPageController.isLogin.value){
+
+                // 현재 로그인상태가 아니고,
+                // 로그인이 필요한 정보를 선택한 경우
+                // 로그인 안내 항목 출력
+                if (!myPageController.isLogin.value && needLoginFlag) {
                   temp.insert(0, needLogin());
                 }
                 temp.add(editMyPage());
@@ -1537,20 +1447,6 @@ class MyPage extends StatelessWidget {
                   children: temp,
                 );
               }),
-              // Column(
-              //     children: [
-              //   needLogin(), // 로그인
-              //   userInfo(), // 회원 정보
-              //   userBalInfo(), // 회원 자산정보
-              //   stockRank(), // 종목순위
-              //   worldStock(), // 세계지수
-              //   stockGroup(), // 관심그룹(보유주식목록)
-              //   clientCenter(), // 자주 묻는 질문, 챗봇문의
-              //   investSchool(), // , 투자스쿨 배너
-              //   news(), // 국내뉴스
-              //   issueSchedule(), // 이슈스케쥴
-              //   editMyPage(), // My 편집 버튼
-              // ]),
             ),
           ),
           Positioned(

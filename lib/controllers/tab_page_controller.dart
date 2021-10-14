@@ -34,10 +34,12 @@ class TabPageController extends GetxController{
   }*/
 
   void goToPage(String text) {
-    pageStack.add(text);
-    pageStackCnt.value++;
-    title.value = text;
-    selectedMainBottomTab.value = text;
+    if(text != selectedMainBottomTab.value){
+      pageStack.add(text);
+      pageStackCnt.value++;
+      title.value = text;
+      selectedMainBottomTab.value = text;
+    }
     print('goToPage $pageStack');
     // update();
   }

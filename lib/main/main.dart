@@ -9,6 +9,7 @@ import 'package:flutter_prac_jongmock/interest_page/getx_page_interest.dart';
 import 'package:flutter_prac_jongmock/interest_page/getx_stock_list_view.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
+import 'package:flutter_prac_jongmock/my_page/check_service_rank.dart';
 import 'package:flutter_prac_jongmock/my_page/my_page.dart';
 import 'package:flutter_prac_jongmock/present_price/present_price.dart';
 import 'package:flutter_prac_jongmock/register_page_with_getx/register_page.dart';
@@ -94,6 +95,8 @@ class MainPage extends StatelessWidget {
                 switch (pageController.title.value) {
                   case 'MY':
                     return MyPage();
+                  case '서비스등급조회':
+                    return CheckServiceRank();
                   case '관심종목':
                     return JongmockPage();
                   case '주식현재가':

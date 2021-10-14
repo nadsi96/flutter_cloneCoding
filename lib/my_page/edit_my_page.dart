@@ -5,8 +5,12 @@ import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
-class EditMyPage extends StatelessWidget{
-
+/// MyPage 편집
+///
+/// 뒤로가기 클릭시 바뀌지 않도록 이전 상태 유지하도록
+/// 취소, 적용 동작 구현 필요
+/// 초기화버튼 동작 구현 필요
+class EditMyPage extends StatelessWidget {
   final controller = Get.find<MyPageController>();
 
   /// MY 항목 기본값
@@ -22,28 +26,40 @@ class EditMyPage extends StatelessWidget{
     '이슈스케쥴',
   ];
 
-  /// 리스트 상단
+  EditMyPage({Key? key}) : super(key: key);
+
+  /// AppBar 바로 밑
   /// 현재 선택된 카드 수 알려줌
   /// 선택카드 기본 상태로 초기화 버튼
-  Widget top(){
+  Widget top() {
     const double fontSize = 16;
     const TextStyle textStyle = TextStyle(fontSize: fontSize, color: BLACK);
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: LIGHTGRAY),),),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: LIGHTGRAY),
+        ),
+      ),
       child: Row(
         children: [
-          Obx((){
+          Obx(() {
+            // 선택된 항목 갯수 출력
+            // 체크한 항목들 갯수
             int cnt = 0;
-            for(var v in controller.myPageCheckSelected.values){
-              if(v.value){
+            for (var v in controller.myPageCheckSelected.values) {
+              if (v.value) {
                 cnt++;
               }
             }
             return RichText(
-              text: TextSpan(text: '선택카드 ', style: textStyle,
+              text: TextSpan(
+                text: '선택카드 ',
+                style: textStyle,
                 children: [
-                  TextSpan(text: '$cnt', style: const TextStyle(fontSize: 16, color: BLUE)),
+                  TextSpan(
+                      text: '$cnt',
+                      style: const TextStyle(fontSize: 16, color: BLUE)),
                   const TextSpan(text: ' (최대10개)', style: textStyle),
                 ],
               ),
@@ -51,16 +67,26 @@ class EditMyPage extends StatelessWidget{
           }),
           const Spacer(),
           InkWell(
-            onTap: (){},
+            onTap: () {},
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              decoration: BoxDecoration(border: Border.all(color: BLUE), borderRadius: BorderRadius.circular(50)),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+              decoration: BoxDecoration(
+                  border: Border.all(color: BLUE),
+                  borderRadius: BorderRadius.circular(50)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Transform.rotate(angle: 3.1 ,child: Image.asset('assets/images/return.png', color: BLUE, fit: BoxFit.fitHeight, height: 20)),
-                  const Text('초기화', style: TextStyle(color: BLUE, fontSize: 12, fontWeight: FontWeight.bold)),
-                  ],
+                  RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset('assets/images/return.png',
+                        color: BLUE, fit: BoxFit.fitHeight, height: 20),
+                  ),
+                  const Text('초기화',
+                      style: TextStyle(
+                          color: BLUE,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold)),
+                ],
               ),
             ),
           ),
@@ -71,26 +97,25 @@ class EditMyPage extends StatelessWidget{
 
   /// MY 페이지에 보여줄 항목들 리스트
   /// 항목 드래그해서 순서 변경
-  /// 체크해서 MY페이지에 나타날 항목 선택
-  Widget serviceList(){
-    return Obx((){
+  Widget serviceList() {
+    return Obx(() {
       final services = controller.myPageEditOrder.value;
 
       return ReorderableListView(
         shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          onReorder: (oldIdx, newIdx) {
-            controller.swapOrder(oldIdx, newIdx);
-          },
-          children: List.generate(
-            services.length,
-                  (index) => rowItem(services[index])),
+        scrollDirection: Axis.vertical,
+        onReorder: (oldIdx, newIdx) {
+          controller.swapOrder(oldIdx, newIdx);
+        },
+        children:
+            List.generate(services.length, (index) => rowItem(services[index])),
       );
     });
   }
 
   /// 항목뷰
-  Widget rowItem(String text){
+  /// 체크해서 MY페이지에 나타날 항목 선택
+  Widget rowItem(String text) {
     return Container(
       key: ValueKey(text),
       decoration: const BoxDecoration(
@@ -99,22 +124,24 @@ class EditMyPage extends StatelessWidget{
       padding: const EdgeInsets.symmetric(horizontal: 20),
       height: 50,
       child: Row(
-        children:[
+        children: [
           Expanded(
             flex: 2,
             child: InkWell(
               splashColor: TRANSPARENT,
-              onTap: (){
-                if(controller.myPageCheckSelected.containsKey(text)){
+              onTap: () {
+                if (controller.myPageCheckSelected.containsKey(text)) {
                   controller.myPageCheckSelected[text]!.toggle();
                 }
               },
               child: Row(
                 children: [
-                  Obx((){
-                    return RoundCheckButton(controller.myPageCheckSelected[text]!.value, false);
+                  Obx(() {
+                    return RoundCheckButton(
+                        controller.myPageCheckSelected[text]!.value, false);
                   }),
-                  Text(text, style: const TextStyle(fontSize: 20, color: BLACK)),
+                  Text(text,
+                      style: const TextStyle(fontSize: 20, color: BLACK)),
                 ],
               ),
             ),
@@ -122,7 +149,12 @@ class EditMyPage extends StatelessWidget{
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: (controller.needLogin.contains(text)) ? [const Icon(Icons.lock, color: LIGHTGRAY, size: 28), const Icon(Icons.menu, color: LIGHTGRAY, size: 28)] : [const Icon(Icons.menu, color: LIGHTGRAY, size: 28)],
+              children: (controller.needLogin.contains(text))
+                  ? [
+                      const Icon(Icons.lock, color: LIGHTGRAY, size: 28),
+                      const Icon(Icons.menu, color: LIGHTGRAY, size: 28),
+                    ]
+                  : [const Icon(Icons.menu, color: LIGHTGRAY, size: 28)],
             ),
           ),
         ],
@@ -141,44 +173,44 @@ class EditMyPage extends StatelessWidget{
           child: const TitleBarBackButton(),
         ),
         titleSpacing: 0,
-        title: const Text('MY 설정', style: TextStyle(fontSize: TITLEBAR_FONTSIZE, color: BLACK)),
+        title: const Text('MY 설정',
+            style: TextStyle(fontSize: TITLEBAR_FONTSIZE, color: BLACK)),
       ),
-      body: Container(
-        child: Column(
-            children: [
-              top(),
-              serviceList(),
-            ]
-        ),
+      body: Column(
+        children: [
+          top(),
+          serviceList(),
+        ],
       ),
       bottomSheet: SizedBox(
         height: 50,
         child: Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: (){},
-                  child: Container(
-                    color: DARKGRAY,
-                    alignment: Alignment.center,
-                    child: const Text('취소', style: TextStyle(color: WHITE, fontSize: 16)),
-                  ),
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {},
+                child: Container(
+                  color: DARKGRAY,
+                  alignment: Alignment.center,
+                  child: const Text('취소',
+                      style: TextStyle(color: WHITE, fontSize: 16)),
                 ),
               ),
-              Expanded(
-                child: InkWell(
-                  onTap: (){},
-                  child: Container(
-                    color: BLUE,
-                    alignment: Alignment.center,
-                    child: const Text('적용', style: TextStyle(color: WHITE, fontSize: 16)),
-                  ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {},
+                child: Container(
+                  color: BLUE,
+                  alignment: Alignment.center,
+                  child: const Text('적용',
+                      style: TextStyle(color: WHITE, fontSize: 16)),
                 ),
               ),
-            ],
+            ),
+          ],
         ),
-      ),
+      ), // 취소, 적용 버튼
     );
   }
-
 }
