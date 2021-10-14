@@ -29,10 +29,10 @@ class BottomButtons extends StatelessWidget {
   Widget btn_Home() {
     return InkWell(
       onTap: () {
-        pageController.goToPage('My');
+        pageController.goToPage('MY');
       },
       child: Obx((){
-        final bgColor = (pageController.selectedMainBottomTab.value == 'My')? DDarkGray : BLACK;
+        final bgColor = (pageController.selectedMainBottomTab.value == 'MY')? DDarkGray : BLACK;
         return Container(
           color: bgColor,
           padding: const EdgeInsets.all(10),

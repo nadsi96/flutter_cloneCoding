@@ -92,7 +92,7 @@ class MainPage extends StatelessWidget {
             child: Column(children: [
               Expanded(child: GetX<MainController>(builder: (_) {
                 switch (pageController.title.value) {
-                  case 'My':
+                  case 'MY':
                     return MyPage();
                   case '관심종목':
                     return JongmockPage();

@@ -54,7 +54,7 @@ class MyPage extends StatelessWidget {
       }),
       titleSpacing: 0,
       title: const Text(
-        'My',
+        'MY',
         style: TextStyle(
             fontSize: TITLEBAR_FONTSIZE,
             color: BLACK,
