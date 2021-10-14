@@ -46,6 +46,7 @@ class MyPage extends StatelessWidget {
       leading: Obx(() {
         return (pageController.pageStackCnt.value > 1)
             ? InkWell(
+          splashColor: TRANSPARENT,
                 onTap: () => goBack(),
                 child: const TitleBarBackButton(),
               )
@@ -65,6 +66,7 @@ class MyPage extends StatelessWidget {
           child: const Icon(Icons.search, color: BLACK),
         ),
         InkWell(
+          splashColor: TRANSPARENT,
           onTap: (){
             if(myPageController.isLogin.value){
               myPageController.logout();
@@ -148,6 +150,7 @@ class MyPage extends StatelessWidget {
                           fontWeight: FontWeight.w800),
                     ),
                     InkWell(
+                      splashColor: TRANSPARENT,
                       onTap: () {},
                       child: Row(
                         children: [
@@ -202,6 +205,7 @@ class MyPage extends StatelessWidget {
       } else {
         // 로그인되지 않은 화면
         return InkWell(
+          splashColor: TRANSPARENT,
           onTap: () async {
             // 로그인
             final pw = await Get.dialog(InputPw());
@@ -251,6 +255,7 @@ class MyPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(2, (idx) {
           return InkWell(
+            splashColor: TRANSPARENT,
             onTap: () {
               myPageController.accountToggleClick();
             },
@@ -300,7 +305,7 @@ class MyPage extends StatelessWidget {
                   textBaseline: TextBaseline.alphabetic,
                   children: [
                     Text(
-                      '${user.balance}',
+                      formatIntToStr(user.balance),
                       style: TextStyle(
                           fontSize: bigFont,
                           color: BLACK,
@@ -332,6 +337,7 @@ class MyPage extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.all(10),
                       child: InkWell(
+                        splashColor: TRANSPARENT,
                         onTap: () {
                           myPageController.refreshCurrentTime();
                         },
@@ -481,19 +487,22 @@ class MyPage extends StatelessWidget {
                   '종목순위',
                   style: titleStyle,
                 ),
-                Container(
-                  width: 20,
-                  height: 20,
-                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    border: Border.all(color: DARKGRAY),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'i',
-                      style: TextStyle(
-                          fontSize: smallContentFont, color: DARKGRAY),
+                InkWell(
+                  onTap: () => Get.dialog(myPageDialogs.stockRank()),
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      border: Border.all(color: DARKGRAY),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'i',
+                        style: TextStyle(
+                            fontSize: smallContentFont, color: DARKGRAY),
+                      ),
                     ),
                   ),
                 ),
@@ -1164,7 +1173,7 @@ class MyPage extends StatelessWidget {
                   onTap: () {
                     myPageController.refreshNewsUpdateTime();
                   },
-                  child: const Icon(Icons.refresh, color: BLACK),
+                  child: const Icon(Icons.refresh, color: BLACK, size: 26),
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),

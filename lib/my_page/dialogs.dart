@@ -3,6 +3,70 @@ import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:get/get.dart';
 
 class MyPageDialogs {
+  /// 종목순위
+  /// i 버튼 클릭시 보여줄 안내문
+  Dialog stockRank() {
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 30),
+      child: SizedBox(
+        height: 250,
+        child: Column(
+          children: [
+            Container(
+              color: WHITE,
+              height: 200,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    alignment: Alignment.center,
+                    child: Container(
+                      width: 5, height: 5,
+                      color: BLACK,
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text('국내 외국인/기관 종목순위는',
+                            style: TextStyle(fontSize: 14, color: BLACK)),
+                        Text('순매수 금액(백만) 순입니다.',
+                            style: TextStyle(fontSize: 14, color: BLACK)),
+                        Text('- 장중에는 당일 추정 데이터 기준',
+                            style: TextStyle(fontSize: 13, color: BLACK)),
+                        Text('- 장종료 후에는 거래소의 정식 데이터 기준',
+                            style: TextStyle(fontSize: 13, color: BLACK)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            InkWell(
+              onTap: () => Get.back(),
+              child: Container(
+                color: BLUE,
+                height: 50,
+                alignment: Alignment.center,
+                child: const Text('확인',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: WHITE,
+                        fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   /// 주식목록
   /// 그룹 선택
   Dialog selectStockGroup(List<String> groups, String current) {
@@ -19,7 +83,7 @@ class MyPageDialogs {
               alignment: Alignment.center,
               decoration: const BoxDecoration(
                 border: Border(
-                  bottom: BorderSide(color: LIGHTGRAY),
+                  bottom: BorderSide(color: GRAY),
                 ),
               ),
               child: const Text(
@@ -33,16 +97,25 @@ class MyPageDialogs {
                 itemBuilder: (BuildContext context, int index) {
                   final groupName = groups[index];
                   return InkWell(
-                    onTap: (){
-                      Get.back(result: groupName);
-                    },
-                    child: Container(
-                      height: 80,
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      alignment: Alignment.centerLeft,
-                      child: Text(groupName, style: TextStyle(fontSize: 16, color: (current == groupName)?BLUE:BLACK),),
-                    )
-                  );
+                      onTap: () {
+                        Get.back(result: groupName);
+                      },
+                      child: Container(
+                        height: 80,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        alignment: Alignment.centerLeft,
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: LIGHTGRAY),
+                          ),
+                        ),
+                        child: Text(
+                          groupName,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: (current == groupName) ? BLUE : BLACK),
+                        ),
+                      ));
                 },
               ),
             ),

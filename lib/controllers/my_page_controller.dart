@@ -170,8 +170,6 @@ class MyPageController extends GetxController {
   void logout() {
     isLogin.value = false;
     pw = '';
-    selectedStockGroup.value = '최근조회종목';
-    // user.value = User(name: '', account: '', stockGroups: {});
   }
 
   /// 세계지수
