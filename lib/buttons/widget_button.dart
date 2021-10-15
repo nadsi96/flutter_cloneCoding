@@ -288,7 +288,7 @@ class BlueGrayButton extends StatelessWidget{
   Widget build(BuildContext context) {
     return  Container(
         padding: EdgeInsets.fromLTRB(paddingH, paddingV, paddingH, paddingV),
-        color: isSelected? BLUE: LLLIGHTGRAY,
+        color: isSelected? BLUE: LLIGHTGRAY,
         child: Center(
             child: Text(
                 text, style: TextStyle(color: isSelected? WHITE: GRAY, fontSize: fontSize)

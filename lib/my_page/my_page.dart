@@ -122,10 +122,15 @@ class MyPage extends StatelessWidget {
       splashColor: TRANSPARENT,
       onTap: () async {
         // 로그인
-        final pw = await Get.dialog(InputPw());
+        if(myPageController.login('123456')){
+          // 성공
+        }else{
+          // 실패
+        }
+        /*final pw = await Get.dialog(InputPw());
         if (myPageController.login(pw)) {
           // user = usersData[pw];
-        }
+        }*/
       },
       child: Container(
         margin: marginSpace,

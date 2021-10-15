@@ -27,7 +27,16 @@ class EditMyPage extends StatelessWidget {
     '국내주식찾기': false
   };
 
-  EditMyPage({Key? key}) : super(key: key);
+  Map<String, bool> previousState = {};
+  List<String> previousOrder = [];
+  EditMyPage({Key? key}) : super(key: key){
+
+    // 수정 전 상태 저장
+    for(var item in controller.myPageCheckSelected.entries){
+      previousState[item.key] = item.value.value;
+    }
+    previousOrder = List.of(controller.myPageEditOrder.value);
+  }
 
   /// AppBar 바로 밑
   /// 현재 선택된 카드 수 알려줌
@@ -185,6 +194,16 @@ class EditMyPage extends StatelessWidget {
     );
   }
 
+  /// 수정사항 취소
+  void cancel(){
+    controller.myPageEditOrder.value = List.of(previousOrder);
+    for(var item in previousState.entries){
+      controller.myPageCheckSelected[item.key]!.value = item.value;
+    }
+    Get.back();
+    // controller.myPageEditOrder.refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,7 +211,7 @@ class EditMyPage extends StatelessWidget {
         backgroundColor: WHITE,
         shadowColor: TRANSPARENT,
         leading: InkWell(
-          onTap: () => Get.back(),
+          onTap: () => cancel(),
           child: const TitleBarBackButton(),
         ),
         titleSpacing: 0,
@@ -211,7 +230,7 @@ class EditMyPage extends StatelessWidget {
           children: [
             Expanded(
               child: InkWell(
-                onTap: () {},
+                onTap: () => cancel(),
                 child: Container(
                   color: DARKGRAY,
                   alignment: Alignment.center,
@@ -222,7 +241,7 @@ class EditMyPage extends StatelessWidget {
             ),
             Expanded(
               child: InkWell(
-                onTap: () {},
+                onTap: () => Get.back(),
                 child: Container(
                   color: BLUE,
                   alignment: Alignment.center,
