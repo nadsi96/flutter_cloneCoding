@@ -63,7 +63,6 @@ bool isTopEqual(String a, String b){
 }*/
 
 String formatStringComma(String item){
-  print('formatStringComma $item');
   int cnt = 0;
   String temp = '';
   for(int i = item.length-1; i >= 0 ; i--){
@@ -72,7 +71,6 @@ String formatStringComma(String item){
       temp = ',$temp';
       cnt = 0;
     }
-    print(temp);
   }
   return temp;
 }
@@ -103,5 +101,28 @@ Color getColorWithSign(int sign){
       return BLUE;
     default:
       return BLACK;
+  }
+}
+
+/// 부호따라 그래프 이미지 경로
+String getGraphImgPathWithSign(int sign){
+  switch(sign){
+    case 1:
+      return 'assets/images/img1.png';
+    case -1:
+      return 'assets/images/img2.png';
+    default:
+      return 'assets/images/img3.png';
+  }
+}
+
+Icon? getIconWithSign(int sign){
+  switch(sign){
+    case 1:
+      return const Icon(Icons.arrow_drop_up, color: RED, size: 30);
+    case -1:
+      return const Icon(Icons.arrow_drop_down, color: BLUE, size: 30);
+    default:
+      return null;
   }
 }
