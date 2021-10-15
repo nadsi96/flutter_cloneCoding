@@ -12,13 +12,13 @@ Widget stockInfo(Stock stock) {
 
   return Container(
     height: 70,
-    padding: const EdgeInsets.all(10),
+    padding: const EdgeInsets.symmetric(vertical: 10),
     color: WHITE,
     child: Row(
       children: [
         Container(
             alignment: Alignment.center,
-            margin: const EdgeInsets.only(left: 10, right: 20),
+            margin: const EdgeInsets.only(right: 20),
             child: Image.asset(
               getGraphImgPathWithSign(stock.sign),
               height: 30,
@@ -63,7 +63,14 @@ Widget stockInfo(Stock stock) {
   );
 }
 
-AppBar topBar({required String title, List<Widget>? actions, bool bottomSeparate=false}) {
+/// 상단바
+/// title - 페이지 타이틀
+/// actions - 바 오른쪽에 들어갈 내용
+/// bottomSeparate - 상단바 아래 구분선 - true - 생성, false - ㄴㄴ
+AppBar topBar(
+    {required String title,
+    List<Widget>? actions,
+    bool bottomSeparate = false}) {
   final pageController = Get.find<TabPageController>();
   return AppBar(
     leading: Obx(() {
@@ -91,12 +98,56 @@ AppBar topBar({required String title, List<Widget>? actions, bool bottomSeparate
     actions: actions,
     shadowColor: TRANSPARENT,
     backgroundColor: WHITE,
-    bottom: (bottomSeparate) ? PreferredSize(
-      preferredSize: const Size.fromHeight(2),
-      child: Container(
-        color: LIGHTGRAY,
-        height: 2,
-      ),
-    ) : null,
+    bottom: (bottomSeparate)
+        ? PreferredSize(
+            preferredSize: const Size.fromHeight(2),
+            child: Container(
+              color: LIGHTGRAY,
+              height: 2,
+            ),
+          )
+        : null,
+  );
+}
+
+/// 종목검색
+Widget searchStock(String stockName) {
+  return Container(
+    height: 40,
+    decoration: BoxDecoration(
+      color: WHITE,
+      border: Border.all(color: GRAY),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: InkWell(
+            onTap: () => print('주식 종목 찾기'),
+            child: Row(
+              children: [
+                const Icon(Icons.search, size: 30, color: GRAY),
+                Text(stockName,
+                    style: const TextStyle(color: GRAY, fontSize: 16)),
+                const Spacer(),
+              ],
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: () => print('종목 설명 기업개요, 메모'),
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: const BoxDecoration(
+              border: Border(
+                left: BorderSide(color: GRAY),
+              ),
+            ),
+            padding: const EdgeInsets.all(5),
+            child: Image.asset('assets/images/i.png', fit: BoxFit.fitHeight),
+          ),
+        ),
+      ],
+    ),
   );
 }

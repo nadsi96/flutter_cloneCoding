@@ -24,7 +24,7 @@ class PresentPrice extends StatelessWidget {
 
   PresentPrice({Key? key}) : super(key: key);
 
-  List<Widget> topBarActions(){
+  List<Widget> topBarActions() {
     return [
       Container(
           padding: const EdgeInsets.all(15),
@@ -34,6 +34,7 @@ class PresentPrice extends StatelessWidget {
           child: const Icon(Icons.menu, color: BLACK))
     ];
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,76 +43,54 @@ class PresentPrice extends StatelessWidget {
         color: WHITE,
         child: Column(
           children: [
-            Column(
-              children: [
-                IntrinsicHeight(
-                  child: Row(
-                    // 주식 선택부분
-                    // 검색창, 매수,매도 버튼
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: LIGHTGRAY)),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                child: const Icon(Icons.search_rounded,
-                                    color: GRAY),
-                              ),
-                              GetX<MainController>(
-                                  builder: (_) => Text(
-                                      controller.getSelectedStock(),
-                                      style: const TextStyle(
-                                          color: GRAY, fontSize: 16)))
-                            ],
-                          ),
-                        ),
-                      ), // 검색창 (돋보기아이콘, 텍스트)
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                top: BorderSide(color: LIGHTGRAY),
-                                bottom: BorderSide(color: LIGHTGRAY),
-                                right: BorderSide(color: LIGHTGRAY))),
-                        child: Image.asset(
-                          "assets/images/i.png",
-                          width: 40,
-                        ),
+                        child: Obx(() {
+                          return searchStock(controller.getSelectedStock());
+                        }),
                       ),
                       Container(
-                        margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
-                        child: TextBtn("매수",
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            fontColor: RED,
-                            backgroundColor: LLLIGHTGRAY,
-                            borderColor: LLIGHTGRAY,
-                            padding: 10),
+                        height: 40,
+                        width: 60,
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(left: 5),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: LLIGHTGRAY),
+                            color: LLLIGHTGRAY),
+                        child: const Text('매수',
+                            style: TextStyle(
+                                color: RED,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold)),
                       ), // 매수버튼
                       Container(
-                        margin: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-                        child: TextBtn("매도",
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            fontColor: BLUE,
-                            backgroundColor: LLLIGHTGRAY,
-                            borderColor: LLIGHTGRAY,
-                            padding: 10),
+                        height: 40,
+                        width: 60,
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(left: 5),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: LLIGHTGRAY),
+                            color: LLLIGHTGRAY),
+                        child: const Text('매도',
+                            style: TextStyle(
+                                color: BLUE,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold)),
                       ), // 매도버튼
                     ],
                   ),
-                ),
-                GetX<MainController>(builder: (_) {
-                  // 주식 정보
-                  // 그래프, 현재가, 등락비율 등
-                  return stockInfo(controller.getSelectedStockData());
-                  // stockInfo(controller.getSelectedStock());
-                }),
-              ],
+                  Obx((){
+                    // 주식 정보
+                    // 그래프, 현재가, 등락비율 등
+                    return stockInfo(controller.getSelectedStockData());
+                  }),
+                ],
+              ),
             ),
             tabMenu(), // 테이블에 보여줄 내용 선택할 탭메뉴
             Expanded(
