@@ -46,18 +46,19 @@ class InvestorTable extends StatelessWidget {
     print("investor Table class");
 
     print("set Controller");
-    pd.initData();
-    controller.investorPage_initData(pd);
+    // pd.initData();
+    // controller.investorPage_initData(pd);
+    controller.investorPage_setData(pd.get30());
     print("end investor Table constructor");
   }
 
-  Color getColor(int item) {
-    if (item > 0) {
-      return RED;
-    } else if (item < 0) {
+  Color getColor(String item) {
+    if (item[0] ==  '0') {
+      return BLACK;
+    } else if (item[0] == '-') {
       return BLUE;
     } else {
-      return BLACK;
+      return RED;
     }
   }
 
@@ -114,53 +115,11 @@ class InvestorTable extends StatelessWidget {
       ]
     );
   }
-  /*/// 테이블 항목뷰 생성
-  /// 일자부분
-  Widget buildGridItem_Date(DateTime item) {
-    final date =
-        "${formatIntToStringLen2(item.year % 100)}/${formatIntToStringLen2(item.month)}/${formatIntToStringLen2(item.day)}";
-    return Container(
-      width: tableWidth,
-      height: tableHeight,
-      decoration: BoxDecoration(border: Border.all(color: GRAY, width: 0.5)),
-      child: Center(
-        child: Text(
-          date,
-          style: const TextStyle(fontSize: 12, color: BLACK),
-        ),
-      ),
-    );
-  }
 
-  /// 테이블 항목뷰 생성
-  /// 일자 제외한 나머지
-  Widget buildGridItem(dynamic item) {
-    if (item is int) {
-      var v = formatIntToStr(item);
-      final color;
-      if (item > 0) {
-        color = RED;
-      } else if (item < 0) {
-        color = BLUE;
-      } else {
-        color = BLACK;
-      }
-      return Container(
-        width: tableWidth,
-        height: tableHeight,
-        alignment: Alignment.centerRight,
-        decoration: BoxDecoration(
-          border: Border.all(color: GRAY, width: 0.5),
-        ),
-        child: Text(
-          v,
-          style: TextStyle(fontSize: 14, color: color),
-        ),
-      );
-    } else {
-      return buildGridItem_Date(item);
-    }
-  }*/
+  Future<bool> getMoreData() async{
+    // controller.investorPage_addRow(pd);
+    return true;
+  }
 
   /// 테이블
   /// Col - Row(일자/주가, 나머지 헤더)
@@ -267,7 +226,12 @@ class InvestorTable extends StatelessWidget {
                     if (firstColumnController.hasClients &&
                         firstColumnController.offset ==
                             firstColumnController.position.maxScrollExtent) {
-                      controller.investorPage_addRow(pd);
+                      // var isUpdating = true;
+                      // isUpdating = getMoreData();
+
+
+                      // controller.investorPage_addRow(pd);
+                      controller.investorPage_addRow(pd.get30());
                       print("scroll bottom");
                     }
                     return false;
@@ -327,8 +291,9 @@ class ProduceInvestorData {
   void initData() => dataSet = [];
 
   // 30개 추가
-  void get30() {
-    // var temp = [];
+  // void get30() {
+  List<InvestorData> get30(){
+    List<InvestorData> dataSet = [];
     var i = 0;
 
     while (i < 30) {
@@ -338,33 +303,25 @@ class ProduceInvestorData {
       }
       i++;
       dataSet.add(InvestorData(date: '${formatIntToStringLen2(currentDay.year%100)}/${formatIntToStringLen2(currentDay.month)}/${formatIntToStringLen2(currentDay.day)}',
-        stockPrice: ran.nextInt(40000) - 20000,
-        personal: ran.nextInt(40000) - 20000,
-        foreign: ran.nextInt(40000) - 20000,
-        institution: ran.nextInt(40000) - 20000,
-        program: ran.nextInt(40000) - 20000,
-        invest: ran.nextInt(40000) - 20000,
-        insurance: ran.nextInt(40000) - 20000,
-        rely: ran.nextInt(40000) - 20000,
-        fund: ran.nextInt(40000) - 20000,
-        bank: ran.nextInt(40000) - 20000,
-        rest: ran.nextInt(40000) - 20000,
-        nation: ran.nextInt(40000) - 20000,
-        restCooperation: ran.nextInt(40000) - 20000,
-        restForeign: ran.nextInt(40000) - 20000,
-        yeon: ran.nextInt(40000) - 20000,
+        stockPrice: formatIntToStr(ran.nextInt(40000) - 20000),
+        personal: formatIntToStr(ran.nextInt(40000) - 20000),
+        foreign: formatIntToStr(ran.nextInt(40000) - 20000),
+        institution: formatIntToStr(ran.nextInt(40000) - 20000),
+        program: formatIntToStr(ran.nextInt(40000) - 20000),
+        invest: formatIntToStr(ran.nextInt(40000) - 20000),
+        insurance: formatIntToStr(ran.nextInt(40000) - 20000),
+        rely: formatIntToStr(ran.nextInt(40000) - 20000),
+        fund: formatIntToStr(ran.nextInt(40000) - 20000),
+        bank: formatIntToStr(ran.nextInt(40000) - 20000),
+        rest: formatIntToStr(ran.nextInt(40000) - 20000),
+        nation: formatIntToStr(ran.nextInt(40000) - 20000),
+        restCooperation: formatIntToStr(ran.nextInt(40000) - 20000),
+        restForeign: formatIntToStr(ran.nextInt(40000) - 20000),
+        yeon: formatIntToStr(ran.nextInt(40000) - 20000),
       ));
     }
-    // dataSet.addAll(temp);
+    return dataSet;
   }
-
-  // List<DateTime> getDate() {
-  //   return List.generate(dataSet.length, (idx) => dataSet[idx][0]);
-  // }
-  //
-  // List<int> getPrice() {
-  //   return List.generate(dataSet.length, (idx) => dataSet[idx][1]);
-  // }
 }
 
 class InvestorData {
@@ -380,54 +337,54 @@ class InvestorData {
    기타금융 - 저축은행, 신협, 여신사 등(은행, 금융투자, 보험이 아닌 금융기관)
    */
   final String date;
-  final int stockPrice;
-  final int personal;
-  final int foreign;
-  final int institution;
-  final int program;
-  final int invest; // 금융투자
-  final int insurance;
-  final int rely; // 투신
-  final int fund; // 사모펀드
-  final int bank;
-  final int rest; // 기타금융
-  final int yeon; // 연기금
-  final int nation; // 국가지자체
-  final int restCooperation; // 기타법인
-  final int restForeign; // 기타외국인
+  final String stockPrice;
+  final String personal;
+  final String foreign;
+  final String institution;
+  final String program;
+  final String invest; // 금융투자
+  final String insurance;
+  final String rely; // 투신
+  final String fund; // 사모펀드
+  final String bank;
+  final String rest; // 기타금융
+  final String yeon; // 연기금
+  final String nation; // 국가지자체
+  final String restCooperation; // 기타법인
+  final String restForeign; // 기타외국인
 
   InvestorData({
     this.date = "",
-    this.stockPrice = 0,
-    this.personal = 0,
-    this.foreign = 0,
-    this.institution = 0,
-    this.program = 0,
-    this.invest = 0,
-    this.insurance = 0,
-    this.rely = 0,
-    this.fund = 0,
-    this.bank = 0,
-    this.rest = 0,
-    this.yeon = 0,
-    this.nation = 0,
-    this.restCooperation = 0,
-    this.restForeign = 0,
+    this.stockPrice = '0',
+    this.personal = '0',
+    this.foreign = '0',
+    this.institution = '0',
+    this.program = '0',
+    this.invest = '0',
+    this.insurance = '0',
+    this.rely = '0',
+    this.fund = '0',
+    this.bank = '0',
+    this.rest = '0',
+    this.yeon = '0',
+    this.nation = '0',
+    this.restCooperation = '0',
+    this.restForeign = '0',
   });
 
-  String getStockPrice() => formatIntToStr(stockPrice);
-  String getPersonal() => formatIntToStr(personal);
-  String getForeign() => formatIntToStr(foreign);
-  String getInstitution() => formatIntToStr(institution);
-  String getProgram() => formatIntToStr(program);
-  String getInvest() => formatIntToStr(invest);
-  String getInsurance() => formatIntToStr(insurance);
-  String getRely() => formatIntToStr(rely);
-  String getFund() => formatIntToStr(fund);
-  String getBank() => formatIntToStr(bank);
-  String getRest() => formatIntToStr(rest);
-  String getYeon() => formatIntToStr(yeon);
-  String getNation() => formatIntToStr(nation);
-  String getRestCooperation() => formatIntToStr(restCooperation);
-  String getRestForeign() => formatIntToStr(restForeign);
+  String getStockPrice() => stockPrice;
+  String getPersonal() => personal;
+  String getForeign() => foreign;
+  String getInstitution() => (institution);
+  String getProgram() => (program);
+  String getInvest() => (invest);
+  String getInsurance() => (insurance);
+  String getRely() => (rely);
+  String getFund() => (fund);
+  String getBank() => (bank);
+  String getRest() => (rest);
+  String getYeon() => (yeon);
+  String getNation() => (nation);
+  String getRestCooperation() => (restCooperation);
+  String getRestForeign() => (restForeign);
 }

@@ -201,15 +201,15 @@ class MainController extends GetxController {
   Stock getSelectedStockData(){
     if(selectedStock.value == "" && stocks.value.isNotEmpty){
       if(stockData.containsKey(stocks.value.first)){
-        return stockData[stocks.value.first]!.first;
+        return stockData[stocks.value.first]!;
       }else{
-        return stockData.values.first.first;
+        return stockData.values.first;
       }
     }else{
       if(stockData.containsKey(getSelectedStock())){
-        return stockData[getSelectedStock()]!.first;
+        return stockData[getSelectedStock()]!;
       }else{
-        return stockData.values.first.first;
+        return stockData.values.first;
       }
     }
   }
@@ -229,24 +229,14 @@ class MainController extends GetxController {
     // investorPage_tableFirstColumn.value = (investorPage_date_price_flag.value)? d.getDate() : d.getPrice();
   }
 
-  void investorPage_initData(ProduceInvestorData d){
-    // investorPage_tableFirstColumn.value.clear();
-    // investorPage_tableRestColumns.value.clear();
-    investorPage_Data.value.clear();
-    investorPage_addRow(d);
-  }
-  void investorPage_addRow(ProduceInvestorData d){
-    print("addRow");
-    d.get30();
-    print("get30");
-    investorPage_Data.value = List.of(d.dataSet);
-    // investorPage_tableFirstColumn.value = (investorPage_date_price_flag.value)? d.getDate() : d.getPrice();
-    // print("flag");
-    // investorPage_tableRestColumns.value = List.generate(d.dataSet.length,
-    //         (index) => d.dataSet[index].getRange(2, d.dataSet[index].length));
-    print("end addRow");
+  void investorPage_setData(List<InvestorData> dataList){
+    investorPage_Data.value = dataList;
   }
 
+  void investorPage_addRow(List<InvestorData> dataList){
+    investorPage_Data.value.addAll(dataList);
+    investorPage_Data.refresh();
+  }
 
 
   /// 주식 현재가 - 거래원
@@ -311,10 +301,10 @@ class MainController extends GetxController {
 
 
   /// 주식현재가 - 호가
-  void hogaPage_setHoga(ProduceHogaData data, int price){
+  void hogaPage_setHoga(ProduceHogaData data){
     data.setRate();
-    hogaPage_sellHoga.value = data.getSellHoga(price);
-    hogaPage_buyHoga.value = data.getBuyHoga(price);
+    hogaPage_sellHoga.value = data.getSellHoga(getSelectedStockData());
+    hogaPage_buyHoga.value = data.getBuyHoga(getSelectedStockData());
 
     hogaPage_standardPrice.value = data.getStandardPrice();
 
