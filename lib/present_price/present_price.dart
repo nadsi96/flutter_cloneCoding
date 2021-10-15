@@ -24,7 +24,6 @@ class PresentPrice extends StatelessWidget {
 
   PresentPrice({Key? key}) : super(key: key);
 
-*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
