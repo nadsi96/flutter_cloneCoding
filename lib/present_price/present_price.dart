@@ -24,35 +24,20 @@ class PresentPrice extends StatelessWidget {
 
   PresentPrice({Key? key}) : super(key: key);
 
+  List<Widget> topBarActions(){
+    return [
+      Container(
+          padding: const EdgeInsets.all(15),
+          child: Image.asset("assets/images/bell.png")),
+      Container(
+          margin: const EdgeInsets.only(right: 10),
+          child: const Icon(Icons.menu, color: BLACK))
+    ];
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Obx((){
-          final flag = pageController.pageStackCnt.value > 1;
-          return (flag) ? InkWell(
-              onTap: () {
-                pageController.backToPage();
-                if (pageController.title.value != "주식현재가") {
-                  Get.back();
-                }
-              },
-              child: TitleBarBackButton()) : Container();
-        }),
-        titleSpacing: 0,
-        title: const Text("주식현재가",
-            style: TextStyle(fontSize: TITLEBAR_FONTSIZE, color: BLACK)),
-        actions: [
-          Container(
-              padding: const EdgeInsets.all(15),
-              child: Image.asset("assets/images/bell.png")),
-          Container(
-              margin: const EdgeInsets.only(right: 10),
-              child: const Icon(Icons.menu, color: BLACK))
-        ],
-        backgroundColor: WHITE,
-        shadowColor: TRANSPARENT,
-      ),
+      appBar: topBar(title: '주식현재가', actions: topBarActions()),
       body: Container(
         color: WHITE,
         child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
+import 'package:flutter_prac_jongmock/commons/commons.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
@@ -54,28 +55,10 @@ class MyPage extends StatelessWidget {
     };
   }
 
-  /// 회색 밑줄이 있는 AppBar
-  /// 이전 페이지로, 타이틀, 검색, 메뉴(지금은 로그아웃)
-  AppBar topBar() {
-    return AppBar(
-      leading: Obx(() {
-        return (pageController.pageStackCnt.value > 1)
-            ? InkWell(
-                splashColor: TRANSPARENT,
-                onTap: () => goBack(),
-                child: const TitleBarBackButton(),
-              )
-            : Container();
-      }),
-      titleSpacing: 0,
-      title: const Text(
-        'MY',
-        style: TextStyle(
-            fontSize: TITLEBAR_FONTSIZE,
-            color: BLACK,
-            fontWeight: FontWeight.normal),
-      ),
-      actions: [
+  /// AppBar actions
+  /// 검색, 메뉴(지금은 로그아웃)
+  List<Widget> topBarActions() {
+    return [
         Container(
           margin: const EdgeInsets.only(right: 15),
           child: const Icon(Icons.search, color: BLACK),
@@ -93,17 +76,7 @@ class MyPage extends StatelessWidget {
             child: const Icon(Icons.menu, color: BLACK),
           ),
         ),
-      ],
-      shadowColor: TRANSPARENT,
-      backgroundColor: WHITE,
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(2),
-        child: Container(
-          color: LIGHTGRAY,
-          height: 2,
-        ),
-      ),
-    );
+      ];
   }
 
   /// 이전 페이지로 이동
@@ -1400,7 +1373,7 @@ class MyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(),
+      appBar: topBar(title: 'MY', actions: topBarActions(), bottomSeparate: true),
       backgroundColor: LIGHTGRAY,
       body: Stack(
         fit: StackFit.expand,

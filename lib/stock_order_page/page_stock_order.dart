@@ -13,6 +13,7 @@ class StockOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: topBar(title: '주식주문'),
       body: Column(
         children: [stockInfo(mainController.getSelectedStockData())],
       ),

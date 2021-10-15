@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
+import 'package:flutter_prac_jongmock/commons/commons.dart';
 import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:flutter_prac_jongmock/divider.dart';
 import 'package:get/get.dart';
@@ -17,22 +18,7 @@ class JongmockPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: WHITE,
-          titleSpacing: 0,
-          leading: Obx((){
-            return (pageController.pageStackCnt.value > 1)
-                ? InkWell(
-                onTap: () {
-                  pageController.backToPage();
-                },
-                child: TitleBarBackButton())
-                : Container(width: 0);
-          }),
-          title: Text(pageController.title.value,
-              style: const TextStyle(color: BLACK, fontSize: 18)),
-          shadowColor: TRANSPARENT,
-        ),
+        appBar: topBar(title: '관심종목'),
         body: SafeArea(
             child: Column(children: [
               TopButtons(), // 상단 버튼(최근조회종목, 현재가, 등록, 오늘뉴스, 그래프 버튼
