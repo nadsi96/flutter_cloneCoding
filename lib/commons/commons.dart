@@ -116,7 +116,7 @@ Widget searchStock(String stockName) {
     height: 40,
     decoration: BoxDecoration(
       color: WHITE,
-      border: Border.all(color: GRAY),
+      border: Border.all(color: LIGHTGRAY),
     ),
     child: Row(
       children: [
@@ -140,7 +140,7 @@ Widget searchStock(String stockName) {
             height: 40,
             decoration: const BoxDecoration(
               border: Border(
-                left: BorderSide(color: GRAY),
+                left: BorderSide(color: LIGHTGRAY),
               ),
             ),
             padding: const EdgeInsets.all(5),
