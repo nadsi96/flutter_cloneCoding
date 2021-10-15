@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 
 // import 'package:flutter_prac_jongmock/register_page/register_page.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
+import 'package:flutter_prac_jongmock/stock_order_page/page_stock_order.dart';
 import 'package:get/get.dart';
 
 import '../divider.dart';
@@ -101,6 +102,8 @@ class MainPage extends StatelessWidget {
                     return JongmockPage();
                   case '주식현재가':
                     return PresentPrice();
+                  case '주식주문':
+                    return StockOrder();
                   default:
                     return EmptyPage();
                 }

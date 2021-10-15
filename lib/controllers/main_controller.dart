@@ -190,6 +190,8 @@ class MainController extends GetxController {
 
   /// 선택된 주식 title
   String getSelectedStock() {
+    // 선택된 주식이 없고, 주식 리스트가 비어있지 않다면
+    // 주식 리스트에서 첫번째 항목 반환
     if (selectedStock.value == "" && stocks.value.isNotEmpty) {
       return stocks.value.first;
     }
@@ -199,6 +201,8 @@ class MainController extends GetxController {
   /// 선택된 것 없으면 보유종목 중 첫번째 항목으로
   /// Stock()
   Stock getSelectedStockData(){
+    print('getSelectedStockData');
+    print(selectedStock.value);
     if(selectedStock.value == "" && stocks.value.isNotEmpty){
       if(stockData.containsKey(stocks.value.first)){
         return stockData[stocks.value.first]!;
@@ -206,7 +210,7 @@ class MainController extends GetxController {
         return stockData.values.first;
       }
     }else{
-      if(stockData.containsKey(getSelectedStock())){
+      if(stockData.containsKey(selectedStock.value)){
         return stockData[getSelectedStock()]!;
       }else{
         return stockData.values.first;
@@ -271,12 +275,8 @@ class MainController extends GetxController {
   }
 
   void timePage_addRow(ProduceTimeData pd){
-    // var temp = timePage_data.value;
-    // temp.addAll(data);
-    // timePage_data.value = temp;
     pd.getMore(getSelectedStock());
     timePage_data.value = List.generate(pd.dataSet.length, (idx) => pd.dataSet[idx]);
-    // timePage_data.value = pd.dataSet;
     print(timePage_data.value.length);
   }
 

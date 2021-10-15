@@ -32,7 +32,7 @@ class Stock{
 final stockData = {
   "크래프톤" :
     Stock(title: "크래프톤", type: "서비스업", price: '475500', sign: -1, count: '123772', dist: '3000', yesterday_close: '478500', today_start: '478000', today_close: '475500'),
-  "Naver" :
+  "NAVER" :
     Stock(title: "NAVER", type: "서비스업", price: '396000', sign: 1, count: '232543', dist: '1000', yesterday_close: '395000', today_close: '396000', today_start: '400000' ),
   "카카오" :
     Stock(title: "카카오", type: "서비스업", price: '121000', sign: -1, count: '1459706', dist: '500', yesterday_close: '121500', today_close: '121000', today_start: '123000'),
@@ -186,7 +186,7 @@ final stockData = {
 };*/
 
 
-var myStocks = <String>["Naver", "카카오", "삼성전자"];
+var myStocks = <String>["NAVER", "카카오", "삼성전자"];
 
 
 Stock? getStock(String name, int i){
