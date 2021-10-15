@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_prac_jongmock/buttons/widget_button.dart';
+import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/divider.dart';
 import 'package:flutter_prac_jongmock/register_page_with_getx/register_page_controller.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';

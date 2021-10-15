@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_prac_jongmock/buttons/widget_button.dart';
+import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/hoga/ten_hoga.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
-import 'package:flutter_prac_jongmock/buttons/widget_button.dart';
+import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 
 class StockListItem extends StatelessWidget {
   // 항목에 나타낼 주식 정보

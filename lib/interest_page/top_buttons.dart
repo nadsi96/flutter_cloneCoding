@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_prac_jongmock/buttons/btn_price.dart';
-import 'package:flutter_prac_jongmock/buttons/widget_button.dart';
+import 'package:flutter_prac_jongmock/commons/buttons/btn_price.dart';
+import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 // import 'package:flutter_prac_jongmock/register_page/register_page.dart';
 import 'package:flutter_prac_jongmock/register_page_with_getx/register_page.dart';
