@@ -31,11 +31,11 @@ class MyPage extends StatelessWidget {
   final double midContentFont = 16;
 
   final double space = 10;
-  final marginSpace = const EdgeInsets.only(bottom: 10); // 영역간 margin
+  final marginSpace = const EdgeInsets.only(bottom: 10); // 항목간 margin
   final titleStyle =
-      const TextStyle(fontSize: 18, color: BLACK, fontWeight: FontWeight.w700);
+      const TextStyle(fontSize: 18, color: BLACK, fontWeight: FontWeight.w700); // 항목 타이틀 스타일
 
-  final myPageDialogs = MyPageDialogs();
+  final myPageDialogs = MyPageDialogs(); // MyPage에서 사용되는 다이얼로그들
 
   /// 선택한 항목에 따라 보여줄 뷰
   Map<String, Widget> sections = {};
@@ -331,7 +331,7 @@ class MyPage extends StatelessWidget {
                   textBaseline: TextBaseline.alphabetic,
                   children: [
                     Text(
-                      formatIntToStr(user.balance),
+                      user.balance,
                       style: TextStyle(
                           fontSize: bigFont,
                           color: BLACK,

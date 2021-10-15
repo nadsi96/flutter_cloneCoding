@@ -27,15 +27,15 @@ class EditMyPage extends StatelessWidget {
     '국내주식찾기': false
   };
 
-  Map<String, bool> previousState = {};
-  List<String> previousOrder = [];
+  Map<String, bool> previousState = {}; // 편집 전 체크 상태
+  List<String> previousOrder = []; // 편집 전 순서
   EditMyPage({Key? key}) : super(key: key){
 
     // 수정 전 상태 저장
     for(var item in controller.myPageCheckSelected.entries){
-      previousState[item.key] = item.value.value;
+      previousState[item.key] = item.value.value; // 체크상태
     }
-    previousOrder = List.of(controller.myPageEditOrder.value);
+    previousOrder = List.of(controller.myPageEditOrder.value); // 순서
   }
 
   /// AppBar 바로 밑
