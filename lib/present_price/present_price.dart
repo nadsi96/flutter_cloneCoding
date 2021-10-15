@@ -2,6 +2,7 @@ import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
+import 'package:flutter_prac_jongmock/commons/commons.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/news/page_news.dart';
@@ -23,105 +24,7 @@ class PresentPrice extends StatelessWidget {
 
   PresentPrice({Key? key}) : super(key: key);
 
-  /// 테이블 윗부분
-  /// 조회하는 주식의 현재가, 등락비율 등 나타내는 부분
-  /// item - 정보 표시할 주식
-  Widget stockInfo(String item) {
-    final Stock data;
-    if (stockData.containsKey(item)) {
-      // data = stockData[item]!.first;
-      data = stockData[item]!;
-    } else {
-      // data = stockData.values.first.first;
-      data = stockData.values.first;
-    }
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        const double bigFontsize = 30;
-        const double smallFontsize = 14;
-
-        String? rateImgStr; // 대비기호 이미지 경로
-        Color textColor = BLACK; // 글자색 지정
-        if (data.sign == 1) {
-          rateImgStr = "assets/images/rateImg1.png";
-          textColor = RED;
-        } else if (data.sign == -1) {
-          rateImgStr = "assets/images/rateImg2.png";
-          textColor = BLUE;
-        }
-
-        return Container(
-            margin: const EdgeInsets.all(5),
-
-            /// - Row - 그래프, 현재가, Column,   %
-            ///                        ㄴRow - 대비기호, 전일대비
-            ///                          주식잔량
-            child: Row(children: [
-              Expanded(
-                  child: Row(
-                      // 그래프, 현재가
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                    Image.asset(getGraphImgPathWithSign(controller.getSelectedStockData().sign), height: 50),
-                    Expanded(
-                        child: Center(
-                            child: Text(formatStringComma(data.price),
-                                style: TextStyle(
-                                    color: textColor, fontSize: bigFontsize))))
-                  ])),
-              Expanded(
-                child: Row(children: [
-                  Expanded(
-                      child: Column(
-                          // Row - 대비기호, 전일대비
-                          // 주식잔량
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // 대비기호. 변화없으면 빈칸으로
-                              (rateImgStr == null)
-                                  ? Container()
-                                  : Image.asset(
-                                      rateImgStr,
-                                      width: 15,
-                                    ),
-                              // 주식잔량
-                              Text(formatStringComma(data.dist),
-                                  style: TextStyle(
-                                      color: textColor,
-                                      fontSize: smallFontsize))
-                            ]),
-                        Text("${formatStringComma(data.count)}주", // 주식잔량
-                            style: const TextStyle(
-                                color: BLACK, fontSize: smallFontsize))
-                      ])),
-                  Expanded(
-                      child: Container(
-                          // 전일대비
-                          margin: const EdgeInsets.only(right: 10),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: [
-                                Text(data.getDrate(),
-                                    style: TextStyle(
-                                        color: textColor,
-                                        fontSize: bigFontsize)),
-                                Text("%",
-                                    style: TextStyle(
-                                        color: textColor, fontSize: 18))
-                              ])))
-                ]),
-              )
-            ]));
-      },
-    );
-  }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,7 +124,8 @@ class PresentPrice extends StatelessWidget {
                 GetX<MainController>(builder: (_) {
                   // 주식 정보
                   // 그래프, 현재가, 등락비율 등
-                  return stockInfo(controller.getSelectedStock());
+                  return stockInfo(controller.getSelectedStockData());
+                  // stockInfo(controller.getSelectedStock());
                 }),
               ],
             ),
