@@ -40,19 +40,14 @@ class PresentPrice extends StatelessWidget {
         const double bigFontsize = 30;
         const double smallFontsize = 14;
 
-        String graphImgStr = ""; // 그래프 이미지 경로
         String? rateImgStr; // 대비기호 이미지 경로
         Color textColor = BLACK; // 글자색 지정
         if (data.sign == 1) {
-          graphImgStr = "assets/images/img1.png";
           rateImgStr = "assets/images/rateImg1.png";
           textColor = RED;
         } else if (data.sign == -1) {
-          graphImgStr = "assets/images/img2.png";
           rateImgStr = "assets/images/rateImg2.png";
           textColor = BLUE;
-        } else {
-          graphImgStr = "assets/images/img3.png";
         }
 
         return Container(
@@ -67,7 +62,7 @@ class PresentPrice extends StatelessWidget {
                       // 그래프, 현재가
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                    Image.asset(graphImgStr, height: 50),
+                    Image.asset(getGraphImgPathWithSign(controller.getSelectedStockData().sign), height: 50),
                     Expanded(
                         child: Center(
                             child: Text(formatStringComma(data.price),

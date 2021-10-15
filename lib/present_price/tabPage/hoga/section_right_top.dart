@@ -158,7 +158,7 @@ class RightTopSection extends StatelessWidget {
             children: [
               rowItem(key: "예상체결", value: null),
               rowItem(
-                  key: null, value: price, vColor: getColor(dist, standard)),
+                  key: null, value: price, vColor: getColor(price, standard)),
               Row(
                 children: [
                   Expanded(
@@ -182,7 +182,7 @@ class RightTopSection extends StatelessWidget {
                       formatIntToStr(dist),
                       textAlign: TextAlign.end,
                       style: TextStyle(
-                          color: getColor((int.parse(stock.dist)), 0),
+                          color: getColor(price, standard),
                           fontSize: fontSize),
                     ),
                   ),
