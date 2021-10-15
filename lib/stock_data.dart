@@ -1,18 +1,61 @@
 import 'package:flutter_prac_jongmock/util.dart';
-/*
-class _Stock{
+import 'package:intl/intl.dart';
+
+class Stock{
   final String title; // 주식 이름
   final String type; // 분야
   final int sign; // 부호 1 양수, 0 0, -1 음수
-  final int price; // 현재가
-  final int dist; // 등락폭
-  int restCount; // 잔량
+  final String price; // 현재가
+  final String dist; // 등락폭
+  final String count; // 잔량
 
-  final int yesterday_close; // 전일 종가
-  final int today_start; // 당일 시가
-  final int today_close; // 당일 종가
-}*/
-class Stock {
+  final String yesterday_close; // 전일 종가
+  final String today_start; // 당일 시가
+  final String today_close; // 당일 종가
+
+  Stock({required this.title, required this.type, required this.sign, required this.price, required this.dist, required this.count, required this.yesterday_close, required this.today_start, required this.today_close});
+
+  String getDist({bool signFlag = false}) =>(signFlag) ? dist : dist.replaceAll('-', '');
+  String getDrate({bool signFlag = false}){
+    int ye = getYesterdayInt();
+    double drate = (getPriceInt() - ye)/ye * 100;
+    return NumberFormat("#0.00", "en_US").format((signFlag)?drate:drate.abs());
+  }
+
+  int getPriceInt() => int.parse(price);
+  int getYesterdayInt() => int.parse(yesterday_close);
+  int getStartInt() => int.parse(today_start);
+  int getCloseInt() => int.parse(today_close);
+
+}
+
+final stockData = {
+  "크래프톤" :
+    Stock(title: "크래프톤", type: "서비스업", price: '475500', sign: -1, count: '123772', dist: '3000', yesterday_close: '478500', today_start: '478000', today_close: '475500'),
+  "Naver" :
+    Stock(title: "NAVER", type: "서비스업", price: '396000', sign: 1, count: '232543', dist: '1000', yesterday_close: '395000', today_close: '396000', today_start: '400000' ),
+  "카카오" :
+    Stock(title: "카카오", type: "서비스업", price: '121000', sign: -1, count: '1459706', dist: '500', yesterday_close: '121500', today_close: '121000', today_start: '123000'),
+  "삼성증권" :
+    Stock(title: "삼성증권", type: "증권", price: '47300', sign: 1, count: '102819', dist: '100', yesterday_close: '47100', today_start: '47350', today_close: '47300'),
+  "넷마블" :
+    Stock(title: "넷마블", type: "서비스업", price: '123000', sign: 1, count: '69985', dist: '500', yesterday_close: '122500', today_start: '121000', today_close: '123000'),
+  "삼성전자" :
+    Stock(title: "삼성전자", type: "전기/전자", price: '70300', sign: 1, count: '11731923', dist: '900', yesterday_close: '69400', today_start: '70200', today_close: '70300'),
+  "TJ미디어" :
+    Stock(title: "TJ미디어", type: "KQ 일반전기전자", price: '5740', sign: 1, count: '108285', dist: '40', yesterday_close: '5700', today_start: '5760', today_close: '5740'),
+  "KB금융" :
+    Stock(title: "KB금융", type: "금융업", price: '55200', sign: 1, count: '771297', dist: '700', yesterday_close: '54600', today_start: '54200', today_close: '55300'),
+  "IBKS제12호스팩" :
+    Stock(title: "IBKS제12호스팩", type: "KQ 금융", price: '2340', sign: 1, count: '9080', dist: '30', yesterday_close: '2310', today_start: '2295', today_close: '2340'),
+  "CJ" :
+    Stock(title: "CJ", type: "금융업", price: '98400', sign: 0, count: '35715', dist: '0', yesterday_close: '98400', today_start: '99000', today_close: '98500'),
+  "CJ제일제당" :
+    Stock(title: "CJ제일제당", type: "음식료업", price: '404500', sign: 1, count: '22925', dist: '1000', yesterday_close: '403000', today_start: '407000', today_close: '404500'),
+  "농심" :
+    Stock(title: "농심", type: "음식료업", price: '292500', sign: 1, count: '6611', dist: '500', yesterday_close: '292000', today_start: '291000', today_close: '292500'),
+};
+/*class Stock {
   final bool isStock;
   final String? title;
   final String? type;
@@ -78,9 +121,9 @@ class Stock {
       return "";
     }
   }
-}
+}*/
 
-final stockData = {
+/*final stockData = {
   "크래프톤" : [
     Stock(title: "크래프톤", type: "서비스업", price: 456000, count: 62461, vari: 5000, rate: 1.22),
     Stock(title: "크래프톤", type: "서비스업", price: 449500, count: 1451, vari: -2000, rate: -0.44),
@@ -140,25 +183,13 @@ final stockData = {
     Stock(title: "농심", type: "음식료업", price: 294500, count: 64, vari: 500, rate: 0.17),
     Stock(title: "농심", type: "음식료업", price: 294000, count: 29, vari: 0, rate: 0),
   ]
-};
+};*/
 
 
 var myStocks = <String>["Naver", "카카오", "삼성전자"];
-List<Stock> getStocksData({int i = 0}){
-  var stocks = <Stock>[];
-  for(var item in myStocks){
-    final _stocks = stockData[item];
-    if(_stocks != null){
-      stocks.add(_stocks.elementAt(i));
-    }
-  }
-  if (stocks.length > 1){
-    stocks.add(Stock(isStock: false));
-  }
-  return stocks;
-}
 
 
-Stock getStock(String name, int i){
-  return stockData[name]?.elementAt(i) ?? Stock(isStock: false);
+Stock? getStock(String name, int i){
+  return stockData[name];
+  // return stockData[name]?.elementAt(i) ?? Stock(isStock: false);
 }

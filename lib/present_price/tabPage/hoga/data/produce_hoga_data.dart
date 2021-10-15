@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter_prac_jongmock/stock_data.dart';
+
 import 'hoga_data.dart';
 
 class ProduceHogaData {
@@ -16,16 +18,19 @@ class ProduceHogaData {
     print(rate);
   }
 
-  List<HogaData?> getSellHoga(int price) {
+  List<HogaData?> getSellHoga(Stock stock) {
     List<HogaData?> temp = [];
-    temp.add(HogaData(ran.nextInt(1000000), price, this.rate));
+    final count = ran.nextInt(1000000);
+    int price = stock.getPriceInt();
+    int standard = stock.getYesterdayInt();
+    double rate = double.parse(((price-standard)/standard * 100).toStringAsFixed(2));
+
+    temp.add(HogaData(count, price, rate));
     if (this.rate == 0) {
       standardPrice = price;
     }
 
-    double rate = this.rate;
     temp.addAll(List.generate(9, (idx) {
-      rate = double.parse((rate + 0.1).toStringAsFixed(2));
 
       if (price > 100000) {
         price += 500;
@@ -40,7 +45,7 @@ class ProduceHogaData {
       } else {
         price += 1;
       }
-
+      rate = double.parse(((price-standard)/standard*100).toStringAsFixed(2));
       if (rate == 0) {
         standardPrice = price;
       }
@@ -50,10 +55,12 @@ class ProduceHogaData {
     return temp.reversed.toList();
   }
 
-  List<HogaData?> getBuyHoga(int price) {
-    return List.generate(10, (idx) {
-      rate = double.parse((rate - 0.1).toStringAsFixed(2));
+  List<HogaData?> getBuyHoga(Stock stock) {
 
+    int price = stock.getPriceInt();
+    int standard = stock.getYesterdayInt();
+
+    return List.generate(10, (idx) {
       if (price > 100000) {
         price -= 500;
       } else if (price > 50000) {
@@ -67,6 +74,8 @@ class ProduceHogaData {
       } else {
         price -= 1;
       }
+
+      double rate = double.parse(((price-standard)/standard * 100).toStringAsFixed(2));
 
       if (rate == 0) {
         standardPrice = price;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_prac_jongmock/buttons/widget_button.dart';
+
+import 'widget_button.dart';
 
 
 // 0 - 현재가

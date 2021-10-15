@@ -26,7 +26,7 @@ class Hoga extends StatelessWidget {
 
   Hoga({Key? key}) : super(key: key) {
     print("HogaPage Constructor");
-    controller.hogaPage_setHoga(ProduceHogaData(), controller.getSelectedStockData().price ?? 0);
+    controller.hogaPage_setHoga(ProduceHogaData());
     // dataListening();
   }
 
@@ -69,7 +69,7 @@ class Hoga extends StatelessWidget {
                 onTap: (){
                   controller.hogaPage_bottomBarClick();
                   print("hogaPage_bottomBarClick()");
-                  controller.hogaPage_setHoga(ProduceHogaData(), controller.getSelectedStockData().price ?? 0);
+                  controller.hogaPage_setHoga(ProduceHogaData());
                   print("setHoga");
                 },
                 child: Stack(
@@ -107,7 +107,7 @@ class Hoga extends StatelessWidget {
 
     final delay = ran.nextInt(10);
     await Future.delayed(Duration(seconds: delay), () {
-      controller.hogaPage_setHoga(ProduceHogaData(),controller.getSelectedStockData().price ?? 0);
+      controller.hogaPage_setHoga(ProduceHogaData()); //,controller.getSelectedStockData().getPriceInt()
     });
   }
 

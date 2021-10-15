@@ -34,7 +34,7 @@ class StockListView extends StatelessWidget {
               final index = idx ~/ 2;
               // if(index >= controller.stockCnt.value){
               if(index >= controller.stocks.value.length){
-                return StockListItem(stock: Stock(isStock: false));
+                return StockListItem(stock: null);
               }else{
                 return StockListItem(stock: getStock(controller.stocks.value[index], controller.stockListShowType.value));
               }

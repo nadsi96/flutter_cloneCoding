@@ -63,7 +63,7 @@ class _StockListView extends State<StockListView> {
           } else {
             final index = idx ~/ 2;
             if(index >= stocks.length){
-              return StockListItem(stock: Stock(isStock: false), onClickEvent: null, eventClearStock: clearStocks);
+              return StockListItem(stock: null, onClickEvent: null, eventClearStock: clearStocks);
             }
             return StockListItem(stock: getStock(stocks[index], type), onClickEvent: null, eventClearStock: clearStocks,);
           }

@@ -3,7 +3,10 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'colors.dart';
 
 
 const double TITLEBAR_FONTSIZE = 16;
@@ -59,7 +62,20 @@ bool isTopEqual(String a, String b){
 
 }*/
 
-
+String formatStringComma(String item){
+  print('formatStringComma $item');
+  int cnt = 0;
+  String temp = '';
+  for(int i = item.length-1; i >= 0 ; i--){
+    temp = '${item[i]}$temp';
+    if(++cnt == 3 && i != 0){
+      temp = ',$temp';
+      cnt = 0;
+    }
+    print(temp);
+  }
+  return temp;
+}
 /// 세자리마다 쉼표
 String formatIntToStr(int item) {
   var f = NumberFormat("###,###,###,###,###,###");
@@ -76,4 +92,16 @@ String formatDoubleToStr(double item, {bool needSign = true}) {
 /// 공백에 0이 채워지는 두자리 정수
 String formatIntToStringLen2(int item){
   return NumberFormat("#00").format(item);
+}
+
+// 부호 따라 색 반환
+Color getColorWithSign(int sign){
+  switch(sign){
+    case 1:
+      return RED;
+    case -1:
+      return BLUE;
+    default:
+      return BLACK;
+  }
 }

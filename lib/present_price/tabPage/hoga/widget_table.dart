@@ -26,7 +26,7 @@ Color getColor(double? rate) {
 
 BoxDecoration? getBorder(int? price) {
   final controller = Get.find<MainController>();
-  if ((price ?? 0) == (controller.getSelectedStockData().price ?? 0)) {
+  if ((price ?? 0) == (controller.getSelectedStockData().getPriceInt())) {
     return BoxDecoration(border: Border.all(color: BLACK));
   }
   return null;

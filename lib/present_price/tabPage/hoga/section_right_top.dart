@@ -77,9 +77,9 @@ class RightTopSection extends StatelessWidget {
   Widget firstTab() {
     return Obx(() {
       final stock = controller.getSelectedStockData();
-      final standard = controller.hogaPage_standardPrice.value; // 기준
-      final price = (stock.price != null) ? stock.price! : 0; // 현재가
-      final pPrice = price + (ran.nextInt(2000) - 1000); // 시가
+      final standard = stock.getYesterdayInt(); // 기준
+      final price = stock.getPriceInt(); // 현재가
+      final pPrice = stock.getStartInt(); // 시가
       final hPrice = pPrice + (ran.nextInt(2000) ~/ 100 * 100); // 고가
       final lPrice = pPrice - (ran.nextInt(2000) ~/ 100 * 100); // 저가
       return Column(
@@ -145,11 +145,11 @@ class RightTopSection extends StatelessWidget {
       ),
       Expanded(
         child: Obx(() {
-          final stock =
-              stockData[controller.getSelectedStock()]?.elementAt(1) ??
-                  controller.getSelectedStockData(); // 예상가
-          final standard = controller.hogaPage_standardPrice.value;
-          final price = stock.price ?? 0;
+          final stock = controller.getSelectedStockData();
+              // stockData[controller.getSelectedStock()]?.elementAt(1) ??
+              //     controller.getSelectedStockData(); // 예상가
+          final standard = stock.getYesterdayInt();
+          final price = stock.getPriceInt();
           final dist = price - standard;
           final rate = (price / standard - 1) * 100;
 
@@ -182,7 +182,7 @@ class RightTopSection extends StatelessWidget {
                       formatIntToStr(dist),
                       textAlign: TextAlign.end,
                       style: TextStyle(
-                          color: getColor((stock.vari ?? 0), 0),
+                          color: getColor((int.parse(stock.dist)), 0),
                           fontSize: fontSize),
                     ),
                   ),

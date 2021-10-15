@@ -22,7 +22,7 @@ class TabHoga extends StatelessWidget {
   TabHoga({Key? key}) : super(key: key) {
     if (controller.hogaPage_sellHoga.value.isEmpty) {
       controller.hogaPage_setHoga(
-          ProduceHogaData(), controller.getSelectedStockData().price ?? 0);
+          ProduceHogaData()); //, controller.getSelectedStockData().getPriceInt()
     }
 
     final ptd = ProduceTabHogaSomeData();
@@ -87,19 +87,21 @@ class TabHoga extends StatelessWidget {
   Widget rightTop(){
     final ran = Random();
 
-    final stock = stockData[controller.getSelectedStock()]; // 주식정보(현재가, 예상가, 단일가)
-    final prePrice = controller.getSelectedStockData().price ?? 0;
-    final predictPrice = stock?.elementAt(2).price ?? 0;
-    final standard = controller.hogaPage_standardPrice.value; // 기준가
+    // final stock = stockData[controller.getSelectedStock()]; // 주식정보(현재가, 예상가, 단일가)
+    final stock = controller.getSelectedStockData();
+    final prePrice = stock.getPriceInt();
+    final predictPrice = prePrice + (ran.nextInt((prePrice * 0.3).toInt()*2)-(prePrice * 0.3).toInt());
+    final standard = stock.getYesterdayInt();
+    // final standard = controller.hogaPage_standardPrice.value; // 기준가
     Widget icon = Spacer();
     Color fontColor = BLACK;
-    final dist = stock?.elementAt(1).vari ?? 0;
-    final rate = stock?.elementAt(1).getRate() ?? 0;
+    // final dist = stock?.elementAt(1).vari ?? 0;
+    // final rate = stock?.elementAt(1).getRate() ?? 0;
 
-    if(rate < 0){
+    if(stock.sign == -1){
       icon = const Icon(Icons.arrow_drop_down_sharp, color: BLUE, size: 20,);
       fontColor = BLUE;
-    }else if(rate > 0){
+    }else if(stock.sign == 1){
       icon = const Icon(Icons.arrow_drop_down_sharp, color: RED);
       fontColor = RED;
     }
@@ -109,10 +111,10 @@ class TabHoga extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          rowItem(key: "상한가", value: 9999999, vColor: RED),
-          rowItem(key: "하한가", value: 100, vColor: BLUE),
+          rowItem(key: "상한가", value: (prePrice * 1.3).toInt(), vColor: RED),
+          rowItem(key: "하한가", value: (prePrice * 0.7).toInt(), vColor: BLUE),
           Container(height: 10),
-          rowItem(key: '예상가', value: stock![1].price, vColor: ((standard > predictPrice) ? RED : (standard < predictPrice) ? BLUE : BLACK)), // 단일가내용
+          rowItem(key: '예상가', value: predictPrice, vColor: ((standard > predictPrice) ? RED : (standard < predictPrice) ? BLUE : BLACK)), // 단일가내용
           rowItem(key: '예상량', value: 0),
           Container(height: 10),
           rowItem(key: '정규장', value: standard, vColor: fontColor), // 기준가
@@ -125,11 +127,11 @@ class TabHoga extends StatelessWidget {
                   child: icon,
                 ),
                 Expanded(
-                  child: Text(formatIntToStr(dist), style: TextStyle(fontSize: sideFont, color: fontColor),textAlign: TextAlign.right,),),
+                  child: Text(formatStringComma(stock.dist), style: TextStyle(fontSize: sideFont, color: fontColor),textAlign: TextAlign.right,),),
               ],
             ),
           ),
-          rowItem(value: formatDoubleToStr(rate), vColor: fontColor),
+          rowItem(value: stock.getDrate(), vColor: fontColor),
           rowItem(value: ran.nextInt(500000)),
         ],
       ),

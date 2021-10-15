@@ -4,6 +4,7 @@ import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/unit_price/tab_predict_contract.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
+import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
 import 'tab_date.dart';
@@ -24,20 +25,18 @@ class UnitPrice extends StatelessWidget {
     const double rateFont = 24; // 대비 폰트 크기
 
     return Obx(() {
-      final stock = stockData[controller.getSelectedStock()]?.last; // 현재 선택된 주식
+      final stock = controller.getSelectedStockData(); // 현재 선택된 주식
 
       Color fontColor = BLACK;
       Widget icon = const Spacer(); // 등락기호
 
-      if (stock != null) {
-        if (stock.getRate() > 0) {
+        if (stock.sign == 1) {
           fontColor = RED;
           icon = const Icon(Icons.arrow_drop_up_sharp, color: RED);
-        } else if (stock.getRate() < 0) {
+        } else if (stock.sign == -1) {
           fontColor = BLUE;
           icon = const Icon(Icons.arrow_drop_down_sharp, color: BLUE);
         }
-      }
 
       return Row(
         children: [
@@ -50,7 +49,7 @@ class UnitPrice extends StatelessWidget {
                   style: TextStyle(color: BLACK, fontSize: smallFont),
                 ),
                 Text(
-                  stock?.getPrice() ?? "",
+                    formatStringComma(stock.price),
                   style: TextStyle(color: fontColor, fontSize: priceFont),
                 ),
               ],
@@ -71,14 +70,14 @@ class UnitPrice extends StatelessWidget {
                         children: [
                           icon,
                           Text(
-                            stock?.getVarStr() ?? "",
+                            formatStringComma(stock.dist),
                             style: TextStyle(
                                 color: fontColor, fontSize: smallFont),
                           ),
                         ],
                       ),
                       Text(
-                        "${stock?.getCount() ?? ""}주",
+                        '${formatStringComma(stock.count)}주',
                         style: const TextStyle(color: BLACK, fontSize: smallFont),
                       ),
                     ],
@@ -86,7 +85,7 @@ class UnitPrice extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    stock?.getRateStr() ?? "",
+                    stock.getDrate(),
                     style: TextStyle(color: fontColor, fontSize: rateFont),
                     textAlign: TextAlign.end,
                   ),

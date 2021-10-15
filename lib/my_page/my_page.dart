@@ -961,14 +961,14 @@ class MyPage extends StatelessWidget {
     // 리스트뷰에 들어갈 뷰아이템 리스트 생성
     final List<Widget> itemList = [];
     for (var i = 0; i < data.length; i++) {
-      final stock = stockData[data[i]]?.elementAt(0);
+      final stock = stockData[data[i]];
       if (stock == null) {
         continue;
       } else {
         itemList.add(
           InkWell(
             onTap: () {
-              mainController.selectedStock.value = stock.getTitle();
+              mainController.selectedStock.value = stock.title;
               pageController.goToPage('주식현재가');
               mainController.stockPriceTab.value = '호가';
             },
@@ -992,11 +992,11 @@ class MyPage extends StatelessWidget {
     final String imgPath;
     final String? rateImg;
     Color textColor;
-    if (stock.getRate() > 0) {
+    if (stock.sign > 0) {
       textColor = RED;
       imgPath = 'assets/images/img1.png';
       rateImg = 'assets/images/rateImg1.png';
-    } else if (stock.getRate() < 0) {
+    } else if (stock.sign < 0) {
       textColor = BLUE;
       imgPath = 'assets/images/img2.png';
       rateImg = 'assets/images/rateImg2.png';
@@ -1029,11 +1029,11 @@ class MyPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      stock.getTitle(),
+                      stock.title,
                       style: TextStyle(fontSize: bigContentFont, color: BLACK),
                     ),
                     Text(
-                      stock.getType(),
+                      stock.type,
                       style: const TextStyle(
                         fontSize: 12,
                         color: GRAY,
@@ -1054,12 +1054,12 @@ class MyPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          stock.getPrice(),
+                          formatStringComma(stock.price),
                           style: TextStyle(
                               fontSize: bigContentFont, color: textColor),
                         ),
                         Text(
-                          stock.getCount(),
+                          formatStringComma(stock.count),
                           style: TextStyle(
                               fontSize: smallContentFont, color: BLACK),
                         ),
@@ -1077,12 +1077,12 @@ class MyPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                       Text(
-                        stock.getVarStr(),
+                        stock.getDist(),
                         style: TextStyle(
                             fontSize: midContentFont, color: textColor),
                       ),
                       Text(
-                        stock.getRateStr(),
+                        stock.getDrate(),
                         style: TextStyle(
                             fontSize: midContentFont, color: textColor),
                       ),

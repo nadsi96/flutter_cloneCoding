@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
+import 'package:flutter_prac_jongmock/util.dart';
+
+import 'colors.dart';
 
 class StockListItem extends StatelessWidget {
   // 항목에 나타낼 주식 정보
-  final Stock stock;
+  final Stock? stock;
 
   // 항목 클릭시 동작
   final ClickEvent? onClickEvent;
@@ -30,9 +33,9 @@ class StockListItem extends StatelessWidget {
 
   final ClickEvent? eventClearStock;
 
-  StockListItem({required this.stock, this.onClickEvent, this.eventClearStock});
+  StockListItem({this.stock, this.onClickEvent, this.eventClearStock});
 
-  // 상승/하락에 따른 색 변동
+  /*// 상승/하락에 따른 색 변동
   // 상승 - 빨강
   // 하락 - 파랑
   // 변화없음 - 검정
@@ -44,51 +47,76 @@ class StockListItem extends StatelessWidget {
     } else {
       return fontColors['blue'];
     }
-  }
+  }*/
 
   // 캔들그래프
   String getGraph() {
     var i = 0;
-    if (stock.getRate() > 0) {
-      i = 1;
-    } else if (stock.getRate() < 0) {
-      i = 2;
-    } else {
-      i = 3;
+    switch(stock!.sign){
+      case 1:
+        i = 1;
+        break;
+      case -1:
+        i = 2;
+        break;
+      default:
+        i = 3;
+        break;
     }
+    // if (stock.sign > 0) {
+    //   i = 1;
+    // } else if (stock.getRate() < 0) {
+    //   i = 2;
+    // } else {
+    //   i = 3;
+    // }
     return "assets/images/img${i}.png";
   }
 
   /// 주식 가격 TextView
   Widget setTextPrice(){
-    return Text(stock.getPrice(), style: TextStyle(fontSize: fontSizeTitle, color: _getColor()), textAlign: TextAlign.right);
+    return Text(formatStringComma(stock!.price), style: TextStyle(fontSize: fontSizeTitle, color: getColorWithSign(stock!.sign)), textAlign: TextAlign.right);
+    // return Text(stock.getPrice(), style: TextStyle(fontSize: fontSizeTitle, color: _getColor()), textAlign: TextAlign.right);
   }
 
-  /// 주식 변화량 TextView
+  /// 주식 등락폭 TextView
   Widget setTextVar(){
-    return Text(stock.getVarStr(), style: TextStyle(fontSize:fontSizeContent, color:_getColor()), textAlign: TextAlign.right);
+    return Text(formatStringComma(stock!.dist), style: TextStyle(fontSize:fontSizeContent, color:getColorWithSign(stock!.sign)), textAlign: TextAlign.right);
+    // return Text(stock.getVarStr(), style: TextStyle(fontSize:fontSizeContent, color:_getColor()), textAlign: TextAlign.right);
   }
 
-  /// 갯수 TextView
+  /// 잔량 TextView
   Widget setTextCount(){
-    return Text(stock.getCount(), style: TextStyle(fontSize:fontSizeContent, color: fontColors['black']), textAlign: TextAlign.right);
+    return Text('${formatStringComma(stock!.count)}주', style: TextStyle(fontSize:fontSizeContent, color: BLACK), textAlign: TextAlign.right);
+    // return Text(stock.getCount(), style: TextStyle(fontSize:fontSizeContent, color: fontColors['black']), textAlign: TextAlign.right);
   }
 
   /// 비율 TextView
   Widget setTextRate(){
-    return Text(stock.getRateStr(), style: TextStyle(fontSize: fontSizeContent, color: _getColor()), textAlign: TextAlign.right);
+    return Text('${stock!.getDrate()}%', style: TextStyle(fontSize: fontSizeContent, color: getColorWithSign(stock!.sign)), textAlign: TextAlign.right);
+    // return Text(stock.getRateStr(), style: TextStyle(fontSize: fontSizeContent, color: _getColor()), textAlign: TextAlign.right);
   }
 
   // 등락기호
   Widget setRateImg() {
     var i = 0;
-    if (stock.getRate() > 0) {
-      i = 1;
-    } else if (stock.getRate() < 0) {
-      i = 2;
-    } else {
-      return Container();
+    switch(stock!.sign){
+      case 1:
+        i = 1;
+        break;
+      case -1:
+        i = 2;
+        break;
+      default:
+        return Container();
     }
+    // if (stock.getRate() > 0) {
+    //   i = 1;
+    // } else if (stock.getRate() < 0) {
+    //   i = 2;
+    // } else {
+    //   return Container();
+    // }
     return Container(
       child: Image.asset(
         "assets/images/rateImg${i}.png",
@@ -119,18 +147,18 @@ class StockListItem extends StatelessWidget {
                   Container(
                     child: Image.asset(getGraph(), fit: BoxFit.contain),
                     width: 20,
-                    margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                   ),
 
                   /// 주식 이름, 분야
                   Column(
                     children: [
-                      Text(stock.getTitle(),
+                      Text(stock!.title,
                           style: TextStyle(
                               fontSize: fontSizeTitle,
                               fontWeight: FontWeight.bold,
                               color: fontColors['black'])),
-                      Text(stock.getType(),
+                      Text(stock!.type,
                           style: TextStyle(
                               fontSize: fontSizeContent,
                               color: fontColors['gray']))
@@ -191,6 +219,6 @@ class StockListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return stock.getIsStock() ? buildStock() : removeList();
+    return (stock != null) ? buildStock() : removeList();
   }
 }

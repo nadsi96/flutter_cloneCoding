@@ -141,20 +141,15 @@ class TenHoga extends StatelessWidget {
 
         // 그래프부분 설정
         final imgPath =
-            "assets/images/img${(stock.getRate() > 0) ? 1 : (stock.getRate() < 0) ? 2 : 3}.png";
+            "assets/images/img${(stock.sign == 1) ? 1 : (stock.sign == -1) ? 2 : 3}.png";
 
-        final icon = (stock.getRate() > 0)
+        final icon = (stock.sign == 1)
             ? const Icon(Icons.arrow_drop_up_sharp, color: RED)
-            : (stock.getRate() < 0)
+            : (stock.sign == -1)
                 ? const Icon(Icons.arrow_drop_down_sharp, color: BLUE)
                 : Spacer();
         // 글자 색 설정
-        Color fontColor = BLACK;
-        if (stock.getRate() > 0) {
-          fontColor = RED;
-        } else if (stock.getRate() < 0) {
-          fontColor = BLUE;
-        }
+        Color fontColor = getColorWithSign(stock.sign);
 
         return Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -171,7 +166,7 @@ class TenHoga extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: Text(
-                        stock.getPrice(),
+                          formatStringComma(stock.price),
                         style: TextStyle(fontSize: priceFont, color: fontColor),
                       ),
                     ),
@@ -197,14 +192,14 @@ class TenHoga extends StatelessWidget {
                           children: [
                             icon, // 등락기호
                             Text(
-                              stock.getVarStr(),
+                                formatStringComma(stock.dist),
                               style: TextStyle(
                                   color: fontColor, fontSize: smallFont),
                             ),
                           ],
                         ),
                         Text(
-                          stock.getCount(),
+                          formatStringComma(stock.count),
                           style: TextStyle(color: BLACK, fontSize: smallFont),
                         ),
                       ],
@@ -218,7 +213,7 @@ class TenHoga extends StatelessWidget {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          stock.getRate().abs().toString(),
+                          stock.getDrate(signFlag: false),
                           style:
                               TextStyle(color: fontColor, fontSize: rateFont),
                         ),

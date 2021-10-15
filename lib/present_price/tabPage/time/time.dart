@@ -424,10 +424,7 @@ class ProduceTimeData {
             : (dist < 0)
                 ? -0.01
                 : 0.01;
-        var price = stockData[stock]![0].price;
-        if (price == null) {
-          continue;
-        }
+        var price = stockData[stock]!.getPriceInt();
         i++;
         price += dist;
 

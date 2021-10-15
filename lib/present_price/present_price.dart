@@ -29,24 +29,25 @@ class PresentPrice extends StatelessWidget {
   Widget stockInfo(String item) {
     final Stock data;
     if (stockData.containsKey(item)) {
-      data = stockData[item]!.first;
+      // data = stockData[item]!.first;
+      data = stockData[item]!;
     } else {
-      data = stockData.values.first.first;
+      // data = stockData.values.first.first;
+      data = stockData.values.first;
     }
     return LayoutBuilder(
       builder: (context, constraints) {
-        final height = constraints.maxHeight;
         const double bigFontsize = 30;
         const double smallFontsize = 14;
 
         String graphImgStr = ""; // 그래프 이미지 경로
         String? rateImgStr; // 대비기호 이미지 경로
         Color textColor = BLACK; // 글자색 지정
-        if (data.getRate() > 0) {
+        if (data.sign == 1) {
           graphImgStr = "assets/images/img1.png";
           rateImgStr = "assets/images/rateImg1.png";
           textColor = RED;
-        } else if (data.getRate() < 0) {
+        } else if (data.sign == -1) {
           graphImgStr = "assets/images/img2.png";
           rateImgStr = "assets/images/rateImg2.png";
           textColor = BLUE;
@@ -69,7 +70,7 @@ class PresentPrice extends StatelessWidget {
                     Image.asset(graphImgStr, height: 50),
                     Expanded(
                         child: Center(
-                            child: Text(data.getPrice(),
+                            child: Text(formatStringComma(data.price),
                                 style: TextStyle(
                                     color: textColor, fontSize: bigFontsize))))
                   ])),
@@ -93,12 +94,12 @@ class PresentPrice extends StatelessWidget {
                                       width: 15,
                                     ),
                               // 주식잔량
-                              Text(data.getVarStr(),
+                              Text(formatStringComma(data.dist),
                                   style: TextStyle(
                                       color: textColor,
                                       fontSize: smallFontsize))
                             ]),
-                        Text("${data.getCount()}주", // 주식잔량
+                        Text("${formatStringComma(data.count)}주", // 주식잔량
                             style: const TextStyle(
                                 color: BLACK, fontSize: smallFontsize))
                       ])),
@@ -111,7 +112,7 @@ class PresentPrice extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.baseline,
                               textBaseline: TextBaseline.alphabetic,
                               children: [
-                                Text("${data.getRate().abs()}",
+                                Text(data.getDrate(),
                                     style: TextStyle(
                                         color: textColor,
                                         fontSize: bigFontsize)),
