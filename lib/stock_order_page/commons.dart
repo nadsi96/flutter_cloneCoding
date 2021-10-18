@@ -7,7 +7,7 @@ const double boxHeight = 60;
 const double titleFontSize = 12;
 const double contentFontSize = 14;
 final deco =
-    BoxDecoration(color: LLLIGHTGRAY, borderRadius: BorderRadius.circular(3));
+    BoxDecoration(color: LLIGHTGRAY, borderRadius: BorderRadius.circular(3));
 
 /// 구분
 /// 보통, 시장가, 장전시간외, 장후시간외, 시간외단일가, 최유리지정가, 최우선지정가

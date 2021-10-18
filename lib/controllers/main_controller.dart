@@ -159,7 +159,10 @@ class MainController extends GetxController {
   // 현금/신용/대출상환
   var stockOrderPage_payIdx = 0.obs;
 
+  // 구분
   var stockOrderPage_tradeType = '보통'.obs;
+  // 시장가 체크박스
+  var stockOrderPage_marketPrice = true.obs;
 
   MainController() {
 
@@ -376,5 +379,13 @@ class MainController extends GetxController {
   /// 테이블 헤더 (정규장대비/정규장대비율) 토글
   void unitPage_tabPredict_toggleClick(){
     unitPage_tabPredict_toggleIdx.value = (unitPage_tabPredict_toggleIdx.value + 1) % unitPage_tabPredict_toggleList.length;
+  }
+
+  /// 주식주문
+/// 탭 바뀔 때 상태 초기화
+  void stockOrderPage_clearState(){
+    stockOrderPage_marketPrice.value = false;
+    stockOrderPage_payIdx.value = 0;
+    stockOrderPage_tradeType.value = '보통';
   }
 }

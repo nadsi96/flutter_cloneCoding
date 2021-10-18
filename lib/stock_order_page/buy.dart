@@ -7,11 +7,12 @@ import 'package:get/get.dart';
 import 'commons.dart';
 
 class Buy extends StatelessWidget {
-  // final btnTexts = ['현금', '신용', '대출상환'];
-
   final mainController = Get.find<MainController>();
 
-  Buy({Key? key}) : super(key: key);
+  /// 탭 바뀔 때 상태 초기화
+  Buy({Key? key}) : super(key: key) {
+    mainController.stockOrderPage_clearState();
+  }
 
   Color getColor() {
     final title = mainController
@@ -39,14 +40,11 @@ class Buy extends StatelessWidget {
                   final title = mainController.stockOrderPage_tabList[
                       mainController.stockOrderPage_tabIdx.value];
                   List<String> btnTexts = [];
-                  Color titleColor = Colors.green;
 
                   if (title == '매수') {
                     btnTexts = ['현금', '신용'];
-                    titleColor = RED;
                   } else if (title == '매도') {
                     btnTexts = ['현금', '신용', '대출상환'];
-                    titleColor = BLUE;
                   } else {}
 
                   return Row(
@@ -57,10 +55,12 @@ class Buy extends StatelessWidget {
                           onTap: () =>
                               mainController.stockOrderPage_payIdx.value = idx,
                           child: BlueGrayButton(
-                              isSelected:
-                                  (mainController.stockOrderPage_payIdx.value ==
-                                      idx),
-                              text: btnTexts[idx], fontSize: 14,),
+                            isSelected:
+                                (mainController.stockOrderPage_payIdx.value ==
+                                    idx),
+                            text: btnTexts[idx],
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ),
@@ -90,7 +90,13 @@ class Buy extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 3,
-                      child: checkBoxText('시장', true),
+                      child: InkWell(
+                          onTap: () => mainController.stockOrderPage_marketPrice
+                              .toggle(),
+                          child: Obx(() => checkBoxText(
+                              '시장',
+                              mainController
+                                  .stockOrderPage_marketPrice.value))),
                     ),
                   ],
                 ),
@@ -130,7 +136,7 @@ class Buy extends StatelessWidget {
               child: Text(
                 '현금${mainController.stockOrderPage_tabList[mainController.stockOrderPage_tabIdx.value]}',
                 style: const TextStyle(
-                    color: WHITE, fontSize: 24, fontWeight: FontWeight.bold),
+                    color: WHITE, fontSize: 20, fontWeight: FontWeight.bold),
               ),
             );
           }),
