@@ -5,7 +5,6 @@ import 'package:flutter_prac_jongmock/present_price/tabPage/investor/page_invest
 import 'package:flutter_prac_jongmock/present_price/tabPage/stock_info/page_stock_info.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/time/time.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/unit_price/tab_hoga.dart';
-import 'package:flutter_prac_jongmock/present_price/tabPage/unit_price/table_data.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:get/get.dart';
 
@@ -146,6 +145,12 @@ class MainController extends GetxController {
   // 단일가 - 예상체결 탭 토글
   var unitPage_tabPredict_toggleList = ['정규장대비', '정규장대비율'];
   var unitPage_tabPredict_toggleIdx = 0.obs;
+
+
+  /// 주식주문
+  /// 탭
+  var stockOrderPage_tabList = ['매수', '매도', '정정/취소', '미체결'];
+  var stockOrderPage_tabIdx = 0.obs;
 
   MainController() {
 
