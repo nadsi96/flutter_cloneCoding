@@ -152,6 +152,9 @@ class MainController extends GetxController {
   var stockOrderPage_tabList = ['매수', '매도', '정정/취소', '미체결'];
   var stockOrderPage_tabIdx = 0.obs;
 
+  // 호가/체결 테이블 토글
+  var stockOrderPage_hoga_che_toggle = true.obs;
+
   MainController() {
 
 

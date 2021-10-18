@@ -7,6 +7,8 @@ import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:get/get.dart';
 
+import 'hoga_che_section.dart';
+
 /// 주식주문
 class StockOrder extends StatelessWidget {
   final mainController = Get.find<MainController>();
@@ -194,7 +196,12 @@ class StockOrder extends StatelessWidget {
               width: 80,
               alignment: Alignment.center,
               child: Obx(() {
-                return UnderLineButton(text: texts[idx], fontSize: 14, paddingV: 10, isSelected: mainController.stockOrderPage_tabIdx.value == idx,);
+                return UnderLineButton(
+                  text: texts[idx],
+                  fontSize: 14,
+                  paddingV: 10,
+                  isSelected: mainController.stockOrderPage_tabIdx.value == idx,
+                );
               }),
             ),
           );
@@ -212,6 +219,20 @@ class StockOrder extends StatelessWidget {
           top(), // 종목검색, 종목정보
           account(), // 계좌정보
           tabs(),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Hoga_Che_Table(),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Container(),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
