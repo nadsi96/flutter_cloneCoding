@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
+import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
@@ -21,7 +22,7 @@ class LeftBottomSection extends StatelessWidget {
     print(controller.hogaPage_tradeData.value.isEmpty);
     if(controller.hogaPage_tradeData.value.isEmpty) {
       pd = ProduceTradeData(controller.hogaPage_sellHoga.value,
-          controller.hogaPage_buyHoga.value, controller);
+          controller.hogaPage_buyHoga.value, controller.getSelectedStockData());
       controller.hogaPage_setTradeData(pd.data);
     }
     // dataListening();
@@ -125,9 +126,9 @@ class ProduceTradeData {
   final sellPrices; // HogaData.sellHoga
   final buyPrices; // HogaData.buyHoga
   final ran = Random();
-  final MainController controller;
+  final Stock stock;
 
-  ProduceTradeData(this.sellPrices, this.buyPrices, this.controller) {
+  ProduceTradeData(this.sellPrices, this.buyPrices, this.stock) {
     createData();
   }
 
@@ -142,7 +143,7 @@ class ProduceTradeData {
       return TradeData(
           tradeType: type,
           price: price,
-          standard: controller.hogaPage_standardPrice.value);
+          standard: stock.getYesterdayInt());
     });
   }
 
@@ -158,7 +159,7 @@ class ProduceTradeData {
         TradeData(
             tradeType: type,
             price: price,
-            standard: controller.hogaPage_standardPrice.value));
+            standard: stock.getYesterdayInt()));
   }
 }
 
