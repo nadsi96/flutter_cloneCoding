@@ -24,6 +24,10 @@ class Hoga_Che_Table extends StatelessWidget {
     mainController.hogaPage_setHoga(ProduceHogaData()); // 데이터 받
   }
 
+  /// 셀 배경
+  /// 테두리 - 하단, 우
+  /// 배경색 - bool sell에 따라
+  ///       true - 연파랑, false - 연빨강
   BoxDecoration cellBorder(bool sell) {
     return BoxDecoration(
       border: const Border(
@@ -34,10 +38,13 @@ class Hoga_Che_Table extends StatelessWidget {
           color: LIGHTGRAY,
         ),
       ),
-      color: (sell) ? LIGHTRED : LIGHTBLUE,
+      color: (sell) ? LIGHTBLUE : LIGHTRED,
     );
   }
 
+  /// 상/하한가 부분 셀
+  /// high - true - 상한가
+  ///        false - 하한가
   Widget hogaCellLimit(int stockPrice, bool high) {
     return Row(
       children: [
@@ -86,6 +93,9 @@ class Hoga_Che_Table extends StatelessWidget {
     );
   }
 
+  /// 호가테이블 셀
+  /// 호가, 등락률, 잔량, 체결
+  /// iSSell - 매도하는 것인지
   Widget hogaCell(HogaData data, int stockPrice, bool isSell) {
     Color fontColor = BLACK;
     if (data.rate > 0) {
@@ -163,6 +173,7 @@ class Hoga_Che_Table extends StatelessWidget {
     ]);
   }
 
+  /// 호가 테이블 (10호가)
   Widget hoga() {
     return Obx(() {
       final stockPrice = mainController.getSelectedStockData().getPriceInt();
