@@ -31,7 +31,7 @@ class Buy extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(
+        Expanded( // 현금/신용/(대출상환)버튼
           child: Container(
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -65,9 +65,9 @@ class Buy extends StatelessWidget {
                       ),
                     ),
                   );
-                }), // 현금 / 신용
-                tradeType(text: '현금'),
-                Row(
+                }), // 현금/신용/(대출상환)버튼
+                tradeType(text: '보통'), // 구분
+                Row( // 주식 수량
                   children: [
                     Expanded(
                       flex: 7,
@@ -81,7 +81,7 @@ class Buy extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
+                Row( // 단가
                   children: [
                     Expanded(
                       flex: 7,
@@ -100,7 +100,7 @@ class Buy extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
+                Row( // 금액
                   children: [
                     Expanded(
                         flex: 7,
@@ -110,7 +110,7 @@ class Buy extends StatelessWidget {
                         )),
                     Obx(() {
                       if (mainController.stockOrderPage_tabIdx.value == 0) {
-                        return Spacer(flex: 3);
+                        return const Spacer(flex: 3);
                       } else {
                         return Expanded(
                           flex: 3,
@@ -126,7 +126,7 @@ class Buy extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            // 현금매수
+            // 현금 매수/매도
           },
           child: Obx(() {
             return Container(
