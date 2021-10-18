@@ -36,7 +36,10 @@ class TabPageController extends GetxController{
   void goToPage(String text) {
     if(text != selectedMainBottomTab.value){
       pageStack.add(text);
-      pageStackCnt.value++;
+      if(pageStack.length > 10){
+        pageStack.removeAt(0);
+      }
+      pageStackCnt.value = pageStack.length;
       title.value = text;
       selectedMainBottomTab.value = text;
     }
@@ -45,8 +48,10 @@ class TabPageController extends GetxController{
   }
 
   void backToPage() {
-    pageStack.removeLast();
-    pageStackCnt.value--;
+    if(pageStack.length > 1){
+      pageStack.removeLast();
+      pageStackCnt.value = pageStack.length;
+    }
     final title = pageStack.last;
     this.title.value = title;
     selectedMainBottomTab.value = title;

@@ -35,6 +35,7 @@ class InvestorPage extends StatelessWidget {
         controller.investorPage_topBtns.length,
         (index) => SizedBox(
           width: tableWidth,
+          height: 60,
           child: _topBtn(controller.investorPage_topBtns[index], null),
         ),
       ),
@@ -115,43 +116,41 @@ class InvestorPage extends StatelessWidget {
     print("infoDrawer");
     return Dialog(
       backgroundColor: WHITE,
-      child: Container(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: const BoxDecoration(
-                color: WHITE,
-                border: Border(
-                  top: BorderSide(color: GRAY),
-                  bottom: BorderSide(color: GRAY),
-                ),
-              ),
-              child: const Center(
-                child: Text(
-                  "투자자 세부분류",
-                  style: TextStyle(
-                      color: BLACK, fontSize: 20, fontWeight: FontWeight.w400),
-                ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              color: WHITE,
+              border: Border(
+                top: BorderSide(color: GRAY),
+                bottom: BorderSide(color: GRAY),
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    alignment: Alignment.topLeft,
-                    child: const Text(
-                      "※ 장중 당일 정보는 추정치입니다.",
-                      style: TextStyle(color: GRAY, fontSize: 10),
-                    ),
+            child: const Center(
+              child: Text(
+                "투자자 세부분류",
+                style: TextStyle(
+                    color: BLACK, fontSize: 20, fontWeight: FontWeight.w400),
+              ),
+            ),
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  alignment: Alignment.topLeft,
+                  child: const Text(
+                    "※ 장중 당일 정보는 추정치입니다.",
+                    style: TextStyle(color: GRAY, fontSize: 10),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -166,11 +165,7 @@ class InvestorPage extends StatelessWidget {
     print("${today.year}/${today.month}/.${today.day}");
     return Column(
       children: [
-        ConstrainedBox(
-          constraints: const BoxConstraints(
-              minWidth: double.infinity, minHeight: 40, maxHeight: 60),
-          child: topButtons(),
-        ),
+        topButtons(),
         Expanded(
           child: Container(
               margin: const EdgeInsets.only(top: 10), child: InvestorTable()),

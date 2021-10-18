@@ -45,10 +45,10 @@ class InvestorTable extends StatelessWidget {
 
   InvestorTable({Key? key}) : super(key: key) {
     print("investor Table class");
-
-    print("set Controller");
-    controller.investorPage_setData(pd.get30());
-    print("end investor Table constructor");
+    // controller.investorPage_setData([]);
+    // print("set Controller");
+    // controller.investorPage_setData(pd.get30());
+    // print("end investor Table constructor");
   }
 
   Color getColor(String item) {
@@ -131,6 +131,9 @@ class InvestorTable extends StatelessWidget {
       Container(width: 5, height: 5, color: BLUE),
       Container(width: 5, height: 5, color: GRAY)
     ];
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) => controller.investorPage_setData(pd.get30()));
+
     return Column(
       children: [
         SizedBox(
@@ -154,7 +157,6 @@ class InvestorTable extends StatelessWidget {
                       decoration: const BoxDecoration(
                         color: LLIGHTGRAY,
                         border: Border(top: BorderSide(color: GRAY), right: BorderSide(color: GRAY), bottom: BorderSide(color: GRAY)),
-                        // border: Border.all(color: GRAY, width: 0.5),
                       ),
                       child: Stack(
                         children: [

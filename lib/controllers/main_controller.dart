@@ -251,7 +251,9 @@ class MainController extends GetxController {
   }
 
   void investorPage_setData(List<InvestorData> dataList){
+    print('---------');
     investorPage_Data.value = dataList;
+    print('===============');
   }
 
   void investorPage_addRow(List<InvestorData> dataList){
