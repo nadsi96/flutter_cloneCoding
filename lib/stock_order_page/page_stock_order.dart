@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
+import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/commons/commons.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
@@ -193,28 +194,7 @@ class StockOrder extends StatelessWidget {
               width: 80,
               alignment: Alignment.center,
               child: Obx(() {
-                if (mainController.stockOrderPage_tabIdx.value == idx) {
-                  return Container(
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: const BoxDecoration(
-                        border:
-                            Border(bottom: BorderSide(color: BLACK, width: 2))),
-                    child: Text(texts[idx],
-                        style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold)),
-                  );
-                } else {
-                  return Container(
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(texts[idx],
-                        style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: GRAY)),
-                  );
-                }
+                return UnderLineButton(text: texts[idx], fontSize: 14, paddingV: 10, isSelected: mainController.stockOrderPage_tabIdx.value == idx,);
               }),
             ),
           );

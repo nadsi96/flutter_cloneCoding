@@ -130,61 +130,40 @@ class UnderLineButton extends StatelessWidget {
       this.text = '',
       this.fontSize = 16,
       this.isSelected = false,
-      this.paddingH = 15,
-      this.paddingV = 20,
-      this.underLineWidth = 1})
+      this.paddingV = 10,})
       : super(key: key);
   final String text;
   final double fontSize;
   final bool isSelected;
-  final double paddingH;
   final double paddingV;
-  final double underLineWidth;
 
   @override
   Widget build(BuildContext context) {
     if (isSelected) {
       return Container(
-          padding: EdgeInsets.only(left: paddingH, right: paddingH),
-          child: Container(
-              padding: EdgeInsets.only(top: paddingV, bottom: paddingV),
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(width: underLineWidth, color: BLACK))),
-              child: Center(
-                  child: Text(text,
-                      style: TextStyle(fontSize: fontSize, color: BLACK)))));
+        height: 40,
+        padding: EdgeInsets.symmetric(vertical: paddingV),
+        decoration: const BoxDecoration(
+            border:
+            Border(bottom: BorderSide(color: BLACK, width: 2))),
+        child: Text(text,
+            style: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold)),
+      );
     } else {
       return Container(
-          padding: EdgeInsets.only(left: paddingH, right: paddingH),
-          child: Container(
-              padding: EdgeInsets.only(top: paddingV, bottom: paddingV),
-              child: Center(
-                  child: Text(text,
-                      style: TextStyle(fontSize: fontSize, color: GRAY)))));
+        height: 40,
+        padding: EdgeInsets.symmetric(vertical: paddingV),
+        child: Text(text,
+            style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: GRAY)),
+      );
     }
   }
 }
 
-/*
-class UnSelectedUnderLineButton extends StatelessWidget {
-  const UnSelectedUnderLineButton(
-      {Key? key, this.text = '', this.fontSize = 16})
-      : super(key: key);
-  final String text;
-  final double fontSize;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        child: Container(
-            padding: const EdgeInsets.only(top: 20, bottom: 20),
-            child:
-                Text(text, style: TextStyle(fontSize: fontSize, color: GRAY))));
-  }
-}
-*/
 
 class RoundBorderButton extends StatelessWidget {
   const RoundBorderButton(

@@ -22,13 +22,17 @@ class AddStockPage extends StatelessWidget {
     // 아닌 경우, 밑줄 없는 회색글자 버튼
     final tabs = List.generate(
         texts.length,
-        (idx) => GetX<RegisterPageController>(
-            builder: (_) => InkWell(
-                onTap: () {
-                  controller.onClickTabBtn(idx);
-                },
-                splashColor: TRANSPARENT,
-                child: UnderLineButton(text: texts[idx], fontSize: 15, isSelected: (idx == controller.topTabIdx.value)))));
+        (idx) => InkWell(
+            onTap: () => controller.onClickTabBtn(idx),
+            child: Obx(() => Container(
+                  width: 80,
+                  alignment: Alignment.center,
+                  child: UnderLineButton(
+                      text: texts[idx],
+                      fontSize: 15,
+                      isSelected: (idx == controller.topTabIdx.value)),
+                ),),),
+        );
 
     return Container(color: WHITE, child: Row(children: tabs));
   }
@@ -259,15 +263,14 @@ class AddStockPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+        onTap: () {
+          // TextField focus 없애기
+          FocusScopeNode currentFocus = FocusScope.of(context);
 
-        // TextField focus 없애기
-        FocusScopeNode currentFocus = FocusScope.of(context);
-
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
         child: Column(children: [
           topTabButtonSection(),
           DivideLine(LLLIGHTGRAY),
@@ -291,7 +294,10 @@ class AddStockPage extends StatelessWidget {
                             GetX<RegisterPageController>(
                                 builder: (c) => InkWell(
                                     child: RoundCheckButtonWithText(
-                                        "ETF", c.chkETF.value, fontColor: GRAY,),
+                                      "ETF",
+                                      c.chkETF.value,
+                                      fontColor: GRAY,
+                                    ),
                                     onTap: () {
                                       c.chkETF.value = !c.chkETF.value;
                                     })),
@@ -300,7 +306,8 @@ class AddStockPage extends StatelessWidget {
                                   margin: EdgeInsets.only(left: 10),
                                   child: InkWell(
                                       child: RoundCheckButtonWithText(
-                                          "ETN", c.chkETN.value, fontColor: GRAY),
+                                          "ETN", c.chkETN.value,
+                                          fontColor: GRAY),
                                       onTap: () {
                                         c.chkETN.value = !c.chkETN.value;
                                       })),

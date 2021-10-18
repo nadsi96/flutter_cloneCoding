@@ -84,7 +84,7 @@ class PresentPrice extends StatelessWidget {
                       ), // 매도버튼
                     ],
                   ),
-                  Obx((){
+                  Obx(() {
                     // 주식 정보
                     // 그래프, 현재가, 등락비율 등
                     return stockInfo(controller.getSelectedStockData());
@@ -145,21 +145,26 @@ class PresentPrice extends StatelessWidget {
   /// 호가,차트,투자자,거래원,뉴스,토론,일자,시간,1분선,재무,기타수급,리포트,종목정보,단일가
   Widget tabMenu() {
     final taps = List.generate(
-        controller.stockPriceTabTexts.length,
-        (index) => GetX<MainController>(
-            builder: (_) => InkWell(
-                onTap: () {
-                  controller.stockPriceTab.value =
-                      controller.stockPriceTabTexts[index];
-                },
-                child: UnderLineButton(
-                  text: controller.stockPriceTabTexts[index],
-                  isSelected: (controller.stockPriceTab.value ==
-                      controller.stockPriceTabTexts[index]),
-                  paddingV: 5,
-                  underLineWidth: 2,
-                ))));
-    return Container(
+      controller.stockPriceTabTexts.length,
+      (index) => InkWell(
+        onTap: () {
+          controller.stockPriceTab.value = controller.stockPriceTabTexts[index];
+        },
+        child: Container(
+          width: 80,
+          alignment: Alignment.center,
+          child: Obx(
+            () => UnderLineButton(
+              text: controller.stockPriceTabTexts[index],
+              isSelected: controller.stockPriceTab.value ==
+                  controller.stockPriceTabTexts[index],
+              paddingV: 10,
+            ),
+          ),
+        ),
+      ),
+    );
+    return SizedBox(
         height: 40,
         child: Row(children: [
           Expanded(
