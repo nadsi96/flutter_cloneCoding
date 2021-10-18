@@ -14,6 +14,7 @@ class InvestorTable extends StatelessWidget {
 
   final tableWidth = Get.width / 4; // table cell 너비
   final double tableHeight = 40;
+  final cellBorder = const Border(bottom: BorderSide(color: GRAY), right: BorderSide(color: GRAY));
 
   final controller = Get.find<MainController>();
 
@@ -46,8 +47,6 @@ class InvestorTable extends StatelessWidget {
     print("investor Table class");
 
     print("set Controller");
-    // pd.initData();
-    // controller.investorPage_initData(pd);
     controller.investorPage_setData(pd.get30());
     print("end investor Table constructor");
   }
@@ -68,7 +67,7 @@ class InvestorTable extends StatelessWidget {
         height: tableHeight,
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 5),
-        decoration: BoxDecoration(border: Border.all(color: GRAY, width: 0.5),),
+        decoration: BoxDecoration(border: cellBorder),
         child: Text(text, style: TextStyle(color: fontColor, fontSize: 14),),
     );
   }
@@ -83,7 +82,7 @@ class InvestorTable extends StatelessWidget {
           height: tableHeight,
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 5),
-          decoration: BoxDecoration(border: Border.all(color: GRAY, width: 0.5),),
+          decoration: BoxDecoration(border: cellBorder,),
           child: Center(
               child: Text(data.date, style: const TextStyle(color: BLACK, fontSize: 12),),),
         );
@@ -152,9 +151,10 @@ class InvestorTable extends StatelessWidget {
                       padding: const EdgeInsets.all(5),
                       width: tableWidth,
                       height: tableHeight,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: LLIGHTGRAY,
-                        border: Border.all(color: GRAY, width: 0.5),
+                        border: Border(top: BorderSide(color: GRAY), right: BorderSide(color: GRAY), bottom: BorderSide(color: GRAY)),
+                        // border: Border.all(color: GRAY, width: 0.5),
                       ),
                       child: Stack(
                         children: [
@@ -194,9 +194,9 @@ class InvestorTable extends StatelessWidget {
                     tableColHeader.length,
                     (idx) => Container(
                       width: tableWidth,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: LLIGHTGRAY,
-                        border: Border.all(color: GRAY, width: 0.5),
+                        border: Border(top: BorderSide(color: GRAY), right: BorderSide(color: GRAY), bottom: BorderSide(color: GRAY)),
                       ),
                       child: Center(
                         child: Text(
