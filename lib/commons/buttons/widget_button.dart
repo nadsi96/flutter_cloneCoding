@@ -254,20 +254,21 @@ class BlueGrayButton extends StatelessWidget{
         this.text = '',
         this.fontSize = 16,
         this.isSelected = false,
-        this.paddingH = 10,
-        this.paddingV = 10,})
+        this.width, this.height = 40,
+      })
       : super(key: key);
   final String text;
   final double fontSize;
   final bool isSelected;
-  final double paddingH;
-  final double paddingV;
-
+  final double? width;
+  final double? height;
   @override
   Widget build(BuildContext context) {
     return  Container(
-        padding: EdgeInsets.fromLTRB(paddingH, paddingV, paddingH, paddingV),
         color: isSelected? BLUE: LLIGHTGRAY,
+        height: height,
+        width: width,
+        alignment: Alignment.center,
         child: Center(
             child: Text(
                 text, style: TextStyle(color: isSelected? WHITE: GRAY, fontSize: fontSize)
