@@ -155,6 +155,12 @@ class MainController extends GetxController {
   // 호가/체결 테이블 토글
   var stockOrderPage_hoga_che_toggle = true.obs;
 
+  // 매수, 매도, 정정/취소
+  // 현금/신용/대출상환
+  var stockOrderPage_payIdx = 0.obs;
+
+  var stockOrderPage_tradeType = '보통'.obs;
+
   MainController() {
 
 

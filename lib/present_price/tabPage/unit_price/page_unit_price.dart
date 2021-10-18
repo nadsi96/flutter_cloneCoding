@@ -124,7 +124,6 @@ class UnitPrice extends StatelessWidget {
                     text: text,
                     isSelected: (idx == controller.unitPage_tabIdx.value),
                     fontSize: 14,
-                    paddingV: 10,
                   ),
                 ),
               );

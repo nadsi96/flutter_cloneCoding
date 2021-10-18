@@ -7,6 +7,7 @@ import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:get/get.dart';
 
+import 'buy.dart';
 import 'hoga_che_section.dart';
 
 /// 주식주문
@@ -220,18 +221,42 @@ class StockOrder extends StatelessWidget {
           account(), // 계좌정보
           tabs(),
           Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Hoga_Che_Table(),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Container(),
-                ),
-              ],
-            ),
+            child: Obx((){
+              final idx = mainController.stockOrderPage_tabIdx.value;
+              switch(mainController.stockOrderPage_tabList[idx]){
+                case '매수':
+                case '매도':
+                return Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Hoga_Che_Table(),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Buy(),
+                    ),
+                  ],
+                );
+                case '정정/취소':
+                  return Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Hoga_Che_Table(),
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: Container(),
+                      ),
+                    ],
+                  );
+                case '미체결':
+                  return Container();
+                default:
+                  return Container();
+              }
+            }),
           ),
         ],
       ),
