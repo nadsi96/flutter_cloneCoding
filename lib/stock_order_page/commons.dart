@@ -111,6 +111,8 @@ Widget checkBoxText(String text, bool isChecked){
           height: 20,
           width: 20,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: (isChecked) ? BLUE : GRAY),
+          alignment: Alignment.center,
+          child: const Icon(Icons.check, color: WHITE, size: 15),
         ),
         Text(text, style: const TextStyle(fontSize: contentFontSize)),
       ],
