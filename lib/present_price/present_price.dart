@@ -39,9 +39,8 @@ class PresentPrice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: topBar(title: '주식현재가', actions: topBarActions()),
-      body: Container(
-        color: WHITE,
-        child: Column(
+      backgroundColor: WHITE,
+      body: Column(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -137,7 +136,6 @@ class PresentPrice extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 
