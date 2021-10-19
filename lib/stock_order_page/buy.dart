@@ -5,6 +5,7 @@ import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:get/get.dart';
 
 import 'commons.dart';
+import 'dialogs.dart';
 
 class Buy extends StatelessWidget {
   final mainController = Get.find<MainController>();
@@ -66,7 +67,7 @@ class Buy extends StatelessWidget {
                     ),
                   );
                 }), // 현금/신용/(대출상환)버튼
-                tradeType(text: '보통'), // 구분
+                tradeType(text: '보통', dialog: tradeTypeDialog()), // 구분
                 Row( // 주식 수량
                   children: [
                     Expanded(

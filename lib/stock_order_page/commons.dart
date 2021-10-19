@@ -32,7 +32,10 @@ Widget tradeType({String text = '', Widget? dialog}) {
           child: InkWell(
             onTap: () async {
               if (dialog != null) {
-                mainController.stockOrderPage_tradeType.value = await Get.dialog(dialog);
+                final result = await Get.bottomSheet(dialog);
+                if(result != null){
+                  mainController.stockOrderPage_tradeType.value = result;
+                }
               }
             },
             child: Row(
