@@ -154,8 +154,19 @@ class Buy extends StatelessWidget {
         InkWell(
           onTap: () {
             // 현금 매수/매도
-            final count;
-            final price;
+            final count = mainController.stockOrderPage_orderCount.value;
+            final price = mainController.stockOrderPage_orderCount.value;
+            String? errorText = null;
+            if(count == 0){
+              errorText = '주문 수량을 입력해주세요';
+            }else if(price == 0 && !mainController.stockOrderPage_showPrice()){
+              errorText = '주문 단가를 입력해주세요';
+            }
+            if(errorText != null){
+              Get.bottomSheet(orderErrorDialog(errorText));
+            }
+
+
 
           },
           child: Obx(() {

@@ -40,3 +40,34 @@ Widget tradeTypeDialog() {
     ),
   );
 }
+
+Widget orderErrorDialog(String msg){
+  return SizedBox(
+    height: 150,
+    child: Column(
+      children: [
+        Expanded(
+          flex: 3,
+          child: Container(
+            decoration: const BoxDecoration(color: WHITE, borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
+            padding: const EdgeInsets.only(left: 30),
+            alignment: Alignment.centerLeft,
+            child: Text(msg, style: const TextStyle(fontSize: 14, color: BLACK)),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: InkWell(
+            onTap: ()=>Get.back(),
+            child: Container(
+              color: BLUE,
+              alignment: Alignment.center,
+              height: 50,
+              child: const Text('닫기', style: TextStyle(color: WHITE, fontSize: 16)),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}

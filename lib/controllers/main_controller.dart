@@ -164,9 +164,9 @@ class MainController extends GetxController {
   // 시장가 체크박스
   var stockOrderPage_marketPrice = true.obs;
   // 주문수량
-  var stockOrderPage_orderCount = '0'.obs;
+  var stockOrderPage_orderCount = 0.obs;
   // 주문 단가
-  var stockOrderPage_orderPrice = '0'.obs;
+  var stockOrderPage_orderPrice = 0.obs;
 
 
 
