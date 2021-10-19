@@ -32,9 +32,20 @@ Widget tradeType({String text = '', Widget? dialog}) {
           child: InkWell(
             onTap: () async {
               if (dialog != null) {
+
+                // 다이얼로그에서 클릭한 항목 받음
                 final result = await Get.bottomSheet(dialog);
                 if(result != null){
                   mainController.stockOrderPage_tradeType.value = result;
+                  print(result);
+                  // 다이얼로그에서 시장가를 선택했다면,
+                  // 시장가 체크박스의 체크 상태를 true로
+                  // 그 외 = false
+                  if(result == '시장가'){
+                    mainController.stockOrderPage_marketPrice.value = true;
+                  }else{
+                    mainController.stockOrderPage_marketPrice.value = false;
+                  }
                 }
               }
             },
@@ -68,11 +79,11 @@ Widget tradeType({String text = '', Widget? dialog}) {
 
 /// 좌상단 - title,
 /// 우하단 - content 들어간 회색 박스
-Widget titleContent({String title='', String content='', Color titleColor=BLACK}) {
+Widget titleContent({String title='', String content='', Color titleColor=BLACK, Color bgColor=LLIGHTGRAY}) {
   return Container(
     margin: const EdgeInsets.only(bottom: 5, right: 5),
     padding: const EdgeInsets.all(10),
-    decoration: deco,
+    decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(3)),
     height: boxHeight,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

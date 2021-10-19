@@ -32,7 +32,8 @@ class Buy extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded( // 현금/신용/(대출상환)버튼
+        Expanded(
+          // 현금/신용/(대출상환)버튼
           child: Container(
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -67,8 +68,16 @@ class Buy extends StatelessWidget {
                     ),
                   );
                 }), // 현금/신용/(대출상환)버튼
-                tradeType(text: '보통', dialog: tradeTypeDialog()), // 구분
-                Row( // 주식 수량
+                Obx(() {
+                  // 구분
+                  String text =
+                      (mainController.stockOrderPage_marketPrice.value)
+                          ? '시장가'
+                          : '보통';
+                  return tradeType(text: text, dialog: tradeTypeDialog());
+                }), // 구분
+                Row(
+                  // 주식 수량
                   children: [
                     Expanded(
                       flex: 7,
@@ -82,33 +91,50 @@ class Buy extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row( // 단가
+                Row(
+                  // 단가
                   children: [
                     Expanded(
                       flex: 7,
-                      child: Obx(() =>
-                          titleContent(title: '단가', titleColor: getColor())),
+                      child: Obx(
+                        () => titleContent(
+                            title: '단가',
+                            titleColor: getColor(),
+                            bgColor: mainController.stockOrderPage_showPrice()
+                                ? LIGHTGRAY
+                                : LLIGHTGRAY),
+                      ),
                     ),
                     Expanded(
                       flex: 3,
                       child: InkWell(
-                          onTap: () => mainController.stockOrderPage_marketPrice
-                              .toggle(),
-                          child: Obx(() => checkBoxText(
-                              '시장',
-                              mainController
-                                  .stockOrderPage_marketPrice.value))),
+                        onTap: () {
+                          mainController.stockOrderPage_marketPrice.toggle();
+                          mainController.stockOrderPage_tradeType.value =
+                              (mainController.stockOrderPage_marketPrice.value)
+                                  ? '시장가'
+                                  : '보통';
+                        },
+                        child: Obx(
+                          () => checkBoxText('시장',
+                              mainController.stockOrderPage_marketPrice.value),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                Row( // 금액
+                Row(
+                  // 금액
                   children: [
-                    Expanded(
-                        flex: 7,
-                        child: Obx(
-                          () =>
-                              titleContent(title: '금액', titleColor: getColor()),
-                        )),
+                    Obx(
+                      () => (mainController.stockOrderPage_showPrice())
+                          ? const Spacer(flex: 7)
+                          : Expanded(
+                              flex: 7,
+                              child: titleContent(
+                                  title: '금액', titleColor: getColor()),
+                            ),
+                    ),
                     Obx(() {
                       if (mainController.stockOrderPage_tabIdx.value == 0) {
                         return const Spacer(flex: 3);
@@ -128,6 +154,9 @@ class Buy extends StatelessWidget {
         InkWell(
           onTap: () {
             // 현금 매수/매도
+            final count;
+            final price;
+
           },
           child: Obx(() {
             return Container(

@@ -163,10 +163,14 @@ class MainController extends GetxController {
   var stockOrderPage_tradeType = '보통'.obs;
   // 시장가 체크박스
   var stockOrderPage_marketPrice = true.obs;
+  // 주문수량
+  var stockOrderPage_orderCount = '0'.obs;
+  // 주문 단가
+  var stockOrderPage_orderPrice = '0'.obs;
+
+
 
   MainController() {
-
-
     stockPriceTab.value =
         stockPriceTabTexts.first; // 주식현재가 탭버튼 첫 항목 선택된 상태로 초기화
     investorPage_investorbtn.value = investorPage_investorList
@@ -389,5 +393,14 @@ class MainController extends GetxController {
     stockOrderPage_marketPrice.value = false;
     stockOrderPage_payIdx.value = 0;
     stockOrderPage_tradeType.value = '보통';
+  }
+
+  /// 주식주문
+  /// 구분 ['시장가', '장전시간외', '장후시간외', '최유리지정가', '최우선지정가']이면
+  /// 금액 표시 x
+  /// 단가 박스 배경색 짙게
+  bool stockOrderPage_showPrice(){
+    return (['시장가', '장전시간외', '장후시간외', '최유리지정가', '최우선지정가'].contains(
+            stockOrderPage_tradeType.value));
   }
 }
