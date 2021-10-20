@@ -81,8 +81,16 @@ class Buy extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 7,
-                      child: Obx(
-                        () => titleContent(title: '수량', titleColor: getColor()),
+                      child: InkWell(
+                        onTap: () => Get.bottomSheet(InsertValDialog('수량')),
+                        child: Obx(
+                          () => titleContent(
+                            title: '수량',
+                            titleColor: getColor(),
+                            content:
+                                mainController.stockOrderPage_getOrderCount(),
+                          ),
+                        ),
                       ),
                     ),
                     Expanded(
@@ -96,13 +104,17 @@ class Buy extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 7,
-                      child: Obx(
-                        () => titleContent(
-                            title: '단가',
-                            titleColor: getColor(),
-                            bgColor: mainController.stockOrderPage_showPrice()
-                                ? LIGHTGRAY
-                                : LLIGHTGRAY),
+                      child: InkWell(
+                        onTap: () => Get.bottomSheet(InsertValDialog('단가')),
+                        child: Obx(() => titleContent(
+                              title: '단가',
+                              titleColor: getColor(),
+                              bgColor: mainController.stockOrderPage_showPrice()
+                                  ? LIGHTGRAY
+                                  : LLIGHTGRAY,
+                              content:
+                                  mainController.stockOrderPage_getOrderPrice(),
+                            )),
                       ),
                     ),
                     Expanded(
@@ -131,8 +143,15 @@ class Buy extends StatelessWidget {
                           ? const Spacer(flex: 7)
                           : Expanded(
                               flex: 7,
-                              child: titleContent(
-                                  title: '금액', titleColor: getColor()),
+                              child: InkWell(
+                                onTap: () =>
+                                    Get.bottomSheet(InsertValDialog('금액')),
+                                child: titleContent(
+                                    title: '금액',
+                                    titleColor: getColor(),
+                                    content: mainController
+                                        .stockOrderPage_getOrderTotal()),
+                              ),
                             ),
                     ),
                     Obx(() {
@@ -157,17 +176,15 @@ class Buy extends StatelessWidget {
             final count = mainController.stockOrderPage_orderCount.value;
             final price = mainController.stockOrderPage_orderCount.value;
             String? errorText = null;
-            if(count == 0){
+            if (count == 0) {
               errorText = '주문 수량을 입력해주세요';
-            }else if(price == 0 && !mainController.stockOrderPage_showPrice()){
+            } else if (price == 0 &&
+                !mainController.stockOrderPage_showPrice()) {
               errorText = '주문 단가를 입력해주세요';
             }
-            if(errorText != null){
+            if (errorText != null) {
               Get.bottomSheet(orderErrorDialog(errorText));
-            }
-
-
-
+            } else {}
           },
           child: Obx(() {
             return Container(

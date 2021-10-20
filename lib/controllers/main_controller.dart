@@ -6,6 +6,7 @@ import 'package:flutter_prac_jongmock/present_price/tabPage/stock_info/page_stoc
 import 'package:flutter_prac_jongmock/present_price/tabPage/time/time.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/unit_price/tab_hoga.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
+import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
 class MainController extends GetxController {
@@ -164,9 +165,15 @@ class MainController extends GetxController {
   // 시장가 체크박스
   var stockOrderPage_marketPrice = true.obs;
   // 주문수량
-  var stockOrderPage_orderCount = 0.obs;
+  var stockOrderPage_orderCount = (-1).obs;
   // 주문 단가
-  var stockOrderPage_orderPrice = 0.obs;
+  var stockOrderPage_orderPrice = (-1).obs;
+  // 금액
+  var stockOrderPage_orderTotal = (-1).obs;
+
+  // 수량/단가/금액 입력 다이얼로그
+  // 선택 탭
+  var stockOrderPage_insertTab = '수량'.obs;
 
 
 
@@ -403,4 +410,171 @@ class MainController extends GetxController {
     return (['시장가', '장전시간외', '장후시간외', '최유리지정가', '최우선지정가'].contains(
             stockOrderPage_tradeType.value));
   }
+
+  /// 수량/단가/금액 입력 다이얼로그
+  /// + 버튼 클릭
+  void stockOrderPage_insertDialog_increBtn(){
+    switch(stockOrderPage_insertTab.value){
+      case '수량':
+        if(stockOrderPage_orderCount.value < 9999999){
+          stockOrderPage_orderCount.value += 1;
+        }
+        break;
+      case '단가':
+        final temp = stockOrderPage_orderPrice.value + getDist(stockOrderPage_orderPrice.value);
+        if((getSelectedStockData().getYesterdayInt() * 1.3).toInt() > temp){
+          stockOrderPage_orderPrice.value = temp;
+        }
+        break;
+    }
+  }
+  /// 수량/단가/금액 입력 다이얼로그
+  /// - 버튼 클릭
+  void stockOrderPage_insertDialog_decreBtn(){
+    switch(stockOrderPage_insertTab.value){
+      case '수량':
+        if(stockOrderPage_orderCount.value > 0){
+          stockOrderPage_orderCount.value -= 1;
+        }
+        break;
+      case '단가':
+        final temp = stockOrderPage_orderPrice.value - getDist(stockOrderPage_orderPrice.value);
+        if((getSelectedStockData().getYesterdayInt() * 0.7).toInt() < temp){
+          stockOrderPage_orderPrice.value = temp;
+        }
+        break;
+    }
+  }
+  String stockOrderPage_getOrderCount(){
+    final cnt = stockOrderPage_orderCount.value;
+    if(cnt < 0){
+      return '';
+    }
+    // if(cnt == 0){
+    //   return '';
+    // }else{
+      return formatIntToStr(cnt);
+    // }
+  }
+  String stockOrderPage_getOrderPrice(){
+    final price = stockOrderPage_orderPrice.value;
+    if(price <= 0){
+      return '';
+    }else{
+      return formatIntToStr(price);
+    }
+  }
+  String stockOrderPage_getOrderTotal(){
+    final cnt = stockOrderPage_orderCount.value;
+    final price = stockOrderPage_orderPrice.value;
+    if(price < 0 || stockOrderPage_orderTotal.value < 0){
+      return '';
+    }else{
+      stockOrderPage_orderCount.value = stockOrderPage_orderTotal.value ~/ price;
+
+      return formatIntToStr(stockOrderPage_orderTotal.value);
+    }
+  }
+
+  /// 수량/단가/금액 입력 다이얼로그
+  /// 숫자판 버튼 클릭 (1 ~ 9, 0, 00, 000)
+  void stockOrderPage_numBtn(String num){
+    switch(stockOrderPage_insertTab.value){
+      case '수량':
+        if(stockOrderPage_orderCount.value <= 0){
+          stockOrderPage_orderCount.value = int.parse(num);
+          break;
+        }
+        String cnt = stockOrderPage_orderCount.value.toString();
+        cnt = '$cnt$num';
+        int temp = int.parse(cnt);
+        if(temp > 9999999){
+          temp = 9999999;
+        }
+        stockOrderPage_orderCount.value = temp;
+        break;
+      case '단가':
+        if(stockOrderPage_orderPrice.value <= 0){
+          stockOrderPage_orderPrice.value = int.parse(num);
+          break;
+        }
+        String price = stockOrderPage_orderPrice.value.toString();
+        price = '$price$num';
+        int temp = int.parse(price);
+        int high = (getSelectedStockData().getYesterdayInt() * 1.3).toInt();
+        if(temp > high){
+          temp = high;
+        }
+        stockOrderPage_orderPrice.value = temp;
+        break;
+      case '금액':
+        if(stockOrderPage_orderTotal.value <= 0){
+          stockOrderPage_orderTotal.value = int.parse(num);
+          break;
+        }
+        String total = stockOrderPage_orderTotal.value.toString();
+        total = '$total$num';
+        int temp = int.parse(total);
+        if(temp > 999999999){
+          temp = 999999999;
+        }
+        stockOrderPage_orderTotal.value = temp;
+        break;
+    }
+  }
+
+  /// 수량/단가/금액 입력 다이얼로그
+  /// 입력칸부분 초기화
+  void stockOrderPage_clearText(){
+    switch(stockOrderPage_insertTab.value){
+      case '수량':
+        stockOrderPage_orderCount.value = -1;
+        break;
+      case '단가':
+        stockOrderPage_orderPrice.value = -1;
+      break;
+      case '금액':
+        stockOrderPage_orderTotal.value = -1;
+        break;
+    }
+  }
+
+  /// 수량/단가/금액 입력 다이얼로그
+  /// 입력칸
+  /// backspace 기능
+  void stockOrderPage_eraseBtn(){
+    switch(stockOrderPage_insertTab.value){
+      case '수량':
+        final cnt = stockOrderPage_orderCount.value;
+        if(cnt < 10){
+          stockOrderPage_orderCount.value = -1;
+        }else{
+          String temp = cnt.toString();
+          temp = temp.substring(0, temp.length-1);
+          stockOrderPage_orderCount.value = int.parse(temp);
+        }
+        break;
+      case '단가':
+        final price = stockOrderPage_orderPrice.value;
+        if(price < 10){
+          stockOrderPage_orderPrice.value = -1;
+        }else{
+          String temp = price.toString();
+          temp = temp.substring(0, temp.length-1);
+          stockOrderPage_orderPrice.value = int.parse(temp);
+        }
+        break;
+      case '금액':
+        final total = stockOrderPage_orderTotal.value;
+        if(total < 10){
+          stockOrderPage_orderTotal.value = -1;
+        }else{
+          String temp = total.toString();
+          temp = temp.substring(0, temp.length-1);
+          stockOrderPage_orderTotal.value = int.parse(temp);
+        }
+        break;
+    }
+  }
+
 }
