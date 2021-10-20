@@ -126,3 +126,23 @@ Icon? getIconWithSign(int sign){
       return null;
   }
 }
+
+/// 주식 호가 단위 코스피
+/// 코스닥은 50000원 이상 == 100
+int getDist(int currentPrice){
+  if(currentPrice >= 500000){
+    return 1000;
+  }else if(currentPrice >= 100000){
+    return 500;
+  }else if(currentPrice >= 50000){
+    return 100;
+  }else if(currentPrice >= 10000){
+    return 50;
+  }else if(currentPrice >= 5000){
+    return 10;
+  }else if(currentPrice >= 1000){
+    return 5;
+  }else{
+    return 1;
+  }
+}
