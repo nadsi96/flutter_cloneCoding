@@ -104,11 +104,10 @@ class InsertValDialog extends StatelessWidget {
       stockOrderController.orderPrice.value
     ]; // 기존 입력되어있던 값
 
-    if(stockOrderController.orderPrice.value == ''){
-      // 주문 단가가 입력되어있지 않았다면
-      // 현재가로 초기화
-      stockOrderController.dialog_orderPrice.value = mainController.getSelectedStockData().getPriceInt();
-    }
+
+    // 주문 단가가 입력되어있지 않았다면
+    // 현재가로 초기화
+    stockOrderController.init();
 
     tabTexts = stockOrderController.showPrice() ? ['수량'] : ['수량', '단가', '금액'];
   }

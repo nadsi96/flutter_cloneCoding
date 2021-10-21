@@ -57,6 +57,18 @@ class StockOrderController extends GetxController {
     tradeType.value = '보통';
   }
 
+  void init() {
+    if (stock != null) {
+      if (orderPrice.value == '') {
+        dialog_orderPrice.value = stock!.getPriceInt();
+      }
+      if (orderCount.value != '') {
+        dialog_orderCount.value =
+            int.parse(orderCount.value.replaceAll(',', ''));
+      }
+    }
+  }
+
   /// 주식주문
   /// 구분 ['시장가', '장전시간외', '장후시간외', '최유리지정가', '최우선지정가']이면
   /// 금액 표시 x
@@ -126,20 +138,9 @@ class StockOrderController extends GetxController {
   }
 
   String getOrderTotal() {
-    final cnt = dialog_orderCount.value;
-    final price = dialog_orderPrice.value;
-    print('$cnt, $price');
-    // if(price < 0 || stockOrderPage_orderTotal.value < 0){
-    if (price < 0) {
-      update();
-      return '';
-    } else {
-      dialog_orderCount.value = dialog_orderTotal.value ~/ price;
-      dialog_orderTotal.value = dialog_orderCount.value * price;
-      print(dialog_orderTotal.value);
-      update();
-      return formatIntToStr(dialog_orderTotal.value);
-    }
+    return (dialog_orderTotal.value < 0)
+        ? ''
+        : formatIntToStr(dialog_orderTotal.value);
   }
 
   /// 수량/단가/금액 입력 다이얼로그
@@ -267,16 +268,26 @@ class StockOrderController extends GetxController {
   /// 다이얼로그에서 입력한 내용을 페이지에 전달
   void backFromDialog() {
     isOpening = true;
-    final cnt = dialog_orderCount.value;
-    final price = dialog_orderPrice.value;
+    int cnt = dialog_orderCount.value;
+    int price = dialog_orderPrice.value;
+    int total = dialog_orderTotal.value;
 
-    orderCount.value = (cnt == -1) ? '' : formatIntToStr(cnt);
-    orderPrice.value = (price == -1) ? '' : formatIntToStr(price);
+    print('$cnt $price $total');
+    if (dialog_insertTab.value == '금액') {
+      cnt = total ~/ price;
+    }
+    total = cnt * price;
+
+    print('$cnt $price $total');
+    orderCount.value = (cnt < 0) ? '' : formatIntToStr(cnt);
+    orderPrice.value = (price < 0) ? '' : formatIntToStr(price);
 
     if (cnt == -1 || price == -1) {
-      orderTotal.value == '';
+      orderTotal.value = '';
+      dialog_orderTotal.value = -1;
     } else {
-      orderTotal.value = formatIntToStr(cnt * price);
+      orderTotal.value = formatIntToStr(total);
+      dialog_orderTotal.value = total;
     }
   }
 }
