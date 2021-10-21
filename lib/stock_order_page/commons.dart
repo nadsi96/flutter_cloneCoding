@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
-import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/stock_order_controller.dart';
 import 'package:get/get.dart';
 
 const double boxHeight = 60;
@@ -12,7 +12,7 @@ final deco =
 /// 구분
 /// 보통, 시장가, 장전시간외, 장후시간외, 시간외단일가, 최유리지정가, 최우선지정가
 Widget tradeType({String text = '', Widget? dialog, double margin_top=5, double margin_bottom=5,}) {
-  final mainController = Get.find<MainController>();
+  final stockOrderController = Get.find<StockOrderController>();
 
   return Container(
     margin: EdgeInsets.only(top: margin_top, bottom: margin_bottom),
@@ -36,15 +36,15 @@ Widget tradeType({String text = '', Widget? dialog, double margin_top=5, double 
                 // 다이얼로그에서 클릭한 항목 받음
                 final result = await Get.bottomSheet(dialog);
                 if(result != null){
-                  mainController.stockOrderPage_tradeType.value = result;
+                  stockOrderController.tradeType.value = result;
                   print(result);
                   // 다이얼로그에서 시장가를 선택했다면,
                   // 시장가 체크박스의 체크 상태를 true로
                   // 그 외 = false
                   if(result == '시장가'){
-                    mainController.stockOrderPage_marketPrice.value = true;
+                    stockOrderController.marketPrice.value = true;
                   }else{
-                    mainController.stockOrderPage_marketPrice.value = false;
+                    stockOrderController.marketPrice.value = false;
                   }
                 }
               }
@@ -56,7 +56,7 @@ Widget tradeType({String text = '', Widget? dialog, double margin_top=5, double 
                     padding: const EdgeInsets.all(15),
                     alignment: Alignment.centerLeft,
                     child: Obx(
-                      () => Text(mainController.stockOrderPage_tradeType.value,
+                      () => Text(stockOrderController.tradeType.value,
                           style: const TextStyle(
                               fontSize: contentFontSize, color: GRAY)),
                     ),

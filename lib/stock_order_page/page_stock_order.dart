@@ -4,6 +4,7 @@ import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/commons/commons.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/my_page_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/stock_order_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:get/get.dart';
 
@@ -16,8 +17,12 @@ class StockOrder extends StatelessWidget {
   final mainController = Get.find<MainController>();
   final pageController = Get.find<TabPageController>();
   final myPageController = Get.find<MyPageController>();
+  final stockOrderController = Get.find<StockOrderController>();
 
   StockOrder({Key? key}) : super(key: key) {
+
+    stockOrderController.setStock(mainController.getSelectedStockData());
+
     // 로그인 상태 체크 후 진행
   }
 
@@ -192,7 +197,7 @@ class StockOrder extends StatelessWidget {
         children: List.generate(texts.length, (idx) {
           return InkWell(
             onTap: () {
-              mainController.stockOrderPage_tabIdx.value = idx;
+              stockOrderController.tabIdx.value = idx;
             },
             child: Container(
               width: 80,
@@ -202,7 +207,7 @@ class StockOrder extends StatelessWidget {
                   text: texts[idx],
                   fontSize: 14,
                   paddingV: 10,
-                  isSelected: mainController.stockOrderPage_tabIdx.value == idx,
+                  isSelected: stockOrderController.tabIdx.value == idx,
                 );
               }),
             ),
@@ -223,8 +228,8 @@ class StockOrder extends StatelessWidget {
           tabs(),
           Expanded(
             child: Obx((){
-              final idx = mainController.stockOrderPage_tabIdx.value;
-              switch(mainController.stockOrderPage_tabList[idx]){
+              final idx = stockOrderController.tabIdx.value;
+              switch(stockOrderController.tabList[idx]){
                 case '매수':
                 case '매도':
                 return Row(

@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/stock_order_controller.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
 Widget tradeTypeDialog() {
   final mainController = Get.find<MainController>();
+  final stockOrderController = Get.find<StockOrderController>();
+
   final texts = ['보통', '시장가', '장전시간외', '장후시간외', '시간외단일가', '최유리지정가', '최우선지정가'];
   return Container(
     height: 300,
@@ -28,7 +31,7 @@ Widget tradeTypeDialog() {
           } else {
             final idx = index ~/ 2;
             return Obx(() {
-              final selected = mainController.stockOrderPage_tradeType.value;
+              final selected = stockOrderController.tradeType.value;
               final flag = texts[idx] == selected;
               return ListTile(
                 onTap: () => Get.back(result: texts[idx]),
@@ -88,18 +91,21 @@ Widget orderErrorDialog(String msg) {
 /// tab - 클릭한 박스(수량/단가/금액)
 class InsertValDialog extends StatelessWidget {
   final controller = Get.find<MainController>();
+  final stockOrderController = Get.find<StockOrderController>();
+
   final double dialogHeight = 420; // 다이얼로그 화면 높이
   late final previous_data; // 다이얼로그 열기 전 입력되어있던 값
   List<String> tabTexts = []; // 상단 탭 텍스트
+
   InsertValDialog(String tab, {Key? key}) : super(key: key) {
-    controller.stockOrderPage_insertTab.value = tab;
+    stockOrderController.dialog_insertTab.value = tab;
     previous_data = [
-      controller.stockOrderPage_orderCount.value,
-      controller.stockOrderPage_orderPrice.value
+      stockOrderController.orderCount.value,
+      stockOrderController.orderPrice.value
     ]; // 기존 입력되어있던 값
 
     tabTexts =
-        controller.stockOrderPage_showPrice() ? ['수량'] : ['수량', '단가', '금액'];
+    stockOrderController.showPrice() ? ['수량'] : ['수량', '단가', '금액'];
   }
 
   /// 주문 수량/단가/금액 입력 텍스트박스 오른쪽
@@ -117,7 +123,7 @@ class InsertValDialog extends StatelessWidget {
         children: [
           Expanded(
             child: InkWell(
-              onTap: () => controller.stockOrderPage_insertDialog_increBtn(),
+              onTap: () => stockOrderController.dialog_increBtn(),
               child: const DecoratedBox(
                   decoration: BoxDecoration(
                       border: Border(right: BorderSide(color: LIGHTGRAY))),
@@ -126,7 +132,7 @@ class InsertValDialog extends StatelessWidget {
           ),
           Expanded(
             child: InkWell(
-              onTap: () => controller.stockOrderPage_insertDialog_decreBtn(),
+              onTap: () => stockOrderController.insertDialog_decreBtn(),
               child: const Icon(Icons.remove, size: 30, color: BLACK),
             ),
           ),
@@ -141,7 +147,7 @@ class InsertValDialog extends StatelessWidget {
 
   /// 숫자판 버튼
   Widget numberBtns() {
-    final selected = controller.stockOrderPage_insertTab.value;
+    final selected = stockOrderController.dialog_insertTab.value;
 
     var items = List.generate(9, (idx) => '${idx + 1}');
     items.addAll(['00', '0']);
@@ -150,22 +156,22 @@ class InsertValDialog extends StatelessWidget {
     List<Widget> itemViews = List.generate(
         items.length,
         (idx) => InkWell(
-              onTap: () => controller.stockOrderPage_numBtn(items[idx]),
+              onTap: () => stockOrderController.dialog_numBtn(items[idx]),
               child: _itemView(items[idx]),
             ));
 
     // 마지막에 000(수량/금액) or 현재가(단가)
     itemViews.add(
       Obx(() {
-        if (controller.stockOrderPage_insertTab.value == '단가') {
+        if (stockOrderController.dialog_insertTab.value == '단가') {
           return (InkWell(
-            onTap: () => controller.stockOrderPage_orderPrice.value =
+            onTap: () => stockOrderController.dialog_orderPrice.value =
                 controller.getSelectedStockData().getPriceInt(),
             child: _itemView('현재가'),
           ));
         } else {
           return (InkWell(
-            onTap: () => controller.stockOrderPage_numBtn('000'),
+            onTap: () => stockOrderController.dialog_numBtn('000'),
             child: _itemView('000'),
           ));
         }
@@ -259,7 +265,7 @@ class InsertValDialog extends StatelessWidget {
           // 백스페이스버튼
           child: InkWell(
             onTap: () {
-              controller.stockOrderPage_eraseBtn();
+              stockOrderController.dialog_eraseBtn();
             },
             child: Container(
               alignment: Alignment.center,
@@ -279,6 +285,7 @@ class InsertValDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       height: dialogHeight,
       color: GRAY,
@@ -291,12 +298,12 @@ class InsertValDialog extends StatelessWidget {
               (idx) => Expanded(
                 child: InkWell(
                   onTap: () {
-                    controller.stockOrderPage_insertTab.value = tabTexts[idx];
+                    stockOrderController.dialog_insertTab.value = tabTexts[idx];
                   },
                   child: Obx(() {
                     Color bgColor = WHITE;
                     Color fontColor = BLACK;
-                    if (controller.stockOrderPage_insertTab.value ==
+                    if (stockOrderController.dialog_insertTab.value ==
                         tabTexts[idx]) {
                       bgColor = DARKBLUE;
                       fontColor = WHITE;
@@ -328,23 +335,23 @@ class InsertValDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Obx(() {
-                  final selected = controller.stockOrderPage_insertTab.value;
+                  final selected = stockOrderController.dialog_insertTab.value;
 
                   String text;
                   if (selected == '단가') {
                     /// 단가를 클릭했는데, 입력해뒀던 내용이 없다면
                     /// text를 현재가로 초기화
                     /// 있으면 있던거 넣
-                    if (controller.stockOrderPage_getOrderPrice() == '') {
-                      controller.stockOrderPage_orderPrice.value =
+                    if (stockOrderController.getOrderPrice() == '' && stockOrderController.isOpening) {
+                      stockOrderController.dialog_orderPrice.value =
                           controller.getSelectedStockData().getPriceInt();
                     }
-                    text = controller.stockOrderPage_getOrderPrice();
+                    text = stockOrderController.getOrderPrice();
                   } else if (selected == '수량') {
                     // 수량 클릭한 경우
-                    text = controller.stockOrderPage_getOrderCount();
+                    text = stockOrderController.getOrderCount();
                   } else {
-                    text = controller.stockOrderPage_getOrderTotal();
+                    text = stockOrderController.getOrderTotal();
                   }
 
                   String unit;
@@ -374,47 +381,22 @@ class InsertValDialog extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.fade,
                             ),
-                            // child: (selected == '금액')
-                            //     ? FittedBox(
-                            //         fit: BoxFit.scaleDown,
-                            //         child: Text(
-                            //           text,
-                            //           style: const TextStyle(
-                            //               color: BLACK,
-                            //               fontSize: 26,
-                            //               fontWeight: FontWeight.bold),
-                            //           textAlign: TextAlign.end,
-                            //           maxLines: 1,
-                            //           overflow: TextOverflow.fade,
-                            //         ),
-                            //       )
-                            //     : Text(
-                            //         text,
-                            //         style: const TextStyle(
-                            //             color: BLACK,
-                            //             fontSize: 26,
-                            //             fontWeight: FontWeight.bold),
-                            //         textAlign: TextAlign.end,
-                            //         maxLines: 1,
-                            //         overflow: TextOverflow.fade,
-                            //       ),
                           ), // 수량/원 입력칸
                           Text(unit, style: const TextStyle(fontSize: 14)),
                           InkWell(
-                            onTap: () => controller.stockOrderPage_clearText(),
+                            onTap: () => stockOrderController.dialog_clearText(),
                             child:
-
                                 /// 입력한 내용 지우기 버튼. 0보다 크면 나타남
                                 ((selected == '수량' &&
-                                            controller.stockOrderPage_orderCount
+                                    stockOrderController.dialog_orderCount
                                                     .value >
                                                 0) ||
                                         (selected == '단가' &&
-                                            controller.stockOrderPage_orderPrice
+                                            stockOrderController.dialog_orderPrice
                                                     .value >
                                                 0) ||
                                         (selected == '금액' &&
-                                            controller.stockOrderPage_orderTotal
+                                            stockOrderController.dialog_orderTotal
                                                     .value >
                                                 0))
                                     ? Container(
@@ -431,7 +413,7 @@ class InsertValDialog extends StatelessWidget {
                 Obx(
                   () {
                     final flag =
-                        (controller.stockOrderPage_insertTab.value == '금액');
+                        (stockOrderController.dialog_insertTab.value == '금액');
                     return Expanded(
                       flex: flag ? 3 : 1,
                       child: flag ? show_price_count() : incre_decre_btn(),
@@ -466,11 +448,6 @@ class InsertValDialog extends StatelessWidget {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      controller.stockOrderPage_orderCount.value =
-                          previous_data[0]; // 다이얼로그 열 때, 수량
-                      controller.stockOrderPage_orderPrice.value =
-                          previous_data[1]; // 다이얼로그 열 때, 단가
-
                       Get.back();
                     },
                     child: Container(
@@ -483,7 +460,10 @@ class InsertValDialog extends StatelessWidget {
                 ),
                 Expanded(
                   child: InkWell(
-                    onTap: () => Get.back(),
+                    onTap: () {
+                      stockOrderController.backFromDialog();
+                      Get.back();
+                    },
                     child: Container(
                       color: BLUE,
                       alignment: Alignment.center,

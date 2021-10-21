@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/stock_order_controller.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/hoga/data/hoga_data.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/hoga/data/produce_hoga_data.dart';
 import 'package:flutter_prac_jongmock/present_price/tabPage/hoga/section_left_bottom.dart';
@@ -12,6 +13,7 @@ import 'package:get/get.dart';
 
 class Hoga_Che_Table extends StatelessWidget {
   final mainController = Get.find<MainController>();
+  final stockOrderController = Get.find<StockOrderController>();
 
   final hogaScrollController = ScrollController();
 
@@ -250,7 +252,7 @@ class Hoga_Che_Table extends StatelessWidget {
     return Stack(
       children: [
         Obx(() {
-          if (mainController.stockOrderPage_hoga_che_toggle.value) {
+          if (stockOrderController.hoga_che_toggle.value) {
             // 화면 그려지고 난 뒤 동작
             // 스크롤 가운데로 이동
             WidgetsBinding.instance!.addPostFrameCallback((_) => scrollToCenter());
@@ -276,7 +278,7 @@ class Hoga_Che_Table extends StatelessWidget {
           left: 0,
           bottom: 10,
           child: InkWell(
-            onTap: () => mainController.stockOrderPage_hoga_che_toggle.toggle(),
+            onTap: () => stockOrderController.hoga_che_toggle.toggle(),
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -287,7 +289,7 @@ class Hoga_Che_Table extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Obx(() {
                 final text =
-                    (mainController.stockOrderPage_hoga_che_toggle.value)
+                    (stockOrderController.hoga_che_toggle.value)
                         ? '체\n결'
                         : '호\n가';
                 return Text(

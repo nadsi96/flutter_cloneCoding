@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/stock_order_controller.dart';
 import 'package:get/get.dart';
 
 import 'commons.dart';
@@ -9,15 +10,16 @@ import 'dialogs.dart';
 
 class Buy extends StatelessWidget {
   final mainController = Get.find<MainController>();
+  final stockOrderController = Get.find<StockOrderController>();
 
   /// 탭 바뀔 때 상태 초기화
   Buy({Key? key}) : super(key: key) {
-    mainController.stockOrderPage_clearState();
+    stockOrderController.clearState();
   }
 
   Color getColor() {
-    final title = mainController
-        .stockOrderPage_tabList[mainController.stockOrderPage_tabIdx.value];
+    final title = stockOrderController
+        .tabList[stockOrderController.tabIdx.value];
 
     if (title == '매수') {
       return RED;
@@ -39,8 +41,8 @@ class Buy extends StatelessWidget {
             child: Column(
               children: [
                 Obx(() {
-                  final title = mainController.stockOrderPage_tabList[
-                      mainController.stockOrderPage_tabIdx.value];
+                  final title = stockOrderController.tabList[
+                  stockOrderController.tabIdx.value];
                   List<String> btnTexts = [];
 
                   if (title == '매수') {
@@ -55,10 +57,10 @@ class Buy extends StatelessWidget {
                       (idx) => Expanded(
                         child: InkWell(
                           onTap: () =>
-                              mainController.stockOrderPage_payIdx.value = idx,
+                          stockOrderController.payIdx.value = idx,
                           child: BlueGrayButton(
                             isSelected:
-                                (mainController.stockOrderPage_payIdx.value ==
+                                (stockOrderController.payIdx.value ==
                                     idx),
                             text: btnTexts[idx],
                             fontSize: 14,
@@ -71,7 +73,7 @@ class Buy extends StatelessWidget {
                 Obx(() {
                   // 구분
                   String text =
-                      (mainController.stockOrderPage_marketPrice.value)
+                      (stockOrderController.marketPrice.value)
                           ? '시장가'
                           : '보통';
                   return tradeType(text: text, dialog: tradeTypeDialog());
@@ -87,8 +89,8 @@ class Buy extends StatelessWidget {
                           () => titleContent(
                             title: '수량',
                             titleColor: getColor(),
-                            content:
-                                mainController.stockOrderPage_getOrderCount(),
+                            content: stockOrderController.orderCount.value,
+                            // stockOrderController.getOrderCount(),
                           ),
                         ),
                       ),
@@ -109,11 +111,11 @@ class Buy extends StatelessWidget {
                         child: Obx(() => titleContent(
                               title: '단가',
                               titleColor: getColor(),
-                              bgColor: mainController.stockOrderPage_showPrice()
+                              bgColor: stockOrderController.showPrice()
                                   ? LIGHTGRAY
                                   : LLIGHTGRAY,
-                              content:
-                                  mainController.stockOrderPage_getOrderPrice(),
+                              content: stockOrderController.orderPrice.value,
+                              // stockOrderController.getOrderPrice(),
                             )),
                       ),
                     ),
@@ -121,15 +123,22 @@ class Buy extends StatelessWidget {
                       flex: 3,
                       child: InkWell(
                         onTap: () {
-                          mainController.stockOrderPage_marketPrice.toggle();
-                          mainController.stockOrderPage_tradeType.value =
-                              (mainController.stockOrderPage_marketPrice.value)
+                          stockOrderController.marketPrice.toggle();
+                          final flag = stockOrderController.marketPrice.value;
+                          stockOrderController.tradeType.value =
+                              (flag)
                                   ? '시장가'
                                   : '보통';
+                          if(flag){
+                            stockOrderController.orderPrice.value = '';
+                            stockOrderController.tradeType.value = '시장가';
+                          }else{
+                            stockOrderController.tradeType.value = '보통';
+                          }
                         },
                         child: Obx(
                           () => checkBoxText('시장',
-                              mainController.stockOrderPage_marketPrice.value),
+                              stockOrderController.marketPrice.value),
                         ),
                       ),
                     ),
@@ -139,7 +148,7 @@ class Buy extends StatelessWidget {
                   // 금액
                   children: [
                     Obx(
-                      () => (mainController.stockOrderPage_showPrice())
+                      () => (stockOrderController.showPrice())
                           ? const Spacer(flex: 7)
                           : Expanded(
                               flex: 7,
@@ -149,13 +158,12 @@ class Buy extends StatelessWidget {
                                 child: titleContent(
                                     title: '금액',
                                     titleColor: getColor(),
-                                    content: mainController
-                                        .stockOrderPage_getOrderTotal()),
+                                    content: stockOrderController.orderTotal.value,),
                               ),
                             ),
                     ),
                     Obx(() {
-                      if (mainController.stockOrderPage_tabIdx.value == 0) {
+                      if (stockOrderController.tabIdx.value == 0) {
                         return const Spacer(flex: 3);
                       } else {
                         return Expanded(
@@ -173,13 +181,13 @@ class Buy extends StatelessWidget {
         InkWell(
           onTap: () {
             // 현금 매수/매도
-            final count = mainController.stockOrderPage_orderCount.value;
-            final price = mainController.stockOrderPage_orderCount.value;
+            final count = stockOrderController.orderCount.value;
+            final price = stockOrderController.orderCount.value;
             String? errorText = null;
             if (count == 0) {
               errorText = '주문 수량을 입력해주세요';
             } else if (price == 0 &&
-                !mainController.stockOrderPage_showPrice()) {
+                !stockOrderController.showPrice()) {
               errorText = '주문 단가를 입력해주세요';
             }
             if (errorText != null) {
@@ -188,13 +196,13 @@ class Buy extends StatelessWidget {
               Get.bottomSheet(
                 CheckOrderDialog(
                   title:
-                      '현금${mainController.stockOrderPage_tabList[mainController.stockOrderPage_tabIdx.value]}',
+                      '현금${stockOrderController.tabList[stockOrderController.tabIdx.value]}',
                   account: '631202-04-091716',
                   stock: mainController.getSelectedStock(),
-                  type: mainController.stockOrderPage_tradeType.value,
-                  count: mainController.stockOrderPage_getOrderCount(),
-                  unitPrice: mainController.stockOrderPage_getOrderPrice(),
-                  totalPrice: mainController.stockOrderPage_getOrderTotal(),
+                  type: stockOrderController.tradeType.value,
+                  count: stockOrderController.orderCount.value,
+                  unitPrice: stockOrderController.orderPrice.value,
+                  totalPrice: stockOrderController.orderTotal.value,
                 ),
               );
             }
@@ -205,7 +213,7 @@ class Buy extends StatelessWidget {
               height: 50,
               alignment: Alignment.center,
               child: Text(
-                '현금${mainController.stockOrderPage_tabList[mainController.stockOrderPage_tabIdx.value]}',
+                '현금${stockOrderController.tabList[stockOrderController.tabIdx.value]}',
                 style: const TextStyle(
                     color: WHITE, fontSize: 20, fontWeight: FontWeight.bold),
               ),

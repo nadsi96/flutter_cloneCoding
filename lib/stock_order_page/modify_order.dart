@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
+import 'package:flutter_prac_jongmock/controllers/stock_order_controller.dart';
 import 'package:get/get.dart';
 
 import 'commons.dart';
@@ -8,9 +9,10 @@ import 'dialogs.dart';
 
 class ModifyOrder extends StatelessWidget {
   final mainController = Get.find<MainController>();
+  final stockOrderController = Get.find<StockOrderController>();
 
   ModifyOrder({Key? key}) : super(key: key) {
-    mainController.stockOrderPage_clearState();
+    stockOrderController.clearState();
   }
 
   /// 주문번호 / 미체결
@@ -92,7 +94,7 @@ class ModifyOrder extends StatelessWidget {
               orderNum(), // 주문번호/미체결
               Obx(() {
                 // 구분
-                String text = (mainController.stockOrderPage_marketPrice.value)
+                String text = (stockOrderController.marketPrice.value)
                     ? '시장가'
                     : '보통';
                 return tradeType(
@@ -115,12 +117,12 @@ class ModifyOrder extends StatelessWidget {
                         title: '정정',
                         account: '631202-04-091716',
                         stock: mainController.getSelectedStock(),
-                        type: mainController.stockOrderPage_tradeType.value,
-                        count: mainController.stockOrderPage_getOrderCount(),
+                        type: stockOrderController.tradeType.value,
+                        count: stockOrderController.orderCount.value,
                         unitPrice:
-                            mainController.stockOrderPage_getOrderCount(),
+                        stockOrderController.orderCount.value,
                         totalPrice:
-                            mainController.stockOrderPage_getOrderTotal(),
+                        stockOrderController.orderTotal.value,
                       ),
                       enableDrag: false,
                     );
@@ -150,12 +152,12 @@ class ModifyOrder extends StatelessWidget {
                         title: '취소',
                         account: '631202-04-091716',
                         stock: mainController.getSelectedStock(),
-                        type: mainController.stockOrderPage_tradeType.value,
-                        count: mainController.stockOrderPage_getOrderCount(),
+                        type: stockOrderController.tradeType.value,
+                        count: stockOrderController.orderCount.value,
                         unitPrice:
-                            mainController.stockOrderPage_getOrderPrice(),
+                        stockOrderController.orderPrice.value,
                         totalPrice:
-                            mainController.stockOrderPage_getOrderTotal(),
+                        stockOrderController.orderTotal.value,
                       ),enableDrag: false,
                     );
                   },
