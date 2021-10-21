@@ -94,9 +94,8 @@ class ModifyOrder extends StatelessWidget {
               orderNum(), // 주문번호/미체결
               Obx(() {
                 // 구분
-                String text = (stockOrderController.marketPrice.value)
-                    ? '시장가'
-                    : '보통';
+                String text =
+                    (stockOrderController.marketPrice.value) ? '시장가' : '보통';
                 return tradeType(
                     text: text, dialog: tradeTypeDialog(), margin_top: 0);
               }), // 구분
@@ -119,10 +118,8 @@ class ModifyOrder extends StatelessWidget {
                         stock: mainController.getSelectedStock(),
                         type: stockOrderController.tradeType.value,
                         count: stockOrderController.orderCount.value,
-                        unitPrice:
-                        stockOrderController.orderCount.value,
-                        totalPrice:
-                        stockOrderController.orderTotal.value,
+                        unitPrice: stockOrderController.orderCount.value,
+                        totalPrice: stockOrderController.orderTotal.value,
                       ),
                       enableDrag: false,
                     );
@@ -154,11 +151,10 @@ class ModifyOrder extends StatelessWidget {
                         stock: mainController.getSelectedStock(),
                         type: stockOrderController.tradeType.value,
                         count: stockOrderController.orderCount.value,
-                        unitPrice:
-                        stockOrderController.orderPrice.value,
-                        totalPrice:
-                        stockOrderController.orderTotal.value,
-                      ),enableDrag: false,
+                        unitPrice: stockOrderController.orderPrice.value,
+                        totalPrice: stockOrderController.orderTotal.value,
+                      ),
+                      enableDrag: false,
                     );
                   },
                   child: Container(

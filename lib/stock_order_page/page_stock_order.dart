@@ -20,7 +20,6 @@ class StockOrder extends StatelessWidget {
   final stockOrderController = Get.find<StockOrderController>();
 
   StockOrder({Key? key}) : super(key: key) {
-
     stockOrderController.setStock(mainController.getSelectedStockData());
 
     // 로그인 상태 체크 후 진행
@@ -227,23 +226,23 @@ class StockOrder extends StatelessWidget {
           account(), // 계좌정보
           tabs(),
           Expanded(
-            child: Obx((){
+            child: Obx(() {
               final idx = stockOrderController.tabIdx.value;
-              switch(stockOrderController.tabList[idx]){
+              switch (stockOrderController.tabList[idx]) {
                 case '매수':
                 case '매도':
-                return Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Hoga_Che_Table(),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Buy(),
-                    ),
-                  ],
-                );
+                  return Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Hoga_Che_Table(),
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: Buy(),
+                      ),
+                    ],
+                  );
                 case '정정/취소':
                   return Row(
                     children: [

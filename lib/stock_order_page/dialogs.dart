@@ -90,7 +90,7 @@ Widget orderErrorDialog(String msg) {
 /// 주문 수량/단가/금액 입력 다이얼로그
 /// tab - 클릭한 박스(수량/단가/금액)
 class InsertValDialog extends StatelessWidget {
-  final controller = Get.find<MainController>();
+  final mainController = Get.find<MainController>();
   final stockOrderController = Get.find<StockOrderController>();
 
   final double dialogHeight = 420; // 다이얼로그 화면 높이
@@ -104,8 +104,13 @@ class InsertValDialog extends StatelessWidget {
       stockOrderController.orderPrice.value
     ]; // 기존 입력되어있던 값
 
-    tabTexts =
-    stockOrderController.showPrice() ? ['수량'] : ['수량', '단가', '금액'];
+    if(stockOrderController.orderPrice.value == ''){
+      // 주문 단가가 입력되어있지 않았다면
+      // 현재가로 초기화
+      stockOrderController.dialog_orderPrice.value = mainController.getSelectedStockData().getPriceInt();
+    }
+
+    tabTexts = stockOrderController.showPrice() ? ['수량'] : ['수량', '단가', '금액'];
   }
 
   /// 주문 수량/단가/금액 입력 텍스트박스 오른쪽
@@ -166,7 +171,7 @@ class InsertValDialog extends StatelessWidget {
         if (stockOrderController.dialog_insertTab.value == '단가') {
           return (InkWell(
             onTap: () => stockOrderController.dialog_orderPrice.value =
-                controller.getSelectedStockData().getPriceInt(),
+                mainController.getSelectedStockData().getPriceInt(),
             child: _itemView('현재가'),
           ));
         } else {
@@ -285,7 +290,6 @@ class InsertValDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       height: dialogHeight,
       color: GRAY,
@@ -339,13 +343,6 @@ class InsertValDialog extends StatelessWidget {
 
                   String text;
                   if (selected == '단가') {
-                    /// 단가를 클릭했는데, 입력해뒀던 내용이 없다면
-                    /// text를 현재가로 초기화
-                    /// 있으면 있던거 넣
-                    if (stockOrderController.getOrderPrice() == '' && stockOrderController.isOpening) {
-                      stockOrderController.dialog_orderPrice.value =
-                          controller.getSelectedStockData().getPriceInt();
-                    }
                     text = stockOrderController.getOrderPrice();
                   } else if (selected == '수량') {
                     // 수량 클릭한 경우
@@ -384,20 +381,22 @@ class InsertValDialog extends StatelessWidget {
                           ), // 수량/원 입력칸
                           Text(unit, style: const TextStyle(fontSize: 14)),
                           InkWell(
-                            onTap: () => stockOrderController.dialog_clearText(),
+                            onTap: () =>
+                                stockOrderController.dialog_clearText(),
                             child:
+
                                 /// 입력한 내용 지우기 버튼. 0보다 크면 나타남
                                 ((selected == '수량' &&
-                                    stockOrderController.dialog_orderCount
-                                                    .value >
+                                            stockOrderController
+                                                    .dialog_orderCount.value >
                                                 0) ||
                                         (selected == '단가' &&
-                                            stockOrderController.dialog_orderPrice
-                                                    .value >
+                                            stockOrderController
+                                                    .dialog_orderPrice.value >
                                                 0) ||
                                         (selected == '금액' &&
-                                            stockOrderController.dialog_orderTotal
-                                                    .value >
+                                            stockOrderController
+                                                    .dialog_orderTotal.value >
                                                 0))
                                     ? Container(
                                         margin: const EdgeInsets.only(left: 10),
@@ -461,8 +460,14 @@ class InsertValDialog extends StatelessWidget {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      stockOrderController.backFromDialog();
-                      Get.back();
+                      if (stockOrderController.dialog_checkPrice() == 0) {
+                        stockOrderController.backFromDialog();
+                        Get.back();
+                      } else {
+                        Get.dialog(
+                          Container(color: BLUE, padding: const EdgeInsets.symmetric(vertical: 200, horizontal: 50)),
+                        );
+                      }
                     },
                     child: Container(
                       color: BLUE,
@@ -565,7 +570,8 @@ class CheckOrderDialog extends StatelessWidget {
               color: getColor(),
             ),
           ),
-          _contentRowItem('금액', (totalPrice.isNotEmpty) ? '$totalPrice 원' : '', basicStyle),
+          _contentRowItem(
+              '금액', (totalPrice.isNotEmpty) ? '$totalPrice 원' : '', basicStyle),
           _contentRowItem('구분', type, basicStyle),
           divider,
         ],
@@ -615,10 +621,11 @@ class CheckOrderDialog extends StatelessWidget {
     );
   }
 
-  Widget metaExplain(){
+  Widget metaExplain() {
     final String orderType;
     final String extra;
-    const extra1 = '※ 증거금 100% 계좌인 경우에도 제비용(수수료/세금)\n 은 증거금에 포함되지 않아 이로 인한 미수금이\n 발생할 수 있습니다.';
+    const extra1 =
+        '※ 증거금 100% 계좌인 경우에도 제비용(수수료/세금)\n 은 증거금에 포함되지 않아 이로 인한 미수금이\n 발생할 수 있습니다.';
     const extra2 = '※ ETN/ETF 매매시 괴리율에 주의하시기 바랍니다.';
 
     switch (title) {
@@ -632,24 +639,21 @@ class CheckOrderDialog extends StatelessWidget {
         break;
       default:
         orderType = title;
-        if(title == '정정'){
+        if (title == '정정') {
           extra = extra1;
-        }else{
+        } else {
           extra = '';
         }
         break;
     }
-    final top = Text('위 내용으로 $orderType주문을 실행합니다.', style: const TextStyle(fontSize: 14));
-    final bottom = Text(extra, style: const TextStyle(color: RED, fontSize: 12), textAlign: TextAlign.left);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      // crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        top,
-        bottom
-      ]
-    );
-
+    final top = Text('위 내용으로 $orderType주문을 실행합니다.',
+        style: const TextStyle(fontSize: 14));
+    final bottom = Text(extra,
+        style: const TextStyle(color: RED, fontSize: 12),
+        textAlign: TextAlign.left);
+    return Column(mainAxisAlignment: MainAxisAlignment.end,
+        // crossAxisAlignment: CrossAxisAlignment.start,
+        children: [top, bottom]);
   }
 
   @override

@@ -25,6 +25,7 @@ import '../divider.dart';
 
 // import '../interest_page/bottom_button_list.dart';
 import '../interest_page/bottom_text_bar.dart';
+
 // import '../interest_page/stock_list_view.dart';
 import '../interest_page/top_bar.dart';
 import '../interest_page/top_buttons.dart';
@@ -45,16 +46,13 @@ class MyApp extends StatelessWidget {
     Get.put(StockOrderController());
     // 상태바 디자인
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-        statusBarColor: WHITE// 원하는 색
-    ));
+        statusBarIconBrightness: Brightness.dark, statusBarColor: WHITE // 원하는 색
+        ));
 
     return GetMaterialApp(
       title: 'Flutter Demo',
       home: MainPage(),
-      getPages: [
-        GetPage(name: "/register", page: () => RegisterPage())
-      ],
+      getPages: [GetPage(name: "/register", page: () => RegisterPage())],
     );
     /*
     // Stateful
@@ -82,39 +80,39 @@ class MainPage extends StatelessWidget {
 
   MainPage() {
     bottomButtons = BottomButtons();
-
   }
 
   @override
   Widget build(BuildContext context) {
     controller.updateStocks(myStocks); // 보유주식 불러옴
-    pageController.goToPage(pageController.mainBottomTabListTexts.first); // 시작 페이지 설정
+    pageController
+        .goToPage(pageController.mainBottomTabListTexts.first); // 시작 페이지 설정
     print(pageController.pageStack);
 
     return Scaffold(
         body: SafeArea(
             child: Column(children: [
-              Expanded(child: GetX<MainController>(builder: (_) {
-                switch (pageController.title.value) {
-                  case 'MY':
-                    return MyPage();
-                  case '서비스등급조회':
-                    return CheckServiceRank();
-                  case '관심종목':
-                    return JongmockPage();
-                  case '주식현재가':
-                    return PresentPrice();
-                  case '주식주문':
-                    return StockOrder();
-                  default:
-                    return EmptyPage();
-                }
-              })),
-              BottomTextBar(),
-              // 하단 버튼리스트 위 텍스트
-              bottomButtons
-              // 하단 버튼리스트
-            ])));
+      Expanded(child: GetX<MainController>(builder: (_) {
+        switch (pageController.title.value) {
+          case 'MY':
+            return MyPage();
+          case '서비스등급조회':
+            return CheckServiceRank();
+          case '관심종목':
+            return JongmockPage();
+          case '주식현재가':
+            return PresentPrice();
+          case '주식주문':
+            return StockOrder();
+          default:
+            return EmptyPage();
+        }
+      })),
+      BottomTextBar(),
+      // 하단 버튼리스트 위 텍스트
+      bottomButtons
+      // 하단 버튼리스트
+    ])));
   }
 }
 /*

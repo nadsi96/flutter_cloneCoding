@@ -18,8 +18,8 @@ class Buy extends StatelessWidget {
   }
 
   Color getColor() {
-    final title = stockOrderController
-        .tabList[stockOrderController.tabIdx.value];
+    final title =
+        stockOrderController.tabList[stockOrderController.tabIdx.value];
 
     if (title == '매수') {
       return RED;
@@ -41,8 +41,8 @@ class Buy extends StatelessWidget {
             child: Column(
               children: [
                 Obx(() {
-                  final title = stockOrderController.tabList[
-                  stockOrderController.tabIdx.value];
+                  final title = stockOrderController
+                      .tabList[stockOrderController.tabIdx.value];
                   List<String> btnTexts = [];
 
                   if (title == '매수') {
@@ -56,12 +56,10 @@ class Buy extends StatelessWidget {
                       btnTexts.length,
                       (idx) => Expanded(
                         child: InkWell(
-                          onTap: () =>
-                          stockOrderController.payIdx.value = idx,
+                          onTap: () => stockOrderController.payIdx.value = idx,
                           child: BlueGrayButton(
                             isSelected:
-                                (stockOrderController.payIdx.value ==
-                                    idx),
+                                (stockOrderController.payIdx.value == idx),
                             text: btnTexts[idx],
                             fontSize: 14,
                           ),
@@ -73,9 +71,7 @@ class Buy extends StatelessWidget {
                 Obx(() {
                   // 구분
                   String text =
-                      (stockOrderController.marketPrice.value)
-                          ? '시장가'
-                          : '보통';
+                      (stockOrderController.marketPrice.value) ? '시장가' : '보통';
                   return tradeType(text: text, dialog: tradeTypeDialog());
                 }), // 구분
                 Row(
@@ -126,19 +122,17 @@ class Buy extends StatelessWidget {
                           stockOrderController.marketPrice.toggle();
                           final flag = stockOrderController.marketPrice.value;
                           stockOrderController.tradeType.value =
-                              (flag)
-                                  ? '시장가'
-                                  : '보통';
-                          if(flag){
+                              (flag) ? '시장가' : '보통';
+                          if (flag) {
                             stockOrderController.orderPrice.value = '';
                             stockOrderController.tradeType.value = '시장가';
-                          }else{
+                          } else {
                             stockOrderController.tradeType.value = '보통';
                           }
                         },
                         child: Obx(
-                          () => checkBoxText('시장',
-                              stockOrderController.marketPrice.value),
+                          () => checkBoxText(
+                              '시장', stockOrderController.marketPrice.value),
                         ),
                       ),
                     ),
@@ -156,9 +150,11 @@ class Buy extends StatelessWidget {
                                 onTap: () =>
                                     Get.bottomSheet(InsertValDialog('금액')),
                                 child: titleContent(
-                                    title: '금액',
-                                    titleColor: getColor(),
-                                    content: stockOrderController.orderTotal.value,),
+                                  title: '금액',
+                                  titleColor: getColor(),
+                                  content:
+                                      stockOrderController.orderTotal.value,
+                                ),
                               ),
                             ),
                     ),
@@ -186,8 +182,7 @@ class Buy extends StatelessWidget {
             String? errorText = null;
             if (count == 0) {
               errorText = '주문 수량을 입력해주세요';
-            } else if (price == 0 &&
-                !stockOrderController.showPrice()) {
+            } else if (price == 0 && !stockOrderController.showPrice()) {
               errorText = '주문 단가를 입력해주세요';
             }
             if (errorText != null) {

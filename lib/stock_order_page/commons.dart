@@ -11,7 +11,12 @@ final deco =
 
 /// 구분
 /// 보통, 시장가, 장전시간외, 장후시간외, 시간외단일가, 최유리지정가, 최우선지정가
-Widget tradeType({String text = '', Widget? dialog, double margin_top=5, double margin_bottom=5,}) {
+Widget tradeType({
+  String text = '',
+  Widget? dialog,
+  double margin_top = 5,
+  double margin_bottom = 5,
+}) {
   final stockOrderController = Get.find<StockOrderController>();
 
   return Container(
@@ -26,24 +31,26 @@ Widget tradeType({String text = '', Widget? dialog, double margin_top=5, double 
               border: Border(right: BorderSide(color: GRAY))),
           alignment: Alignment.center,
           child: const Text('구분',
-              style: TextStyle(color: DARKGRAY, fontSize: titleFontSize, fontWeight: FontWeight.bold)),
+              style: TextStyle(
+                  color: DARKGRAY,
+                  fontSize: titleFontSize,
+                  fontWeight: FontWeight.bold)),
         ),
         Expanded(
           child: InkWell(
             onTap: () async {
               if (dialog != null) {
-
                 // 다이얼로그에서 클릭한 항목 받음
                 final result = await Get.bottomSheet(dialog);
-                if(result != null){
+                if (result != null) {
                   stockOrderController.tradeType.value = result;
                   print(result);
                   // 다이얼로그에서 시장가를 선택했다면,
                   // 시장가 체크박스의 체크 상태를 true로
                   // 그 외 = false
-                  if(result == '시장가'){
+                  if (result == '시장가') {
                     stockOrderController.marketPrice.value = true;
-                  }else{
+                  } else {
                     stockOrderController.marketPrice.value = false;
                   }
                 }
@@ -79,17 +86,25 @@ Widget tradeType({String text = '', Widget? dialog, double margin_top=5, double 
 
 /// 좌상단 - title,
 /// 우하단 - content 들어간 회색 박스
-Widget titleContent({String title='', String content='', Color titleColor=BLACK, Color bgColor=LLIGHTGRAY}) {
+Widget titleContent(
+    {String title = '',
+    String content = '',
+    Color titleColor = BLACK,
+    Color bgColor = LLIGHTGRAY}) {
   return Container(
     margin: const EdgeInsets.only(bottom: 5, right: 5),
     padding: const EdgeInsets.all(10),
-    decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(3)),
+    decoration:
+        BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(3)),
     height: boxHeight,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(title,
-            style: TextStyle(color: titleColor, fontSize: titleFontSize, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: titleColor,
+                fontSize: titleFontSize,
+                fontWeight: FontWeight.bold),
             textAlign: TextAlign.left),
         Text(content,
             style: const TextStyle(fontSize: contentFontSize, color: BLACK),
@@ -99,18 +114,23 @@ Widget titleContent({String title='', String content='', Color titleColor=BLACK,
   );
 }
 
-Widget textBox({String text='', Color textColor = GRAY, double? fontSize=14, double? width, double height=boxHeight}){
+Widget textBox(
+    {String text = '',
+    Color textColor = GRAY,
+    double? fontSize = 14,
+    double? width,
+    double height = boxHeight}) {
   return Container(
-    margin: const EdgeInsets.only(bottom: 5),
-    width: width,
-    height: boxHeight,
-    decoration: deco,
-    alignment: Alignment.center,
-    child: Text(text, style: TextStyle(fontSize: fontSize, color: textColor))
-  );
+      margin: const EdgeInsets.only(bottom: 5),
+      width: width,
+      height: boxHeight,
+      decoration: deco,
+      alignment: Alignment.center,
+      child:
+          Text(text, style: TextStyle(fontSize: fontSize, color: textColor)));
 }
 
-Widget checkBoxText(String text, bool isChecked){
+Widget checkBoxText(String text, bool isChecked) {
   return Container(
     margin: const EdgeInsets.only(bottom: 5),
     height: boxHeight,
@@ -121,7 +141,9 @@ Widget checkBoxText(String text, bool isChecked){
         Container(
           height: 20,
           width: 20,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: (isChecked) ? BLUE : GRAY),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: (isChecked) ? BLUE : GRAY),
           alignment: Alignment.center,
           child: const Icon(Icons.check, color: WHITE, size: 15),
         ),
