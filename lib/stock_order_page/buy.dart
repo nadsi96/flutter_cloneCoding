@@ -184,12 +184,25 @@ class Buy extends StatelessWidget {
             }
             if (errorText != null) {
               Get.bottomSheet(orderErrorDialog(errorText));
-            } else {}
+            } else {
+              Get.bottomSheet(
+                CheckOrderDialog(
+                  title:
+                      '현금${mainController.stockOrderPage_tabList[mainController.stockOrderPage_tabIdx.value]}',
+                  account: '631202-04-091716',
+                  stock: mainController.getSelectedStock(),
+                  type: mainController.stockOrderPage_tradeType.value,
+                  count: mainController.stockOrderPage_getOrderCount(),
+                  unitPrice: mainController.stockOrderPage_getOrderPrice(),
+                  totalPrice: mainController.stockOrderPage_getOrderTotal(),
+                ),
+              );
+            }
           },
           child: Obx(() {
             return Container(
               color: getColor(),
-              height: 60,
+              height: 50,
               alignment: Alignment.center,
               child: Text(
                 '현금${mainController.stockOrderPage_tabList[mainController.stockOrderPage_tabIdx.value]}',

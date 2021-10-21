@@ -17,3 +17,4 @@ const LIGHTBLUE = Color.fromARGB(255, 233, 239, 251);
 const RED = Colors.red;
 const LIGHTRED = Color.fromARGB(255, 255, 240, 237);
 const TRANSPARENT = Colors.transparent;
+const GREEN = Color.fromARGB(255, 33, 146, 93);

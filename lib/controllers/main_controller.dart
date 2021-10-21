@@ -397,6 +397,10 @@ class MainController extends GetxController {
   /// 주식주문
 /// 탭 바뀔 때 상태 초기화
   void stockOrderPage_clearState(){
+    stockOrderPage_orderCount.value = -1;
+    stockOrderPage_orderPrice.value = -1;
+    stockOrderPage_orderTotal.value = -1;
+
     stockOrderPage_marketPrice.value = false;
     stockOrderPage_payIdx.value = 0;
     stockOrderPage_tradeType.value = '보통';
@@ -576,5 +580,4 @@ class MainController extends GetxController {
         break;
     }
   }
-
 }

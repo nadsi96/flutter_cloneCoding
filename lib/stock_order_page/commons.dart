@@ -11,11 +11,11 @@ final deco =
 
 /// 구분
 /// 보통, 시장가, 장전시간외, 장후시간외, 시간외단일가, 최유리지정가, 최우선지정가
-Widget tradeType({String text = '', Widget? dialog}) {
+Widget tradeType({String text = '', Widget? dialog, double margin_top=5, double margin_bottom=5,}) {
   final mainController = Get.find<MainController>();
 
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 5),
+    margin: EdgeInsets.only(top: margin_top, bottom: margin_bottom),
     decoration: deco,
     child: Row(
       children: [

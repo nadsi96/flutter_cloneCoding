@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 
 import 'buy.dart';
 import 'hoga_che_section.dart';
+import 'modify_order.dart';
 
 /// 주식주문
 class StockOrder extends StatelessWidget {
@@ -247,7 +248,7 @@ class StockOrder extends StatelessWidget {
                       ),
                       Expanded(
                         flex: 4,
-                        child: Container(),
+                        child: ModifyOrder(),
                       ),
                     ],
                   );

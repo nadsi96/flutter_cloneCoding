@@ -306,5 +306,22 @@ class ColoredSignBox extends StatelessWidget{
       color: (isSelected)? selectedColor : unSelectedColor,
     );
   }
+}
 
+Widget cancelBtn(){
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 10),
+    color: GRAY,
+    alignment: Alignment.center,
+    child: const Text('취소', style: TextStyle(color: WHITE, fontSize: 20, fontWeight: FontWeight.bold),),
+  );
+}
+
+Widget okBtn(){
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 10),
+    color: BLUE,
+    alignment: Alignment.center,
+    child: const Text('확인', style: TextStyle(color: WHITE, fontSize: 20, fontWeight: FontWeight.bold),),
+  );
 }
