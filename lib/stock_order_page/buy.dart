@@ -179,10 +179,10 @@ class Buy extends StatelessWidget {
             // 현금 매수/매도
             final count = stockOrderController.orderCount.value;
             final price = stockOrderController.orderCount.value;
-            String? errorText = null;
-            if (count == 0) {
+            String? errorText;
+            if (count == '') {
               errorText = '주문 수량을 입력해주세요';
-            } else if (price == 0 && !stockOrderController.showPrice()) {
+            } else if (price == '' && !stockOrderController.showPrice()) {
               errorText = '주문 단가를 입력해주세요';
             }
             if (errorText != null) {
