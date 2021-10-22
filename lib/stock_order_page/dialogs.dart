@@ -3,14 +3,13 @@ import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/controllers/main_controller.dart';
 import 'package:flutter_prac_jongmock/controllers/stock_order_controller.dart';
-import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
-Widget tradeTypeDialog() {
-  final mainController = Get.find<MainController>();
+/// bool isModify - 정정/취소 탭에서는 [보통, 시장가, 최유리지정가, 최우선지정가]만 있
+Widget tradeTypeDialog({bool isModify=false}) {
   final stockOrderController = Get.find<StockOrderController>();
 
-  final texts = ['보통', '시장가', '장전시간외', '장후시간외', '시간외단일가', '최유리지정가', '최우선지정가'];
+  final texts = (isModify)? ['보통', '시장가', '최유리지정가', '최우선지정가']:['보통', '시장가', '장전시간외', '장후시간외', '시간외단일가', '최유리지정가', '최우선지정가'];
   return Container(
     height: 300,
     decoration: const BoxDecoration(

@@ -118,18 +118,7 @@ class Buy extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: InkWell(
-                        onTap: () {
-                          stockOrderController.marketPrice.toggle();
-                          final flag = stockOrderController.marketPrice.value;
-                          stockOrderController.tradeType.value =
-                              (flag) ? '시장가' : '보통';
-                          if (flag) {
-                            stockOrderController.orderPrice.value = '';
-                            stockOrderController.tradeType.value = '시장가';
-                          } else {
-                            stockOrderController.tradeType.value = '보통';
-                          }
-                        },
+                        onTap: () => stockOrderController.marketPriceToggle(),
                         child: Obx(
                           () => checkBoxText(
                               '시장', stockOrderController.marketPrice.value),

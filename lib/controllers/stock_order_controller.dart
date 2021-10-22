@@ -69,6 +69,18 @@ class StockOrderController extends GetxController {
     }
   }
 
+  void marketPriceToggle() {
+    marketPrice.toggle();
+    final flag = marketPrice.value;
+    tradeType.value = (flag) ? '시장가' : '보통';
+    if (flag) {
+      orderPrice.value = '';
+      tradeType.value = '시장가';
+    } else {
+      tradeType.value = '보통';
+    }
+  }
+
   /// 주식주문
   /// 구분 ['시장가', '장전시간외', '장후시간외', '최유리지정가', '최우선지정가']이면
   /// 금액 표시 x
@@ -273,6 +285,7 @@ class StockOrderController extends GetxController {
     int total = dialog_orderTotal.value;
 
     print('$cnt $price $total');
+
     /// 금액 탭에서 확인 클릭시
     ///  - 수량을 금액과 단가에 따라 결정
     /// 수량/단가에서 확인 클릭시

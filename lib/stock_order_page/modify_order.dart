@@ -74,8 +74,10 @@ class ModifyOrder extends StatelessWidget {
         Expanded(
           flex: 3,
           child: InkWell(
-            onTap: () {},
-            child: checkBoxText('시장', false),
+            onTap: () => stockOrderController.marketPriceToggle(),
+            child: Obx(
+              () => checkBoxText('시장', stockOrderController.marketPrice.value),
+            ),
           ),
         ),
       ],
@@ -97,7 +99,7 @@ class ModifyOrder extends StatelessWidget {
                 String text =
                     (stockOrderController.marketPrice.value) ? '시장가' : '보통';
                 return tradeType(
-                    text: text, dialog: tradeTypeDialog(), margin_top: 0);
+                    text: text, dialog: tradeTypeDialog(isModify: true), margin_top: 0);
               }), // 구분
               orderCount(),
               orderPrice(),
