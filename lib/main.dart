@@ -21,14 +21,14 @@ import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:flutter_prac_jongmock/stock_order_page/page_stock_order.dart';
 import 'package:get/get.dart';
 
-import '../divider.dart';
+import 'divider.dart';
 
 // import '../interest_page/bottom_button_list.dart';
-import '../interest_page/bottom_text_bar.dart';
+import 'interest_page/bottom_text_bar.dart';
 
 // import '../interest_page/stock_list_view.dart';
-import '../interest_page/top_bar.dart';
-import '../interest_page/top_buttons.dart';
+import 'interest_page/top_bar.dart';
+import 'interest_page/top_buttons.dart';
 
 void main() {
   runApp(const MyApp());

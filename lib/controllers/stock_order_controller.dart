@@ -37,9 +37,9 @@ class StockOrderController extends GetxController {
   // 선택 탭
   var dialog_insertTab = '수량'.obs;
 
-  var dialog_orderCount = (-1).obs;
-  var dialog_orderPrice = (-1).obs;
-  var dialog_orderTotal = (-1).obs;
+  var dialog_orderCount = (-1).obs; // 수량
+  var dialog_orderPrice = (-1).obs; // 단가
+  var dialog_orderTotal = (-1).obs; // 금액
 
   void setStock(Stock stock) {
     this.stock = stock;
@@ -273,6 +273,10 @@ class StockOrderController extends GetxController {
     int total = dialog_orderTotal.value;
 
     print('$cnt $price $total');
+    /// 금액 탭에서 확인 클릭시
+    ///  - 수량을 금액과 단가에 따라 결정
+    /// 수량/단가에서 확인 클릭시
+    /// 금액을 수량/단가에 따라 결정
     if (dialog_insertTab.value == '금액') {
       cnt = total ~/ price;
     }
@@ -282,6 +286,7 @@ class StockOrderController extends GetxController {
     orderCount.value = (cnt < 0) ? '' : formatIntToStr(cnt);
     orderPrice.value = (price < 0) ? '' : formatIntToStr(price);
 
+    /// 수량이 빈 칸이면 금액도 빈 칸으로 처리
     if (cnt == -1 || price == -1) {
       orderTotal.value = '';
       dialog_orderTotal.value = -1;
