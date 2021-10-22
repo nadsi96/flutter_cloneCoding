@@ -47,6 +47,9 @@ class StockOrderController extends GetxController {
   /// 정정/취소 탭
   var all_toggle = false.obs; // 전부 체크버튼 토글
 
+
+  /// 미체결탭
+  var contractState = false.obs; // 미체결/체결. false = 미체결
   void setStock(Stock stock) {
     this.stock = stock;
   }

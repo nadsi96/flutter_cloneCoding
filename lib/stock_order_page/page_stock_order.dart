@@ -9,6 +9,7 @@ import 'package:flutter_prac_jongmock/controllers/tab_page_controller.dart';
 import 'package:get/get.dart';
 
 import 'buy.dart';
+import 'contract.dart';
 import 'hoga_che_section.dart';
 import 'modify_order.dart';
 
@@ -257,7 +258,7 @@ class StockOrder extends StatelessWidget {
                     ],
                   );
                 case '미체결':
-                  return Container();
+                  return Contract();
                 default:
                   return Container();
               }
