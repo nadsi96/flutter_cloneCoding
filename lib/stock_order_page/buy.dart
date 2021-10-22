@@ -80,7 +80,8 @@ class Buy extends StatelessWidget {
                     Expanded(
                       flex: 7,
                       child: InkWell(
-                        onTap: () => Get.bottomSheet(InsertValDialog('수량')),
+                        onTap: () =>
+                            stockOrderController.openInsertDialog('수량'),
                         child: Obx(
                           () => titleContent(
                             title: '수량',
@@ -103,7 +104,8 @@ class Buy extends StatelessWidget {
                     Expanded(
                       flex: 7,
                       child: InkWell(
-                        onTap: () => Get.bottomSheet(InsertValDialog('단가')),
+                        onTap: () =>
+                            stockOrderController.openInsertDialog('단가'),
                         child: Obx(() => titleContent(
                               title: '단가',
                               titleColor: getColor(),
@@ -137,7 +139,7 @@ class Buy extends StatelessWidget {
                               flex: 7,
                               child: InkWell(
                                 onTap: () =>
-                                    Get.bottomSheet(InsertValDialog('금액')),
+                                    stockOrderController.openInsertDialog('금액'),
                                 child: titleContent(
                                   title: '금액',
                                   titleColor: getColor(),

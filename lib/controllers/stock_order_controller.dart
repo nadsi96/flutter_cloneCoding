@@ -1,4 +1,5 @@
 import 'package:flutter_prac_jongmock/stock_data.dart';
+import 'package:flutter_prac_jongmock/stock_order_page/dialogs.dart';
 import 'package:flutter_prac_jongmock/util.dart';
 import 'package:get/get.dart';
 
@@ -26,9 +27,11 @@ class StockOrderController extends GetxController {
 
   // 주문수량
   var orderCount = ''.obs;
+  var orderCountEnable = true.obs;
 
   // 주문 단가
   var orderPrice = ''.obs;
+  var orderPriceEnable = true.obs;
 
   // 금액
   var orderTotal = ''.obs;
@@ -41,6 +44,9 @@ class StockOrderController extends GetxController {
   var dialog_orderPrice = (-1).obs; // 단가
   var dialog_orderTotal = (-1).obs; // 금액
 
+  /// 정정/취소 탭
+  var all_toggle = false.obs; // 전부 체크버튼 토글
+
   void setStock(Stock stock) {
     this.stock = stock;
   }
@@ -51,6 +57,9 @@ class StockOrderController extends GetxController {
     orderCount.value = '';
     orderPrice.value = '';
     orderTotal.value = '';
+
+    orderPriceEnable.value = true;
+    orderCountEnable.value = true;
 
     marketPrice.value = false;
     payIdx.value = 0;
@@ -69,15 +78,37 @@ class StockOrderController extends GetxController {
     }
   }
 
+  /// 시장 체크버튼 토글 동작
+  /// 체크버튼 클릭시
+  /// 구분 항목의 내용도 시장가로
+  /// 해제시 보통으로
   void marketPriceToggle() {
     marketPrice.toggle();
     final flag = marketPrice.value;
-    tradeType.value = (flag) ? '시장가' : '보통';
     if (flag) {
       orderPrice.value = '';
+      orderTotal.value = '';
+      dialog_orderPrice.value = -1;
       tradeType.value = '시장가';
+      orderPriceEnable.value = false;
     } else {
       tradeType.value = '보통';
+      orderPriceEnable.value = true;
+    }
+  }
+
+  /// 정정/취소
+  /// 수량 전부 선택/해제
+  void modifyAllToggle() {
+    all_toggle.toggle();
+    if (all_toggle.value) {
+      orderCount.value = '';
+      orderTotal.value = '';
+      dialog_orderCount.value = -1;
+      dialog_orderTotal.value = -1;
+      orderCountEnable.value = false;
+    } else {
+      orderCountEnable.value = true;
     }
   }
 
@@ -88,6 +119,52 @@ class StockOrderController extends GetxController {
   bool showPrice() {
     return (['시장가', '장전시간외', '장후시간외', '최유리지정가', '최우선지정가']
         .contains(tradeType.value));
+  }
+
+  /// 수량/단가/금액 입력 다이얼로그 화면 열기
+  /// tab - 수량/단가/금액
+  /// 활성화된 tab만 다이얼로그 엶
+  void openInsertDialog(String tab) {
+    final flag;
+    switch (tab) {
+      case '수량':
+        flag = orderCountEnable.value;
+        break;
+      case '단가':
+        flag = orderPriceEnable.value;
+        break;
+      default:
+        flag = true;
+        break;
+    }
+
+    (flag)
+        ? Get.bottomSheet(InsertValDialog(tab, tabTexts: getInsertDialogTabs()))
+        : {};
+  }
+
+  List<String> getInsertDialogTabs() {
+    List<String> tabs = ['수량', '단가', '금액'];
+    switch (tabIdx.value) {
+      case 0:
+      case 1:
+        // 매수/매도
+        return (showPrice()) ? ['수량'] : tabs;
+      case 2:
+        //정정/취소
+        tabs.removeLast(); // 금액 제거
+        if (showPrice()) {
+          //단가 제거
+          tabs.removeLast();
+        }
+        if (all_toggle.value) {
+          // 수량 제거
+          tabs.removeAt(0);
+        }
+        return tabs;
+      default:
+        return [];
+    }
   }
 
   /// 수량/단가/금액 입력 다이얼로그

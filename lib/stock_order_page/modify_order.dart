@@ -45,15 +45,23 @@ class ModifyOrder extends StatelessWidget {
         Expanded(
           flex: 7,
           child: InkWell(
-            onTap: () {},
-            child: titleContent(title: '수량', titleColor: GREEN),
+            onTap: () => stockOrderController.openInsertDialog('수량'),
+            child: Obx(
+              () => titleContent(
+                  title: '수량',
+                  titleColor: GREEN,
+                  bgColor:
+                      stockOrderController.orderCountEnable.value ? LLIGHTGRAY : LIGHTGRAY,
+                  content: stockOrderController.orderCount.value),
+            ),
           ),
         ),
         Expanded(
           flex: 3,
           child: InkWell(
-            onTap: () {},
-            child: checkBoxText('전부', false),
+            onTap: () => stockOrderController.modifyAllToggle(),
+            child: Obx(() =>
+                checkBoxText('전부', stockOrderController.all_toggle.value)),
           ),
         ),
       ],
@@ -67,8 +75,17 @@ class ModifyOrder extends StatelessWidget {
         Expanded(
           flex: 7,
           child: InkWell(
-            onTap: () {},
-            child: titleContent(title: '단가', titleColor: GREEN),
+            onTap: () => stockOrderController.openInsertDialog('단가'),
+            child: Obx(
+              () => titleContent(
+                title: '단가',
+                titleColor: GREEN,
+                bgColor:
+                    stockOrderController.showPrice() ? LIGHTGRAY : LLIGHTGRAY,
+                content: stockOrderController.orderPrice.value,
+                // stockOrderController.getOrderPrice(),
+              ),
+            ),
           ),
         ),
         Expanded(
@@ -99,7 +116,9 @@ class ModifyOrder extends StatelessWidget {
                 String text =
                     (stockOrderController.marketPrice.value) ? '시장가' : '보통';
                 return tradeType(
-                    text: text, dialog: tradeTypeDialog(isModify: true), margin_top: 0);
+                    text: text,
+                    dialog: tradeTypeDialog(isModify: true),
+                    margin_top: 0);
               }), // 구분
               orderCount(),
               orderPrice(),

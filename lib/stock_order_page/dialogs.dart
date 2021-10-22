@@ -6,10 +6,12 @@ import 'package:flutter_prac_jongmock/controllers/stock_order_controller.dart';
 import 'package:get/get.dart';
 
 /// bool isModify - 정정/취소 탭에서는 [보통, 시장가, 최유리지정가, 최우선지정가]만 있
-Widget tradeTypeDialog({bool isModify=false}) {
+Widget tradeTypeDialog({bool isModify = false}) {
   final stockOrderController = Get.find<StockOrderController>();
 
-  final texts = (isModify)? ['보통', '시장가', '최유리지정가', '최우선지정가']:['보통', '시장가', '장전시간외', '장후시간외', '시간외단일가', '최유리지정가', '최우선지정가'];
+  final texts = (isModify)
+      ? ['보통', '시장가', '최유리지정가', '최우선지정가']
+      : ['보통', '시장가', '장전시간외', '장후시간외', '시간외단일가', '최유리지정가', '최우선지정가'];
   return Container(
     height: 300,
     decoration: const BoxDecoration(
@@ -50,6 +52,7 @@ Widget tradeTypeDialog({bool isModify=false}) {
   );
 }
 
+/// 주문시 오류 내용 다이얼로그
 Widget orderErrorDialog(String msg) {
   return SizedBox(
     height: 150,
@@ -96,19 +99,17 @@ class InsertValDialog extends StatelessWidget {
   late final previous_data; // 다이얼로그 열기 전 입력되어있던 값
   List<String> tabTexts = []; // 상단 탭 텍스트
 
-  InsertValDialog(String tab, {Key? key}) : super(key: key) {
+  InsertValDialog(String tab, {Key? key, required this.tabTexts})
+      : super(key: key) {
     stockOrderController.dialog_insertTab.value = tab;
     previous_data = [
       stockOrderController.orderCount.value,
       stockOrderController.orderPrice.value
     ]; // 기존 입력되어있던 값
 
-
     // 주문 단가가 입력되어있지 않았다면
     // 현재가로 초기화
     stockOrderController.init();
-
-    tabTexts = stockOrderController.showPrice() ? ['수량'] : ['수량', '단가', '금액'];
   }
 
   /// 주문 수량/단가/금액 입력 텍스트박스 오른쪽
@@ -144,6 +145,8 @@ class InsertValDialog extends StatelessWidget {
     );
   }
 
+  /// 금액탭
+  /// +- 버튼 대신 단가, 입력한 금액에서 가능한 수량 출력
   Widget show_price_count() {
     return Container();
   }
@@ -463,7 +466,10 @@ class InsertValDialog extends StatelessWidget {
                         Get.back();
                       } else {
                         Get.dialog(
-                          Container(color: BLUE, padding: const EdgeInsets.symmetric(vertical: 200, horizontal: 50)),
+                          Container(
+                              color: BLUE,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 200, horizontal: 50)),
                         );
                       }
                     },
