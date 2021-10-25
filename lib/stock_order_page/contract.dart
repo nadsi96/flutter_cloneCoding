@@ -57,7 +57,10 @@ class Contract extends StatelessWidget {
     }
   }
 
+  /// 미체결/체결 버튼
+  /// 일괄취소 버튼
   Widget top() {
+    // 버튼 폭, 높이, 글자크기
     const double width = 100;
     const double height = 40;
     const double fontSize = 14;
@@ -99,7 +102,7 @@ class Contract extends StatelessWidget {
                 border: Border.all(color: DEEPBLUE),
                 borderRadius: BorderRadius.circular(3),
               ),
-              child: Text(
+              child: const Text(
                 '일괄취소',
                 style: TextStyle(color: DEEPBLUE, fontSize: fontSize),
               ),
@@ -110,47 +113,16 @@ class Contract extends StatelessWidget {
     );
   }
 
+  /// 테이블
   Widget table() {
     return Column(
       children: [
-        Row(
-          // header
-          children: [
-            Obx(
-              () => (stockOrderController.contractState.value)
-                  ? singleHeader('종목', bigCellWidth)
-                  : Row(
-                      children: [
-                        singleHeader('선택', checkboxWidth),
-                        singleHeader('종목', bigCellWidth),
-                      ],
-                    ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                controller: headScrollController,
-                child: Row(
-                  children: [
-                    doubleHeader('주문수량', '주문단가', smallCellWidth),
-                    doubleHeader('미체결수량', '체결수량', smallCellWidth),
-                    doubleHeader('주문시간', '주문번호', bigCellWidth),
-                    Obx(() => (stockOrderController.contractState.value)
-                        ? singleHeader('주문구분', smallCellWidth)
-                        : doubleHeader('주문구분', '체결단가', smallCellWidth)),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ), // header
+        tableHeader(),
         Expanded(
+          // table body
           child: Obx(() {
-            print(stockOrderController.contractData.value);
             if (stockOrderController.contractData.value.isEmpty) {
-              print('helloooooooooooooooooooo');
-              print(stockOrderController.contractData.value);
-              // 데이터가 없는 경우
+              // 테이블에 그릴 데이터가 없는 경우
               // table body 중앙에 메시지
               return Container(
                 margin: const EdgeInsets.only(top: 30),
@@ -164,120 +136,153 @@ class Contract extends StatelessWidget {
                 ),
               );
             } else {
+              // 테이블에 그릴 데이터가 있는 경우
               return Row(
-                // body
                 children: [
-                  // 1열
-                  Obx(() {
-                    final double totalSize = checkboxWidth + bigCellWidth;
-                    final dataList = stockOrderController.contractData.value;
-
-                    return (stockOrderController.contractState.value)
-                        ? SizedBox(
-                            width: bigCellWidth,
-                            child: ListView.builder(
-                              // 체결 선택
-                              // head = 종목
-                              controller: firstColScrollController,
-                              itemCount: dataList.length,
-                              itemBuilder: (context, index) {
-                                final data = dataList[index];
-                                return doubleItemCell(
-                                  top: data.stock,
-                                  bottom: data.contractType,
-                                  topAlign: TextAlign.left,
-                                  bottomAlign: TextAlign.left,
-                                  width: bigCellWidth,
-                                  topStyle: tableFontStyle,
-                                  bottomStyle: TextStyle(
-                                      fontSize: 12,
-                                      color: getColor(data.contractType)),
-                                );
-                              },
-                            ),
-                          )
-                        : SizedBox(
-                            // 미체결 선택
-                            // head = 선택 / 종목
-                            width: totalSize,
-                            child: ListView.builder(
-                              controller: firstColScrollController,
-                              itemCount: dataList.length,
-                              itemBuilder: (context, index) {
-                                final data = dataList[index];
-                                return Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () => stockOrderController
-                                          .selectContract(index),
-                                      child: Container(
-                                        height: tableCellHeight,
-                                        width: checkboxWidth,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          border: tableBorder,
-                                          // color: LIGHTGRAY,
-                                        ),
-                                        child: Obx(
-                                              () => CircleAvatar(
-                                            backgroundColor:
-                                            (stockOrderController
-                                                .selectedcontractDataIdxs
-                                                .value
-                                                .contains(index))
-                                                ? BLUE
-                                                : GRAY,
-                                            radius: 10,
-                                            child: const Icon(Icons.check,
-                                                size: 15, color: WHITE),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {},
-                                      child: doubleItemCell(
-                                        top: data.stock,
-                                        bottom: data.contractType,
-                                        topAlign: TextAlign.left,
-                                        bottomAlign: TextAlign.left,
-                                        width: bigCellWidth,
-                                        topStyle: tableFontStyle,
-                                        bottomStyle: TextStyle(
-                                            fontSize: 12,
-                                            color: getColor(data.contractType)),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          );
-                  }),
-                  // 나머지 열
-                  Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      controller: bodyScrollController,
-                      child: SizedBox(
-                        width: smallCellWidth * 3 + bigCellWidth,
-                        child: Obx(() {
-                          final data = stockOrderController.contractData.value;
-                          return ListView(
-                            controller: restColScrollController,
-                            children: List.generate(
-                                data.length, (idx) => getRow(data[idx])),
-                          );
-                        }),
-                      ),
-                    ),
-                  ),
+                  tableRowHeader(),
+                  tableBody(),
                 ],
               );
             }
           }),
         ),
       ],
+    );
+  }
+
+  Widget tableHeader() {
+    return Row(
+      children: [
+        Obx(
+          () => (stockOrderController.contractState.value)
+              ? singleHeader('종목', bigCellWidth) // 체결
+              : Row(
+                  // 미체결
+                  children: [
+                    singleHeader('선택', checkboxWidth),
+                    singleHeader('종목', bigCellWidth),
+                  ],
+                ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            controller: headScrollController,
+            child: Row(
+              children: [
+                doubleHeader('주문수량', '주문단가', smallCellWidth),
+                doubleHeader('미체결수량', '체결수량', smallCellWidth),
+                doubleHeader('주문시간', '주문번호', bigCellWidth),
+                Obx(() => (stockOrderController.contractState.value)
+                    ? singleHeader('주문구분', smallCellWidth)
+                    : doubleHeader('주문구분', '체결단가', smallCellWidth)),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget tableRowHeader() {
+    return Obx(() {
+      final double totalSize = checkboxWidth + bigCellWidth;
+      final dataList = stockOrderController.contractData.value;
+
+      return (stockOrderController.contractState.value)
+          ? SizedBox(
+              width: bigCellWidth,
+              child: ListView.builder(
+                // 체결 선택
+                // head = 종목
+                controller: firstColScrollController,
+                itemCount: dataList.length,
+                itemBuilder: (context, index) {
+                  final data = dataList[index];
+                  return doubleItemCell(
+                    top: data.stock,
+                    bottom: data.contractType,
+                    topAlign: TextAlign.left,
+                    bottomAlign: TextAlign.left,
+                    width: bigCellWidth,
+                    topStyle: tableFontStyle,
+                    bottomStyle: TextStyle(
+                        fontSize: 12, color: getColor(data.contractType)),
+                  );
+                },
+              ),
+            )
+          : SizedBox(
+              // 미체결 선택
+              // head = 선택 / 종목
+              width: totalSize,
+              child: ListView.builder(
+                controller: firstColScrollController,
+                itemCount: dataList.length,
+                itemBuilder: (context, index) {
+                  final data = dataList[index];
+                  return Row(
+                    children: [
+                      InkWell( // 선택 체크박스
+                        onTap: () => stockOrderController.selectContract(index),
+                        child: Container(
+                          height: tableCellHeight,
+                          width: checkboxWidth,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: tableBorder,
+                          ),
+                          child: Obx(
+                            () => CircleAvatar(
+                              backgroundColor: (stockOrderController
+                                      .selectedcontractDataIdxs.value
+                                      .contains(index))
+                                  ? BLUE
+                                  : GRAY,
+                              radius: 10,
+                              child: const Icon(Icons.check,
+                                  size: 15, color: WHITE),
+                            ),
+                          ),
+                        ),
+                      ),
+                      InkWell( // 종목
+                        onTap: () {},
+                        child: doubleItemCell(
+                          top: data.stock,
+                          bottom: data.contractType,
+                          topAlign: TextAlign.left,
+                          bottomAlign: TextAlign.left,
+                          width: bigCellWidth,
+                          topStyle: tableFontStyle,
+                          bottomStyle: TextStyle(
+                              fontSize: 12, color: getColor(data.contractType)),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            );
+    });
+  }
+
+  Widget tableBody() {
+    return Expanded(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        controller: bodyScrollController,
+        child: SizedBox(
+          width: smallCellWidth * 3 + bigCellWidth,
+          child: Obx(() {
+            final data = stockOrderController.contractData.value;
+            return ListView(
+              controller: restColScrollController,
+              children: List.generate(data.length, (idx) => getRow(data[idx])),
+            );
+          }),
+        ),
+      ),
     );
   }
 
