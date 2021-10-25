@@ -40,6 +40,7 @@ dependencies:
   webview_flutter: ^2.1.1 # 웹뷰 - 주식현재가 - 뉴스 상세화면
   aligned_dialog: ^0.0.6 # 쉽게 원하는 위젯 위치에 맞춰서 다이얼로그 생성할 수 있 -주식현재가 -호가화면 매수,매도 주문, - 주식현재가 탭메뉴 펼치기
   charts_flutter: ^0.11.0 # 차트 쉽게 그릴 수 있
+  fluttertoast: ^8.0.8 # toast msg
 
 dev_dependencies:
   flutter_test:

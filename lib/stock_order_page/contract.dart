@@ -3,6 +3,7 @@ import 'package:flutter_prac_jongmock/colors.dart';
 import 'package:flutter_prac_jongmock/commons/buttons/widget_button.dart';
 import 'package:flutter_prac_jongmock/controllers/stock_order_controller.dart';
 import 'package:flutter_prac_jongmock/data/stock_order_data.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
@@ -34,9 +35,11 @@ class Contract extends StatelessWidget {
 
   // final double cellFontSize = 16;
 
-  final tableFontStyle = const TextStyle(color: BLACK, fontSize: 16);
+  final tableFontStyle = const TextStyle(color: BLACK, fontSize: 14);
   final tableBorder = const Border(
       right: BorderSide(color: GRAY), bottom: BorderSide(color: GRAY));
+
+  bool initState = true;
 
   Widget top() {
     const double width = 100;
@@ -114,17 +117,20 @@ class Contract extends StatelessWidget {
                     singleHeader('종목', smallCellWidth)
                   ])
                 : singleHeader('종목', smallCellWidth)),
-            SingleChildScrollView(
-              controller: headScrollController,
-              child: Row(
-                children: [
-                  doubleHeader('주문수량', '주문단가', smallCellWidth),
-                  doubleHeader('미체결수량', '체결수량', smallCellWidth),
-                  doubleHeader('주문시간', '주문번호', bigCellWidth),
-                  Obx(() => (stockOrderController.contractState.value)
-                      ? singleHeader('주문구분', smallCellWidth)
-                      : doubleHeader('주문구분', '체결단가', smallCellWidth)),
-                ],
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                controller: headScrollController,
+                child: Row(
+                  children: [
+                    doubleHeader('주문수량', '주문단가', smallCellWidth),
+                    doubleHeader('미체결수량', '체결수량', smallCellWidth),
+                    doubleHeader('주문시간', '주문번호', bigCellWidth),
+                    Obx(() => (stockOrderController.contractState.value)
+                        ? singleHeader('주문구분', smallCellWidth)
+                        : doubleHeader('주문구분', '체결단가', smallCellWidth)),
+                  ],
+                ),
               ),
             ),
           ],
@@ -235,8 +241,21 @@ class Contract extends StatelessWidget {
     );
   }
 
+  void showToastMsg(){
+      Fluttertoast.showToast(
+          msg: "일괄취소주문은 최대 30건까지 가능합니다.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black87,
+          textColor: Colors.white,
+          fontSize: 14,
+      );
+  }
   @override
   Widget build(BuildContext context) {
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) => showToastMsg());
     return Column(children: [
       top(),
       Expanded(
