@@ -139,7 +139,7 @@ class ModifyOrder extends StatelessWidget {
                         stock: mainController.getSelectedStock(),
                         type: stockOrderController.tradeType.value,
                         count: stockOrderController.orderCount.value,
-                        unitPrice: stockOrderController.orderCount.value,
+                        unitPrice: stockOrderController.orderPrice.value,
                         totalPrice: stockOrderController.orderTotal.value,
                       ),
                       enableDrag: false,
@@ -172,8 +172,6 @@ class ModifyOrder extends StatelessWidget {
                         stock: mainController.getSelectedStock(),
                         type: stockOrderController.tradeType.value,
                         count: stockOrderController.orderCount.value,
-                        unitPrice: stockOrderController.orderPrice.value,
-                        totalPrice: stockOrderController.orderTotal.value,
                       ),
                       enableDrag: false,
                     );
