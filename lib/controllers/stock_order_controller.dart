@@ -1,3 +1,4 @@
+import 'package:flutter_prac_jongmock/data/stock_order_data.dart';
 import 'package:flutter_prac_jongmock/stock_data.dart';
 import 'package:flutter_prac_jongmock/stock_order_page/dialogs.dart';
 import 'package:flutter_prac_jongmock/util.dart';
@@ -50,8 +51,38 @@ class StockOrderController extends GetxController {
 
   /// 미체결탭
   var contractState = false.obs; // 미체결/체결. false = 미체결
+
+  var contractData = <OrderedStock>[].obs;
+  var selectedcontractDataIdxs = <int>{}.obs;
+
   void setStock(Stock stock) {
     this.stock = stock;
+  }
+  void setContractData(List<OrderedStock> orderedStocks){
+    contractData.value = List.of(orderedStocks);
+  }
+
+  // 미체결/체결 선택
+  // 선택에 따라 체결 데이터 set
+  void setContractState(bool flag){
+    contractState.value = flag;
+    if(flag){
+      setContractData([]);
+    }else{
+      setContractData(orderstockList);
+    }
+
+  }
+
+  // 선택한 목록에 있으면 제거,
+  // 없으면 추가
+  void selectContract(int idx){
+    if(selectedcontractDataIdxs.value.contains(idx)){
+      selectedcontractDataIdxs.value.remove(idx);
+    }else{
+      selectedcontractDataIdxs.value.add(idx);
+    }
+    selectedcontractDataIdxs.refresh();
   }
 
   /// 주식주문
